@@ -1,16 +1,26 @@
-{ pkgs ? import <nixpkgs-tools> { system = "x86_64-linux"; config.allowUnfree = true; }
+let
+  nixos = modules:
+    let
+      hvm-config = { config, ... }: {
+        imports = [ <platform/nixos/env-ec2.nix> ] ++ modules;
+        ec2.hvm = true; # pv is almost past :)
+      };
+    in (import <platform/nixos> { configuration = hvm-config; });
+in
+{ pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
 , lib ? pkgs.lib
-
+, modules ? []
+, config ? (nixos modules).config
 , aws-env ? {}
-
-, context ? rec {
+, upload-context ? rec {
     region = "eu-west-1";
-    bucket = "upcast-${region}";
+    bucket = "platform-{region}";
   }
 , ... }:
-with lib;
 
 let
+  inherit (lib) listToAttrs map nameValuePair;
+
   env =
     let
       getEnvs = xs: listToAttrs (map (x: nameValuePair x (builtins.getEnv x)) xs);
@@ -26,33 +36,20 @@ let
   ec2-bundle-image = "${pkgs.ec2_ami_tools}/bin/ec2-bundle-image";
   ec2-upload-bundle = "${pkgs.ec2_ami_tools}/bin/ec2-upload-bundle";
   awscli = "${pkgs.awscli}/bin/aws";
+  jq = "${pkgs.jq}/bin/jq";
 
-  nixos-hvm = let
-      hvm-config = { config, ... }: {
-          imports = [ ./env-ec2.nix ];
-          ec2.hvm = true; # pv is almost past
-      };
-    in (import ./. { configuration = hvm-config; });
-
-  vbox = let
-      vbox-config = { config, ... }: {
-          imports = [ ./env-virtualbox.nix ];
-      };
-    in (import ./. { configuration = vbox-config; }).config.system.build.virtualBoxImage;
-
-  image = nixos-hvm.config.system.build.amazonImage;
-  image-name = "$(basename ${image})-nixos-upcast";
+  ami = config.system.build.amazonImage;
+  ami-name = "$(basename ${ami})-nixos-platform";
 in
 rec {
-  inherit (nixos-hvm) vm vmWithBootLoader;
-  inherit image vbox;
+  inherit ami;
 
   bundle = pkgs.runCommand "ami-ec2-bundle-image" env ''
     mkdir -p $out
 
     ${ec2-bundle-image} \
       -c "$AWS_X509_CERT" -k "$AWS_X509_KEY" -u "$AWS_ACCOUNT_ID" \
-      -i "${image}/nixos.img" --arch x86_64 -d $out
+      -i "${ami}/nixos.img" --arch x86_64 -d $out
   '';
 
   upload = pkgs.runCommand "ami-ec2-upload-image" env ''
@@ -60,22 +57,22 @@ rec {
     export CURL_CA_BUNDLE=${pkgs.cacert}/etc/ca-bundle.crt
 
     ${ec2-upload-bundle} \
-      -b "${context.bucket}/${image-name}" \
+      -b "${upload-context.bucket}/${ami-name}" \
       -d ${bundle} -m ${bundle}/nixos.img.manifest.xml \
-      -a "$AWS_ACCESS_KEY" -s "$AWS_SECRET_KEY" --region ${context.region}
+      -a "$AWS_ACCESS_KEY" -s "$AWS_SECRET_KEY" --region ${upload-context.region}
 
-    echo "${context.bucket}/${image-name}/nixos.img.manifest.xml" > $out
+    echo "${upload-context.bucket}/${ami-name}/nixos.img.manifest.xml" > $out
   '';
 
   register = pkgs.runCommand "ami-ec2-register-image" env ''
     set -o pipefail
 
     ${awscli} ec2 register-image \
-      --region "${context.region}" \
-      --name "${image-name}" \
-      --description "${image-name}" \
+      --region "${upload-context.region}" \
+      --name "${ami-name}" \
+      --description "${ami-name}" \
       --image-location "$(cat ${upload})" \
-      --virtualization-type "hvm" | ${pkgs.jq}/bin/jq -r .ImageId > $out || rm -f $out
+      --virtualization-type "hvm" | ${jq} -r .ImageId > $out || rm -f $out
     cat $out
   '';
 }

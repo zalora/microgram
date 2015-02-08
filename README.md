@@ -25,12 +25,4 @@ Zalora is using [NixOS](https://github.com/nixos/nixpkgs/tree/release-14.12) as 
 codebase for building AMIs and other image types for cloud provides, and Nix packages collection
 as the core package base.
 
-Zalora Platform includes an [optinionated base NixOS configuration](nixos/) (that used to be part of [Upcast](https://github.com/zalora/upcast))
-that has been used for AWS deployments for several months.
-
-```bash
-# builds a base AMI
-nix-build -A image nixos/ami.nix
-# builds a base VirtualBox image
-nix-build -A vbox nixos/ami.nix
-```
+* [nixos/](nixos/) - opinionated base NixOS configuration, used to be a part of [Upcast](https://github.com/zalora/upcast)

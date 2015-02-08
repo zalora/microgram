@@ -20,7 +20,7 @@ a novel interface to supersede NixOS modules. It uses a lot of metaprogramming a
 * [to-nix/ruby](to-nix/ruby) - Ruby packaging documentation and tools
 * [to-nix/python](to-nix/python) - Python packaging documentation and tools (previously known as python2nix)
 * [to-nix/haskell](to-nix/haskell) - Haskell packaging documentation for programs using Cabal
-* [to-nix/golang] - Go packaging documentation for Nix
+* [to-nix/golang](to-nix/golang) - Go packaging documentation for Nix
 * `to-nix/docker` - TBA (using lightweight docker images as a software delivery unit)
 
 ### NixOS

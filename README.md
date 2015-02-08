@@ -17,3 +17,4 @@ and [Upcast](https://github.com/zalora/upcast).
 * [to-nix/python](to-nix/python) - Python packaging documentation and tools (previously known as python2nix)
 * [to-nix/haskell](to-nix/haskell) - Haskell packaging documentation
 * `to-nix/golang` - TBA
+* `to-nix/docker` - TBA

@@ -34,7 +34,8 @@ rec {
     VBoxManage modifyvm "$vmName" \
       --memory 4096 --acpi on --vram 10 \
       --nictype1 virtio --nic1 nat \
-      --natpf1 "SSH,tcp,,2222,,22"
+      --natpf1 "SSH,tcp,,2222,,22" \
+      --natpf1 "Kibana,tcp,,9090,,9090"
 
     VBoxManage storagectl "$vmName" --name SATA --add sata \
       --portcount 30 --hostiocache on --bootable on

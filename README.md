@@ -17,4 +17,20 @@ and [Upcast](https://github.com/zalora/upcast).
 * [to-nix/python](to-nix/python) - Python packaging documentation and tools (previously known as python2nix)
 * [to-nix/haskell](to-nix/haskell) - Haskell packaging documentation
 * `to-nix/golang` - TBA
-* `to-nix/docker` - TBA
+* `to-nix/docker` - TBA (using lightweight docker images as a software delivery unit)
+
+### NixOS
+
+Zalora is using [NixOS](https://github.com/nixos/nixpkgs/tree/release-14.12) as the core
+codebase for building AMIs and other image types for cloud provides, and Nix packages collection
+as the core package base.
+
+Zalora Platform includes an [optinionated base NixOS configuration](nixos/) (that used to be part of [Upcast](https://github.com/zalora/upcast))
+that has been used for AWS deployments for several months.
+
+```bash
+# builds a base AMI
+nix-build -A image nixos/ami.nix
+# builds a base VirtualBox image
+nix-build -A vbox nixos/ami.nix
+```

@@ -8,8 +8,12 @@ EC2, managed hosting environments, etc).
 
 Zalora Platform uses Nix for expressing deployment topologies and packaging software
 using the [Nix package manager](http://nixos.org/nix/).
-Other platform-related work is available as [Defnix](https://github.com/zalora/defnix)
-and [Upcast](https://github.com/zalora/upcast).
+
+Other platform-related projects are:
+
+* [Defnix](https://github.com/zalora/defnix) - aims to replace some core NixOS components that were not designed for our use cases and provides
+a novel interface to supersede NixOS modules. It uses a lot of metaprogramming and [nix-exec](https://github.com/shlevy/nix-exec) for running effectful nix builds.
+* [Upcast](https://github.com/zalora/upcast) - provides AWS infrastructure provisioning (insipired by NixOps but decoupling infrastructure from software) and tooling that extends nix-build.
 
 ### Packaging software
 

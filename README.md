@@ -17,6 +17,10 @@ using the [Nix package manager](http://nixos.org/nix/).
 * [to-nix/golang](to-nix/golang) - Go packaging documentation for Nix
 * `to-nix/docker` - TBA (using lightweight docker images as a software delivery unit)
 
+### Utility scripts
+
+* [bin/](bin) - Lightweight nix related tooling
+
 ### NixOS
 
 Zalora is using [NixOS](https://github.com/nixos/nixpkgs/tree/release-14.12) as the core

@@ -19,7 +19,7 @@ in
 , ... }:
 
 let
-  inherit (lib) listToAttrs map nameValuePair;
+  inherit (lib) listToAttrs nameValuePair;
 
   env =
     let

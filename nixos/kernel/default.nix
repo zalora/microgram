@@ -17,7 +17,7 @@ rec {
       cp -v ${kernel}/${mod}/modules.* $out/${mod}/
 
       # include modules selected by ubuntu guys
-      bash ${./kernel/module-inclusion} {${kernel},$out}/${mod}/kernel ${./kernel/generic.inclusion-list}
+      bash ${./module-inclusion} {${kernel},$out}/${mod}/kernel ${./generic.inclusion-list}
     '' + pkgs.lib.optionalString exclude ''
       # exclude virtual-flavor modules selected by ubuntu guys
       find $out/${mod} -type f | awk '
@@ -29,6 +29,6 @@ rec {
         FILENAME!="-" {
           rm[$1] = $1;
         }
-        ' ${./kernel/exclude.amd64-virtual} - | xargs -t rm
+        ' ${./exclude.amd64-virtual} - | xargs -t rm
   '');
 }

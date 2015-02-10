@@ -1,10 +1,6 @@
 { config, lib, pkgs, ... }:
-with lib;
 let
-  cloudDefault = mkOverride 999;
-
-  inherit (import ./kernel.nix { inherit pkgs; }) cleanLinux;
-  cloudKernel = pkgs.linuxPackages_3_18 // { kernel = cleanLinux pkgs.linux_3_18 true; };
+  inherit (lib) concatStringsSep mapAttrsToList mkOverride mkOption types optionalString;
 
   base64 = "${pkgs.coreutils}/bin/base64";
   jq = "/usr/bin/env LD_LIBRARY_PATH=${pkgs.jq}/lib ${pkgs.jq}/bin/jq";
@@ -17,19 +13,21 @@ let
   bash = "${pkgs.bash}/bin/bash";
   xargs = "${pkgs.findutils}/bin/xargs";
 
-  hostname-script = ''
-    set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname)
-    echo setting hostname from EC2 metadata: $1
-    ${hostname} $1
-  '';
-
   register-hostname = {
     zoneId, zone, iamCredentialName,
     useLocalHostname, prefix ? if useLocalHostname then "local" else "public"
   }: pkgs.writeScript "ec2-register-hostname" ''
-    ${ip} route delete blackhole 169.254.169.254 2>/dev/null || true
-
     date=$(${curl} -I https://route53.amazonaws.com/date | ${awk} '/^Date: / {sub("Date: ", "", $0); sub("\\r", "", $0); print $0}')
+
+    iam="${iamCredentialName}"
+    if [ -z "$iam" ]; then
+      # autodetect
+      set -- $(${curl} http://169.254.169.254/latest/meta-data/iam/security-credentials/ 2>/dev/null | head -1)
+      iam="$1"
+      if [ -z "$iam" ]; then
+        exit 1
+      fi
+    fi
 
     set -- $(${wget} http://169.254.169.254/latest/meta-data/iam/security-credentials/${iamCredentialName} \
               | ${jq} -r '.SecretAccessKey, .AccessKeyId, .Token')
@@ -67,56 +65,89 @@ let
 
     echo
     exit 0
-  '';
+ '';
 
-  cfg = config.ec2;
+  ec2-autohostname = ''
+    ${ip} route delete blackhole 169.254.169.254 2>/dev/null || true
 
-  run-register-hostnames = ''
+    # applying the hostname from UserData if any:
+    set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname)
+    if [ -z $1 ]; then
+      echo "current hostname: $(${hostname})"
+    else
+      echo "setting hostname from EC2 user-data: '$1'"
+      ${hostname} $1
+    fi
+
+    # registering route 53 hostnames if any:
     echo ${concatStringsSep " " (
-        mapAttrsToList (zone: args: register-hostname {
-         inherit zone;
+        mapAttrsToList (_: args: register-hostname {
+         zone = args.name;
          inherit (args) zoneId iamCredentialName useLocalHostname;
-       }) cfg.route53RegisterHostname)} | ${xargs} -n1 -P6 ${bash}
-  '';
+       }) config.ec2.route53RegisterHostname)} | ${xargs} -n1 -P6 ${bash}
 
+    ${optionalString (!config.ec2.metadata) ''
+    ip route add blackhole 169.254.169.254/32
+    ''}
+  '';
 in
 {
-  imports = [
-    ./amazon-image.nix
-    ./default-config.nix
-  ];
-
   options = {
     ec2.route53RegisterHostname = mkOption {
       type = types.attrsOf (types.submodule ({ lib, name, ... }: with lib; {
         options = {
-          zoneId = mkOption { type = types.string; example = "ZOZONEZONEZONE"; };
-          iamCredentialName = mkOption { type = types.string; example = "doge-iam-dns-profile"; };
-          useLocalHostname = mkOption { type = types.bool; default = false; }; 
+          name = mkOption {
+            type = types.string;
+            default = name;
+            description = ''
+              Route53 Hosted Domain Name (can be a sub-domain of a more high-level domain name).
+            '';
+          };
+
+          zoneId = mkOption {
+            type = types.string;
+            example = "ZOZONEZONEZONE";
+            description = ''
+              Route53 Hosted Zone ID for the domain specified in name;
+            '';
+          };
+
+          iamCredentialName = mkOption {
+            type = types.string;
+            example = "doge-iam-dns-profile";
+            default = "";
+            description = ''
+              Instance IAM Role name. Leave empty to autodetect.
+            '';
+          };
+
+          useLocalHostname = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              CNAMEs to the internal hostname. Useful when doing VPC tunneling.
+            '';
+          }; 
         };
       }));
+
       default = {};
     };
   };
 
   config = {
-    nixpkgs.system = mkOverride 900 "x86_64-linux";
-    boot.kernelPackages = cloudKernel;
+    system.activationScripts = {
+      inherit ec2-autohostname;
+    };
 
-    #boot.loader.grub.extraPerEntryConfig = mkIf isEc2Hvm ( mkOverride 10 "root (hd0,0)" );
-
-    ec2.metadata = mkOverride 999 true;
-
-    system.activationScripts.ec2-apply-hostname = hostname-script + run-register-hostnames;
-
-    systemd.services.ec2-apply-hostname = {
+    systemd.services.ec2-autohostname = {
       description = "EC2: apply dynamic hostname";
 
       wantedBy = [ "multi-user.target" "sshd.service" ];
       before = [ "sshd.service" ];
       after = [ "fetch-ec2-data.service" ];
 
-      script = hostname-script + run-register-hostnames;
+      script = ec2-autohostname;
 
       serviceConfig.Type = "oneshot";
       serviceConfig.RemainAfterExit = true;

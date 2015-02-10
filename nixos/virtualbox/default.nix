@@ -7,7 +7,7 @@ in
 {
   require = [
     <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
-    ./default-config.nix
+    <platform/nixos/cloud-config.nix>
   ];
 
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];

@@ -2,7 +2,7 @@ let
   nixos = modules:
     let
       hvm-config = { config, ... }: {
-        imports = [ <platform/nixos/env-ec2.nix> ] ++ modules;
+        imports = [ <platform/nixos/ec2> ] ++ modules;
         ec2.hvm = true; # pv is almost past :)
       };
     in (import <platform/nixos> { configuration = hvm-config; });

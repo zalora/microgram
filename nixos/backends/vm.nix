@@ -2,7 +2,7 @@ let
   nixos = modules:
     import <platform/nixos> {
       configuration = { config, ...}: {
-        imports = [ <platform/nixos/env-virtualbox.nix> ] ++ modules;
+        imports = [ <platform/nixos/virtualbox> ] ++ modules;
       };
     };
 in

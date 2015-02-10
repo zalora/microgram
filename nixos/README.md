@@ -1,10 +1,10 @@
 ## NixOS Images
 
 Opinionated base NixOS configuration suitable for cloud deployments
-based on [EC2 instance-store instances](env-ec2.nix)
-and [VirtualBox](env-virtualbox.nix) for development/testing.
+based on [EC2 instance-store instances](ec2/)
+and [VirtualBox](virtualbox/) for development/testing (also tested with VMWare Fusion).
 
-Quick start (you need `<nixpkgs>` in your `$NIX_PATH` to build this)
+Quick start (you need `<nixpkgs>` in your `$NIX_PATH` to build this, tested with `release-14.12` branch)
 
 Build a NixOS nix package (also known as toplevel system closure) locally:
 

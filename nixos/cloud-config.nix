@@ -14,6 +14,9 @@ in
   time.timeZone = cloudDefault "UTC";
   i18n.supportedLocales = cloudDefault ["en_US.UTF-8/UTF-8"];
 
+  nix.readOnlyStore = true;
+  nix.trustedBinaryCaches = [ "http://hydra.nixos.org" ];
+
   services.openssh.enable = cloudDefault true;
   services.openssh.passwordAuthentication = cloudDefault false;
   services.openssh.challengeResponseAuthentication = cloudDefault false;

@@ -34,6 +34,10 @@ in
   boot.tmpOnTmpfs = cloudDefault true;
   boot.cleanTmpDir = cloudDefault true;
 
+  environment.systemPackages = [ config.boot.kernelPackages.sysdig ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.sysdig ];                                                               
+  boot.kernelModules = [ "sysdig-probe" ];
+
   boot.kernel.sysctl = {
     # allows control of core dumps with systemd-coredumpctl
     "kernel.core_pattern" = cloudDefault "|${pkgs.systemd}/lib/systemd/systemd-coredump %p %u %g %s %t %e";

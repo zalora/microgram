@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }: with lib;
 let
   cloudDefault = mkOverride 900;
+
+  fd-limit.soft = "262140";
+  fd-limit.hard = "524280";
+  core-limit = "1048576"; # one gigabyte
 in
 {
   # usually covered by things like security groups
@@ -22,16 +26,17 @@ in
   services.openssh.challengeResponseAuthentication = cloudDefault false;
 
   security.polkit.enable = cloudDefault false;
-  security.pam.loginLimits = [ # login sessions only, not systemd
-    { domain = "*"; type = "hard"; item = "core"; value = "1048576"; }
-    { domain = "*"; type = "soft"; item = "core"; value = "1048576"; } # one gigabyte
+  security.pam.loginLimits = [ # login sessions only, not systemd services
+    { domain = "*"; type = "hard"; item = "core"; value = core-limit; }
+    { domain = "*"; type = "soft"; item = "core"; value = core-limit; }
 
-    { domain = "*"; type = "soft"; item = "nofile"; value = "262140"; }
-    { domain = "*"; type = "hard"; item = "nofile"; value = "524280"; }
+    { domain = "*"; type = "soft"; item = "nofile"; value = fd-limit.soft; }
+    { domain = "*"; type = "hard"; item = "nofile"; value = fd-limit.hard; }
   ];
 
   systemd.extraConfig = ''
-    DefaultLimitCORE=1048576
+    DefaultLimitCORE=${core-limit}
+    DefaultLimitNOFILE=${fd-limit.soft}
   '';
 
   boot.tmpOnTmpfs = cloudDefault true;
@@ -45,7 +50,7 @@ in
     # allows control of core dumps with systemd-coredumpctl
     "kernel.core_pattern" = cloudDefault "|${pkgs.systemd}/lib/systemd/systemd-coredump %p %u %g %s %t %e";
 
-    "fs.file-max" = cloudDefault "524280";
+    "fs.file-max" = cloudDefault fd-limit.hard;
 
     # moar ports
     "net.ipv4.ip_local_port_range" = cloudDefault "10000 65000";

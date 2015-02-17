@@ -42,7 +42,10 @@ in
   boot.tmpOnTmpfs = cloudDefault true;
   boot.cleanTmpDir = cloudDefault true;
 
-  environment.systemPackages = [ config.boot.kernelPackages.sysdig ];
+  environment.systemPackages = [
+    config.boot.kernelPackages.sysdig
+    config.boot.kernelPackages.perf
+  ];
   boot.extraModulePackages = [ config.boot.kernelPackages.sysdig ];                                                               
   boot.kernelModules = [ "sysdig-probe" ];
 

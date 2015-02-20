@@ -15,14 +15,6 @@ in
   ];
 
   options = {
-    ec2 = {
-      hvm = mkOption {
-        default = true;
-        description = ''
-          Whether the EC2 instance is a HVM instance.
-        '';
-      };
-    };
   };
 
   config = {

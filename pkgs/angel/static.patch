@@ -1,0 +1,13 @@
+diff --git a/angel.cabal b/angel.cabal
+index d996f44..8439f9b 100644
+--- a/angel.cabal
++++ b/angel.cabal
+@@ -96,7 +96,7 @@ Executable angel
+ 
+   Extensions: OverloadedStrings,ScopedTypeVariables,BangPatterns,ViewPatterns
+   
+-  Ghc-Options: -threaded -fwarn-missing-import-lists
++  Ghc-Options: -threaded -fwarn-missing-import-lists -static
+ 
+ test-suite spec
+   Type:           exitcode-stdio-1.0

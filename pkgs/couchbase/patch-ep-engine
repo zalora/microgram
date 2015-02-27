@@ -1,0 +1,36 @@
+diff --git a/ep-engine/management/dbconvert.cc b/ep-engine/management/dbconvert.cc
+index bfb84c6..b6e7635 100644
+--- a/ep-engine/management/dbconvert.cc
++++ b/ep-engine/management/dbconvert.cc
+@@ -10,6 +10,7 @@
+ #ifdef HAVE_SYSEXITS_H
+ #include <sysexits.h>
+ #endif
++#include <unistd.h>
+ 
+ #include <memcached/engine.h>
+ 
+diff --git a/ep-engine/memory_tracker.cc b/ep-engine/memory_tracker.cc
+index 62a2af8..cdbdb7c 100644
+--- a/ep-engine/memory_tracker.cc
++++ b/ep-engine/memory_tracker.cc
+@@ -15,6 +15,7 @@
+  *   limitations under the License.
+  */
+ 
++#include <unistd.h>
+ #include "memory_tracker.hh"
+ 
+ #include "objectregistry.hh"
+diff --git a/ep-engine/stored-value.hh b/ep-engine/stored-value.hh
+index cd64083..e0e76f1 100644
+--- a/ep-engine/stored-value.hh
++++ b/ep-engine/stored-value.hh
+@@ -2,6 +2,7 @@
+ #ifndef STORED_VALUE_H
+ #define STORED_VALUE_H 1
+ 
++#include <unistd.h>
+ #include <climits>
+ #include <cstring>
+ #include <algorithm>

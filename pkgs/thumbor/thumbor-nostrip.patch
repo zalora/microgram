@@ -1,0 +1,55 @@
+diff --git a/thumbor/handlers/__init__.py b/thumbor/handlers/__init__.py
+index 953d129..ee1f86a 100644
+--- a/thumbor/handlers/__init__.py
++++ b/thumbor/handlers/__init__.py
+@@ -36,6 +36,9 @@ CONTENT_TYPE = {
+ 
+ 
+ class BaseHandler(tornado.web.RequestHandler):
++    DIRTY_PROTOCOL = 'http:/static'
++    CLEAN_PROTOCOL = 'http://static'
++
+     def _error(self, status, msg=None):
+         self.set_status(status)
+         if msg is not None:
+@@ -87,8 +90,13 @@ class BaseHandler(tornado.web.RequestHandler):
+ 
+             after_transform_cb = functools.partial(self.after_transform, self.context)
+             Transformer(self.context).transform(after_transform_cb)
++        image_url = self.sanitize(self.context.request.image_url)
++        self._fetch(image_url, self.context.request.extension, callback)
+ 
+-        self._fetch(self.context.request.image_url, self.context.request.extension, callback)
++    def sanitize(self, url):
++        if url.find(self.DIRTY_PROTOCOL) > -1:
++            return url.replace(self.DIRTY_PROTOCOL, self.CLEAN_PROTOCOL)
++        return url
+ 
+     def normalize_crops(self, normalized, req, engine):
+         new_crops = None
+diff --git a/thumbor/handlers/imaging.py b/thumbor/handlers/imaging.py
+index 8eb75d3..3e29881 100644
+--- a/thumbor/handlers/imaging.py
++++ b/thumbor/handlers/imaging.py
+@@ -25,16 +25,17 @@ class ImagingHandler(ContextHandler):
+         if self.context.modules.storage.exists(kw['image'][:32]):
+             kw['image'] = kw['image'][:32]
+ 
+-        url = self.request.uri
+-
+-        if not self.validate(kw['image']):
++        url = self.sanitize(self.request.uri)
++        
++        image_url = self.sanitize(kw['image'])
++        if not self.validate(image_url):
+             self._error(404, 'No original image was specified in the given URL')
+             return
+ 
+         kw['request'] = self.request
+ 
+         self.context.request = RequestParameters(**kw)
+-
++        self.context.request.image_url = self.sanitize(self.context.request.image_url)
+         has_none = not self.context.request.unsafe and not self.context.request.hash
+         has_both = self.context.request.unsafe and self.context.request.hash
+ 

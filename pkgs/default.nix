@@ -64,7 +64,12 @@ in rec {
     };
   };
 
-  ImageMagick = pkgs.callPackage ./ImageMagick {};
+  imagemagick = pkgs.callPackage ./ImageMagick {
+    libX11 = null;
+    ghostscript = null;
+    tetex = null;
+    librsvg = null;
+  };
 
   mariadb = pkgs.callPackage ./mariadb {};
 

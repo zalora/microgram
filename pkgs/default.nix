@@ -46,6 +46,11 @@ in rec {
 
   graphviz = pkgs.callPackage ./graphviz {};
 
+  heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
+    inherit boto;
+    inherit gcs-oauth2-boto-plugin;
+  };
+
   helper = pythonPackages.buildPythonPackage rec {
     name = "helper-2.4.1";
 

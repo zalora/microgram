@@ -49,6 +49,7 @@ in rec {
   heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
     inherit boto;
     inherit gcs-oauth2-boto-plugin;
+    inherit sqlite3;
   };
 
   helper = pythonPackages.buildPythonPackage rec {

@@ -4,31 +4,40 @@ import requests
 from python2nix import pip_deps
 
 PACKAGE = """\
-  {name_only} = pythonPackages.buildPythonPackage rec {{
-    name = "{name}";
+{{ {args_str} }}:
 
-    src = fetchurl {{
-      url = "{url}";
-      md5 = "{md5}";
-    }};
+buildPythonPackage rec {{
 
-    propagatedBuildInputs = with pythonPackages; [ {inputs} ];
+  name = "{name}";
 
-    meta = with stdenv.lib; {{
-      description = "{description}";
-      homepage = {homepage};
-      license = {license};
-    }};
+  src = fetchurl {{
+    url = "{url}";
+    md5 = "{md5}";
   }};
 
-"""
+  propagatedBuildInputs = [ {inputs_str} ];
+
+  meta = with stdenv.lib; {{
+    description = "{description}";
+    homepage = {homepage};
+    license = {license};
+  }};
+}}"""
 
 LICENSE_MAP = {
-    'http://www.opensource.org/licenses/mit-license.php': 'licenses.mit',
-    'http://www.apache.org/licenses/LICENSE-2.0': 'licenses.asl20',
+    'APL2': 'licenses.asl20',
+    'ASL 2': 'licenses.asl20',
+    'Apache 2.0': 'licenses.asl20',
+    'BSD License': 'licenses.bsd',
+    'BSD or Apache License, Version 2.0': 'licenses.bsd',
+    'BSD': 'licenses.bsd',
+    'MIT License': 'licenses.mit',
+    'MIT license': 'licenses.mit',
     'MIT': 'licenses.mit',
+    'PSF or ZPL': 'licenses.psfl',
     'PSF': 'licenses.psfl',
-    'BSD': 'licenses.bsd'
+    'http://www.apache.org/licenses/LICENSE-2.0': 'licenses.asl20',
+    'http://www.opensource.org/licenses/mit-license.php': 'licenses.mit',
 }
 
 _missing = object()
@@ -59,13 +68,7 @@ def build_inputs(name):
             v = adict.get(name)
         return v
 
-    def vsn(name):
-        vsn = get_workaround(vsns, name)
-        if vsn:
-            vsn = "-" + vsn.replace('.', '-')
-        return vsn or ''
-
-    return [name.lower() + vsn(name) for name, specs in get_workaround(reqs, name)]
+    return [name.lower() for name, specs in get_workaround(reqs, name)]
 
 def package_to_info(package):
     url = "https://pypi.python.org/pypi/{}/json".format(package)
@@ -77,11 +80,11 @@ def package_to_info(package):
         raise e
 
 def info_to_expr(info):
-    name_only = info['info']['name'].lower()
-    version = info['info']['version']
-
-    name = name_only + "-" + version
-    inputs = ' '.join(build_inputs(name_only))
+    name = info['info']['name'].lower()
+    inputs = build_inputs(name)
+    inputs_str = ' '.join(build_inputs(name))
+    args = [ 'buildPythonPackage', 'fetchurl', 'stdenv' ] + inputs
+    args_str = ', '.join(args)
 
     url = None
     md5 = None
@@ -95,7 +98,7 @@ def info_to_expr(info):
       raise Exception('No download url found :-(')
 
     description = info['info']['description'].split('\n')[0]
-    homepage = info['info']['home_page']
+    homepage = info['info']['home_page'] or '""'
     license = guess_license(info)
 
     return PACKAGE.format(**locals())

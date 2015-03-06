@@ -58,7 +58,7 @@ in
     "fs.file-max" = cloudDefault fd-limit.hard;
 
     # moar ports
-    "net.ipv4.ip_local_port_range" = cloudDefault "10000 65000";
+    "net.ipv4.ip_local_port_range" = cloudDefault "10000 65535";
 
     # should be the default, really
     "net.ipv4.tcp_slow_start_after_idle" = cloudDefault "0";
@@ -77,6 +77,11 @@ in
     #"net.core.optmem_max" = cloudDefault "40960";
     #"net.ipv4.tcp_rmem" = cloudDefault "4096 87380 16777216";
     #"net.ipv4.tcp_wmem" = cloudDefault "4096 65536 16777216";
+
+    "net.ipv4.tcp_max_syn_backlog" = cloudDefault "8096";
+
+    # read http://vincent.bernat.im/en/blog/2014-tcp-time-wait-state-linux.html
+    "net.ipv4.tcp_tw_reuse" = cloudDefault "1";
 
     # vm
     #"vm.overcommit_memory" = lib.mkDefault "2"; # no overcommit

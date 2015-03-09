@@ -4,8 +4,8 @@
 
 cabal.mkDerivation (self: {
   pname = "angel";
-  version = "0.5.0";
-  sha256 = "15871cxzi6m453fndv49zljansfpaggzriq32c1kdby72ivcf968";
+  version = "0.5.1";
+  sha256 = "1ag5bpwfmshcwhycp12ywqvhf4d1fdfs9haawzhawnjpcm5h2hha";
   isLibrary = false;
   isExecutable = true;
   buildDepends = [
@@ -14,7 +14,7 @@ cabal.mkDerivation (self: {
   testDepends = [
     configurator hspec mtl stm text time unorderedContainers
   ];
-  patches = [ ./static.patch ];
+  patches = [ ./static.patch ./less-logs.patch ];
   meta = {
     homepage = "http://github.com/MichaelXavier/Angel";
     description = "Process management and supervision daemon";

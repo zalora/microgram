@@ -77,6 +77,8 @@ in rec {
     librsvg = null;
   };
 
+  jenkins = pkgs.callPackage ./jenkins {};
+
   mariadb = pkgs.callPackage ./mariadb {};
 
   memcached-tool = pkgs.writeScriptBin "memcached-tool" ''

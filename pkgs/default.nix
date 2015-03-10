@@ -93,20 +93,13 @@ in rec {
     sha256 = "1ssr7si7cbd1wg39lkgsi0nxnh5k0xjsbcjsnn33jm2khx7q0cji";
   };
 
-  newrelic-memcached-plugin = pkgs.runCommand "newrelic_memcached-plugin-2.0.0" rec {
-    name = "newrelic_memcached_plugin-2.0.0";
-    src = pkgs.srcOnly {
-      inherit name;
-      src = pkgs.fetchurl {
-        url = "https://github.com/newrelic-platform/newrelic_memcached_java_plugin/archive/2.0.0.tar.gz";
-        sha256 = "1qlajci2qp37d8qkaaqhv90zqs2nya3xv79nw73z3w9589s5l529";
-      };
+  newrelic-memcached-plugin = pkgs.srcOnly rec {
+    name = "newrelic_memcached_plugin-2.0.1";
+    src = pkgs.fetchurl {
+      url = "https://github.com/newrelic-platform/newrelic_memcached_java_plugin/raw/master/dist/${name}.tar.gz";
+      sha256 = "16kyb42as8plabbfv8v3vhp6hjzxw1ry80ghf2zbkg0v4s1r5m6w";
     };
-  } ''
-    mkdir -p $out
-    tar xvzf $src/dist/$name.tar.gz $name
-    mv $name/* $out/
-  '';
+  };
 
   newrelic-mysql-plugin = pkgs.srcOnly rec {
     name = "newrelic_mysql_plugin-2.0.0";

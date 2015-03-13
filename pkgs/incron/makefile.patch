@@ -1,0 +1,32 @@
+diff -ur incron-0.5.10.orig/Makefile incron-0.5.10/Makefile
+--- incron-0.5.10.orig/Makefile	2012-04-07 00:19:27.000000000 +0200
++++ incron-0.5.10/Makefile	2015-03-13 14:07:34.387856335 +0100
+@@ -1,15 +1,11 @@
+ 
+-PREFIX = /usr/local
+-USERDATADIR = /var/spool/incron
+-SYSDATADIR = /etc/incron.d
++PREFIX = $(out)
+ CFGDIR = /etc
+ MANPATH = $(PREFIX)/share/man
+ RELEASE = incron-`cat VERSION`
+ RELEASEDIR = /tmp/$(RELEASE)
+ DOCDIR = $(PREFIX)/share/doc/$(RELEASE)/
+ 
+-USER = root
+-
+ CXX ?= g++
+ INSTALL = install
+ 
+@@ -48,10 +44,8 @@
+ 	$(INSTALL) -m 0755 -d $(DESTDIR)$(PREFIX)/bin/
+ 	$(INSTALL) -m 0755 -d $(DESTDIR)$(PREFIX)/sbin/
+ 	$(INSTALL) -m 0755 -d $(DESTDIR)$(DOCDIR)/
+-	$(INSTALL) -m 04755 -o $(USER) incrontab $(DESTDIR)$(PREFIX)/bin/
++	$(INSTALL) -m 04755 incrontab $(DESTDIR)$(PREFIX)/bin/
+ 	$(INSTALL) -m 0755 incrond $(DESTDIR)$(PREFIX)/sbin/
+-	$(INSTALL) -m 0755 -o $(USER) -d $(DESTDIR)$(USERDATADIR)
+-	$(INSTALL) -m 0755 -o $(USER) -d $(DESTDIR)$(SYSDATADIR)
+ 	$(INSTALL) -m 0644 incron.conf.example $(DESTDIR)$(DOCDIR)/
+ 
+ install-man:	incrontab.1 incrontab.5 incrond.8 incron.conf.5

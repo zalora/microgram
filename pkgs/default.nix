@@ -77,6 +77,8 @@ in rec {
     librsvg = null;
   };
 
+  incron = pkgs.callPackage ./incron {};
+
   jenkins = pkgs.callPackage ./jenkins {};
 
   mariadb = pkgs.callPackage ./mariadb {};

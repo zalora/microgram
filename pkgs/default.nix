@@ -148,4 +148,10 @@ in rec {
   };
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
+
+  waiAppStatic = pkgs.haskellPackages.callPackage ./wai-app-static {};
+  servant = pkgs.haskellPackages.callPackage ./servant {};
+  servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
+  servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
+  myrapi = pkgs.haskellPackages.callPackage ./myrapi { inherit servant servantClient; };
 }

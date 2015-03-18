@@ -29,6 +29,15 @@ let
       security.grsecurity = stub;
       users.ldap = stub;
       krb5 = stub;
+      powerManagement = stub;
+      security.pam.usb = stub;
+      boot.isContainer = lib.mkOption { default = false; };
+    };
+    config = {
+      powerManagement.enable = false;
+      powerManagement.resumeCommands = "";
+      powerManagement.powerUpCommands = "";
+      powerManagement.powerDownCommands = "";
     };
   };
 

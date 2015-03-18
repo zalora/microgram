@@ -11,7 +11,6 @@ in
   networking.firewall.enable = cloudDefault false;
 
   # likely not needed on a cloud box
-  services.udisks2.enable = cloudDefault false;
   environment.noXlibs = cloudDefault true;
 
   time.timeZone = cloudDefault "UTC";
@@ -24,7 +23,6 @@ in
   services.openssh.passwordAuthentication = cloudDefault false;
   services.openssh.challengeResponseAuthentication = cloudDefault false;
 
-  security.polkit.enable = cloudDefault false;
   security.pam.loginLimits = [ # login sessions only, not systemd services
     { domain = "*"; type = "hard"; item = "core"; value = core-limit; }
     { domain = "*"; type = "soft"; item = "core"; value = core-limit; }

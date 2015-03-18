@@ -7,6 +7,7 @@ in
 {
   require = [
     <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
+    <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
     <platform/nixos/cloud-config.nix>
   ];
 

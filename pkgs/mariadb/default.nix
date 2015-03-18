@@ -30,6 +30,7 @@ stdenv.mkDerivation rec {
     sed -i -e "s|/usr/bin/libtool|libtool|" cmake/libutils.cmake
   '';
   postInstall = ''
+    sed -i -e "s|-lssl|-L${openssl}/lib -lssl|g" $out/bin/mysql_config
     sed -i -e "s|basedir=\"\"|basedir=\"$out\"|" $out/bin/mysql_install_db
     rm -rf $out/mysql-test $out/sql-bench
   '';

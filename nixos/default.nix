@@ -1,11 +1,36 @@
 { configuration
 , system ? "x86_64-linux"
-, modfilter ? (x: x != <nixpkgs/nixos/modules/programs/info.nix>)
 }:
 
 let
   eval-config = import <nixpkgs/nixos/lib/eval-config.nix>;
-  baseModules = builtins.filter modfilter (import <nixpkgs/nixos/modules/module-list.nix>);
+  baseModules = [stub-module] ++ import <platform/nixos/vendor-module-list.nix>;
+
+  lib = import <nixpkgs/lib>;
+
+  stub = with lib; mkOption {
+    type = types.attrsOf types.unspecified;
+    default = {
+      enable = false;
+      nssmdns = false;
+      nsswins = false;
+      syncPasswordsByPam = false;
+      isContainer = false;
+    };
+  };
+
+  stub-module = {
+    options = {
+      services.xserver = stub;
+      services.bind = stub;
+      services.dnsmasq = stub;
+      services.avahi = stub;
+      services.samba = stub;
+      security.grsecurity = stub;
+      users.ldap = stub;
+      krb5 = stub;
+    };
+  };
 
   eval = eval-config {
     inherit system baseModules;

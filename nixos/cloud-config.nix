@@ -24,8 +24,6 @@ in
   services.openssh.passwordAuthentication = cloudDefault false;
   services.openssh.challengeResponseAuthentication = cloudDefault false;
 
-  services.ntp.enable = cloudDefault false; # usually handled by the hypervisor
-
   security.polkit.enable = cloudDefault false;
   security.pam.loginLimits = [ # login sessions only, not systemd services
     { domain = "*"; type = "hard"; item = "core"; value = core-limit; }

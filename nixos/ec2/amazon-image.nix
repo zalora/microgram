@@ -10,7 +10,7 @@ let
 in
 {
   imports = [
-    <nixpkgs/nixos/modules/profiles/headless.nix>
+    #<nixpkgs/nixos/modules/profiles/headless.nix> # incorporated into cloud-config.nix
     <nixpkgs/nixos/modules/virtualisation/ec2-data.nix>
   ];
 

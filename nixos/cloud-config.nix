@@ -11,7 +11,6 @@ in
   networking.firewall.enable = cloudDefault false;
 
   # likely not needed on a cloud box
-  services.nixosManual.enable = cloudDefault false;
   services.udisks2.enable = cloudDefault false;
   environment.noXlibs = cloudDefault true;
 

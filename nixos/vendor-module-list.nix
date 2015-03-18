@@ -31,12 +31,9 @@
   <nixpkgs/nixos/modules/security/sudo.nix>
   <nixpkgs/nixos/modules/services/hardware/udev.nix>
   <nixpkgs/nixos/modules/services/hardware/udisks2.nix>
-  <nixpkgs/nixos/modules/services/logging/logrotate.nix>
-  <nixpkgs/nixos/modules/services/logging/syslog-ng.nix>
   <nixpkgs/nixos/modules/services/misc/nix-daemon.nix>
   <nixpkgs/nixos/modules/services/misc/nix-gc.nix>
   <nixpkgs/nixos/modules/services/misc/nix-ssh-serve.nix>
-  <nixpkgs/nixos/modules/services/misc/nixos-manual.nix>
   <nixpkgs/nixos/modules/services/networking/dhcpcd.nix>
   <nixpkgs/nixos/modules/services/networking/firewall.nix>
   <nixpkgs/nixos/modules/services/networking/ntpd.nix>

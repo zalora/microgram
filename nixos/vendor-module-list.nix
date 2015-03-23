@@ -22,6 +22,7 @@
   <nixpkgs/nixos/modules/programs/shadow.nix>
   <nixpkgs/nixos/modules/programs/shell.nix>
   <nixpkgs/nixos/modules/programs/ssh.nix>
+  <nixpkgs/nixos/modules/security/ca.nix>
   <nixpkgs/nixos/modules/security/pam.nix>
   <nixpkgs/nixos/modules/security/setuid-wrappers.nix>
   <nixpkgs/nixos/modules/security/sudo.nix>

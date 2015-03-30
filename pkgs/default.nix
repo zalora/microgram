@@ -161,9 +161,9 @@ in rec {
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 
-  put-metric = pkgs.runCommand "${aws-ec2.name}-put-metric" {} ''
+  put-metric = pkgs.runCommand "${awsEc2.name}-put-metric" {} ''
     mkdir -p $out/bin
-    cp ${aws-ec2}/bin/put-metric $out/bin
+    cp ${awsEc2}/bin/put-metric $out/bin
   '';
 
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
@@ -175,6 +175,10 @@ in rec {
   sproxy = fns.staticHaskellCallPackage ./sproxy {};
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
+
+  upcast = pkgs.haskellPackages.callPackage ./upcast {
+    inherit awsEc2 vkPosixPty vkAwsRoute53;
+  };
 
   #
   # python libraries
@@ -222,10 +226,12 @@ in rec {
   # haskell libraries
   #
 
-  aws-ec2 = pkgs.haskellPackages.callPackage ./aws-ec2 {};
+  awsEc2 = pkgs.haskellPackages.callPackage ./aws-ec2 {};
   servant = pkgs.haskellPackages.callPackage ./servant {};
   servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
   servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
+  vkAwsRoute53 = pkgs.haskellPackages.callPackage ./vk-aws-route53 {};
+  vkPosixPty = pkgs.haskellPackages.callPackage ./vk-posix-pty {};
   waiAppStatic = pkgs.haskellPackages.callPackage ./wai-app-static {};
 
   #

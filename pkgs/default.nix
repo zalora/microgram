@@ -165,6 +165,8 @@ in rec {
 
   solr = pkgs.callPackage ./solr {};
 
+  sproxy = fns.staticHaskellCallPackage ./sproxy {};
+
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
 
   #

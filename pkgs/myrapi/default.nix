@@ -3,10 +3,6 @@
 , time, transformers, fetchgit
 }:
 
-let
-  inherit (import <eris/lib>) git-repo-filter;
-in
-
 cabal.mkDerivation (self: {
   pname = "myrapi";
   version = "0.1.0.0";

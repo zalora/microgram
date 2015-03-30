@@ -26,10 +26,10 @@ let
             enableSharedLibraries = false;
           };
         });
+      in pkgs.runCommand "${orig.name}-static" {} ''
         # dangerous
-      in pkgs.runCommand "${orig.name}-stripped" {} ''
         mkdir -p $out
-        find ${orig} -maxdepth 1 -mindepth 1 '!' -name nix-support | xargs -I% cp -R % $out
+        (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -t -I% cp -r --parents % $out)
       '';
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {

@@ -168,6 +168,8 @@ in rec {
 
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
 
+  replicator = fns.staticHaskellCallPackage ./replicator {};
+
   solr = pkgs.callPackage ./solr {};
 
   sproxy = fns.staticHaskellCallPackage ./sproxy {};

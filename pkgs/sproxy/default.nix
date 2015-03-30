@@ -34,10 +34,4 @@ cabal.mkDerivation (self: {
     license = self.stdenv.lib.licenses.mit;
     platforms = self.ghc.meta.platforms;
   };
-
-  postInstall = ''
-    rm -rf $out/lib $out/share/doc
-    source ${makeWrapper}/nix-support/setup-hook
-    wrapProgram $out/bin/sproxy --prefix LD_LIBRARY_PATH : ${self.stdenv.gcc.gcc}/lib64
-  '';
 })

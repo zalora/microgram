@@ -161,6 +161,11 @@ in rec {
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 
+  put-metric = pkgs.runCommand "${aws-ec2.name}-put-metric" {} ''
+    mkdir -p $out/bin
+    cp ${aws-ec2}/bin/put-metric $out/bin
+  '';
+
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
 
   solr = pkgs.callPackage ./solr {};
@@ -215,6 +220,7 @@ in rec {
   # haskell libraries
   #
 
+  aws-ec2 = pkgs.haskellPackages.callPackage ./aws-ec2 {};
   servant = pkgs.haskellPackages.callPackage ./servant {};
   servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
   servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
@@ -244,6 +250,7 @@ in rec {
     rev = "dc9a6c76577f8dbfea6acdb6e43d9da13472a9a7";
     sha256 = "bf1b3a24e4c8e947c431e4a53d9a722383344e6c669eb5f86beb24539a25e880";
   };
+
 
   #
   # php libraries

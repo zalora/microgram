@@ -19,12 +19,18 @@ let
     staticHaskellCallPackage = path: { cabal ? pkgs.haskellPackages.cabal
                                      , ...
                                      }@args:
-      pkgs.haskellPackages.callPackage path (args // {
-        cabal = cabal.override {
-          enableSharedExecutables = false;
-          enableSharedLibraries = false;
-        };
-      });
+      let
+        orig = pkgs.haskellPackages.callPackage path (args // {
+          cabal = cabal.override {
+            enableSharedExecutables = false;
+            enableSharedLibraries = false;
+          };
+        });
+        # dangerous
+      in pkgs.runCommand "${orig.name}-stripped" {} ''
+        mkdir -p $out
+        find ${orig} -maxdepth 1 -mindepth 1 '!' -name nix-support | xargs -I% cp -R % $out
+      '';
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
       inherit (pkgs) php stdenv autoreconfHook fetchurl;

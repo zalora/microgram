@@ -2,6 +2,11 @@
 , ...
 }:
 
+#
+# The packages here are mostly grouped by primary programming language
+# and sorted alphabetically within those groups.
+#
+
 let
   inherit (pkgs)
     lib
@@ -9,8 +14,6 @@ let
     stdenv fetchurl;
   inherit (lib) overrideDerivation;
 in rec {
-  angel = pkgs.haskellPackages.callPackage ./angel {};
-
   couchbase = pkgs.callPackage ./couchbase {};
 
   damemtop = pkgs.writeScriptBin "damemtop" ''
@@ -45,30 +48,6 @@ in rec {
   go = pkgs.callPackage ./go/1.4.nix {};
 
   graphviz = pkgs.callPackage ./graphviz {};
-
-  heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
-    inherit boto;
-    inherit gcs-oauth2-boto-plugin;
-    inherit sqlite3;
-  };
-
-  helper = pythonPackages.buildPythonPackage rec {
-    name = "helper-2.4.1";
-
-    propagatedBuildInputs = with pythonPackages; [ pyyaml ];
-    buildInputs = with pythonPackages; [ mock ];
-
-    src = fetchurl {
-      url = "https://pypi.python.org/packages/source/h/helper/${name}.tar.gz";
-      md5 = "e7146c95bbd96a12df8d737a16dca3a7";
-    };
-
-    meta = with stdenv.lib; {
-      description = "Helper";
-      homepage = https://helper.readthedocs.org;
-      license = licenses.bsd3;
-    };
-  };
 
   imagemagick = pkgs.callPackage ./ImageMagick {
     libX11 = null;
@@ -113,8 +92,6 @@ in rec {
 
   newrelic-php = pkgs.callPackage ./newrelic-php {};
 
-  newrelic-python = import ./newrelic-python { inherit pkgs; };
-
   newrelic-sysmond = pkgs.callPackage ./newrelic-sysmond {};
 
   nginx = overrideDerivation (pkgs.nginx.override { ngx_lua = true; }) (args: {
@@ -128,6 +105,36 @@ in rec {
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
 
   solr = pkgs.callPackage ./solr {};
+
+  #
+  # python
+  #
+
+  heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
+    inherit boto;
+    inherit gcs-oauth2-boto-plugin;
+    inherit sqlite3;
+  };
+
+  helper = pythonPackages.buildPythonPackage rec {
+    name = "helper-2.4.1";
+
+    propagatedBuildInputs = with pythonPackages; [ pyyaml ];
+    buildInputs = with pythonPackages; [ mock ];
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/h/helper/${name}.tar.gz";
+      md5 = "e7146c95bbd96a12df8d737a16dca3a7";
+    };
+
+    meta = with stdenv.lib; {
+      description = "Helper";
+      homepage = https://helper.readthedocs.org;
+      license = licenses.bsd3;
+    };
+  };
+
+  newrelic-python = import ./newrelic-python { inherit pkgs; };
 
   statsd = pythonPackages.buildPythonPackage rec {
     name = "statsd-3.0.1";
@@ -149,9 +156,15 @@ in rec {
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
 
-  waiAppStatic = pkgs.haskellPackages.callPackage ./wai-app-static {};
-  servant = pkgs.haskellPackages.callPackage ./servant {};
-  servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
-  servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
+  #
+  # haskell
+  #
+
+  angel = pkgs.haskellPackages.callPackage ./angel {};
+
   myrapi = pkgs.haskellPackages.callPackage ./myrapi { inherit servant servantClient; };
+  servant = pkgs.haskellPackages.callPackage ./servant {};
+  servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
+  servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
+  waiAppStatic = pkgs.haskellPackages.callPackage ./wai-app-static {};
 }

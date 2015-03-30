@@ -27,9 +27,9 @@ let
             enableSharedLibraries = false;
           };
         });
-      in pkgs.runCommand "${orig.name}-static" { __noChroot = true; } ''
+      in pkgs.runCommand "${orig.name}-static" {} ''
         mkdir -p $out
-        (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -t -I% cp -r --parents % $out)
+        (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -I% cp -r --parents % $out)
       '';
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {

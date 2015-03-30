@@ -15,7 +15,8 @@ let
   inherit (lib) overrideDerivation;
 
   fns = {
-    # make a statically linked version of a haskell package
+    # Make a statically linked version of a haskell package.
+    # Use wisely as it may accidentally kill useful files.
     staticHaskellCallPackage = path: { cabal ? pkgs.haskellPackages.cabal
                                      , ...
                                      }@args:
@@ -26,8 +27,7 @@ let
             enableSharedLibraries = false;
           };
         });
-      in pkgs.runCommand "${orig.name}-static" {} ''
-        # dangerous
+      in pkgs.runCommand "${orig.name}-static" { __noChroot = true; } ''
         mkdir -p $out
         (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -t -I% cp -r --parents % $out)
       '';

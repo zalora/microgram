@@ -3,7 +3,7 @@
 }:
 
 #
-# The packages here are mostly grouped by primary programming language
+# Library packages here are grouped by programming language
 # and sorted alphabetically within those groups.
 #
 
@@ -13,8 +13,32 @@ let
     pythonPackages perlPackages haskellPackages
     stdenv fetchurl;
   inherit (lib) overrideDerivation;
+
+  fns = {
+    # make a statically linked version of a haskell package
+    staticHaskellCallPackage = path: { cabal ? pkgs.haskellPackages.cabal
+                                     , ...
+                                     }@args:
+      pkgs.haskellPackages.callPackage path (args // {
+        cabal = cabal.override {
+          enableSharedExecutables = false;
+          enableSharedLibraries = false;
+        };
+      });
+
+    buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
+      inherit (pkgs) php stdenv autoreconfHook fetchurl;
+    };
+  };
+
 in rec {
+  inherit fns; # export functions as well
+
+  angel = fns.staticHaskellCallPackage ./angel {};
+
   couchbase = pkgs.callPackage ./couchbase {};
+
+  curl-loader = pkgs.callPackage ./curl-loader {};
 
   damemtop = pkgs.writeScriptBin "damemtop" ''
     #!${pkgs.bash}/bin/bash
@@ -22,7 +46,20 @@ in rec {
       ${pkgs.perl}/bin/perl ${./memcached/damemtop} "$@"
   '';
 
-  curl-loader = pkgs.callPackage ./curl-loader {};
+  elasticsearch-cloud-aws = pkgs.stdenv.mkDerivation rec {
+    name = "elasticsearch-cloud-aws-${version}";
+    version = "2.4.1";
+    src = fetchurl {
+      url = "http://search.maven.org/remotecontent?filepath=org/elasticsearch/elasticsearch-cloud-aws/${version}/${name}.zip";
+      sha256 = "1nvfvx92q9p0yny45jjfwdvbpn0qh384s6714wmm7qivbylb8f03";
+    };
+    phases = [ "installPhase" ];
+    buildInputs = [ pkgs.unzip ];
+    installPhase = ''
+      mkdir -p $out/plugins/cloud-aws
+      unzip $src -d $out/plugins/cloud-aws
+    '';
+  };
 
   erlang = pkgs.callPackage ./erlang {};
 
@@ -49,6 +86,12 @@ in rec {
 
   graphviz = pkgs.callPackage ./graphviz {};
 
+  heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
+    inherit boto;
+    inherit gcs-oauth2-boto-plugin;
+    inherit sqlite3;
+  };
+
   imagemagick = pkgs.callPackage ./ImageMagick {
     libX11 = null;
     ghostscript = null;
@@ -60,12 +103,22 @@ in rec {
 
   jenkins = pkgs.callPackage ./jenkins {};
 
+  kibana4 = pkgs.srcOnly {
+    name = "kibana-4.0.0";
+    src = fetchurl {
+      url = https://download.elasticsearch.org/kibana/kibana/kibana-4.0.0-linux-x64.tar.gz;
+      sha256 = "0bng4mmmhc2lhfk9vxnbgs4d7hiki5dlzrggzvd96dw0a8gy47cg";
+    };
+  };
+
   mariadb = pkgs.callPackage ./mariadb {};
 
   memcached-tool = pkgs.writeScriptBin "memcached-tool" ''
     #!${pkgs.bash}/bin/bash
     exec ${pkgs.perl}/bin/perl ${./memcached/memcached-tool} "$@"
   '';
+
+  myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servantClient; };
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};
 
@@ -106,15 +159,11 @@ in rec {
 
   solr = pkgs.callPackage ./solr {};
 
-  #
-  # python
-  #
+  thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
 
-  heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
-    inherit boto;
-    inherit gcs-oauth2-boto-plugin;
-    inherit sqlite3;
-  };
+  #
+  # python libraries
+  #
 
   helper = pythonPackages.buildPythonPackage rec {
     name = "helper-2.4.1";
@@ -154,17 +203,52 @@ in rec {
     };
   };
 
-  thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
-
   #
-  # haskell
+  # haskell libraries
   #
 
-  angel = pkgs.haskellPackages.callPackage ./angel {};
-
-  myrapi = pkgs.haskellPackages.callPackage ./myrapi { inherit servant servantClient; };
   servant = pkgs.haskellPackages.callPackage ./servant {};
   servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
   servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
   waiAppStatic = pkgs.haskellPackages.callPackage ./wai-app-static {};
+
+  #
+  # clojure/java libraries
+  #
+
+  clj-json = fetchurl {
+    url = https://clojars.org/repo/clj-json/clj-json/0.5.3/clj-json-0.5.3.jar;
+    sha256 = "1rwmmsvyvpqadv94zxzgn07qj0nf5jh0nhd218mk94y23l5mksxs";
+  };
+
+  elastisch = fetchurl {
+    url = https://clojars.org/repo/clojurewerkz/elastisch/1.4.0/elastisch-1.4.0.jar;
+    sha256 = "17nwcqh9wqvw0avi4lqgdma8qxfylif8ngv6sjdp84c8dn2i9rpf";
+  };
+
+  jackson-core-asl = fetchurl {
+    url = "http://search.maven.org/remotecontent?filepath=org/codehaus/jackson/jackson-core-asl/1.9.9/jackson-core-asl-1.9.9.jar";
+    sha256 = "15wq8g2qhix93f2gq6006fwpi75diqkx6hkcbdfbv0vw5y7ibi2z";
+  };
+
+  kiries = pkgs.fetchgit {
+    url = https://github.com/threatgrid/kiries.git;
+    rev = "dc9a6c76577f8dbfea6acdb6e43d9da13472a9a7";
+    sha256 = "bf1b3a24e4c8e947c431e4a53d9a722383344e6c669eb5f86beb24539a25e880";
+  };
+
+  #
+  # php libraries
+  #
+
+  imagick = fns.buildPecl {
+    name = "imagick-3.1.2";
+    sha256 = "14vclf2pqcgf3w8nzqbdw0b9v30q898344c84jdbw2sa62n6k1sj";
+    buildInputs = [ pkgs.pkgconfig ];
+    configureFlags = [
+      "--with-imagick=${imagemagick}"
+    ];
+
+    NIX_CFLAGS_COMPILE = "-I${imagemagick}/include/ImageMagick-6";
+  };
 }

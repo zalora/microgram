@@ -5,6 +5,7 @@ let
   base64 = "${pkgs.coreutils}/bin/base64";
   jq = "/usr/bin/env LD_LIBRARY_PATH=${pkgs.jq}/lib ${pkgs.jq}/bin/jq";
   curl = "${pkgs.curl}/bin/curl -s --retry 3 --retry-delay 0 --fail";
+  curl-nofail = "${pkgs.curl}/bin/curl -s --retry 3 --retry-delay 0";
   wget = "${pkgs.wget}/bin/wget -q --retry-connrefused -O -";
   awk = "${pkgs.gawk}/bin/awk";
   openssl = "${pkgs.openssl}/bin/openssl";
@@ -39,7 +40,7 @@ let
     hostname=$(${hostname}).${zone}
     record_value=$(${wget} http://169.254.169.254/latest/meta-data/${query})
 
-    ${curl} -d @/dev/stdin \
+    ${curl-nofail} -d @/dev/stdin \
           -H "Content-Type: text/xml" \
           -H "x-amz-date: $date" \
           -H "$auth_header" \

@@ -15,7 +15,9 @@ let
 
   register-hostname = {
     zoneId, zone, iamCredentialName,
-    useLocalHostname, prefix ? if useLocalHostname then "local" else "public"
+    useLocalHostname,
+    query ? if useLocalHostname then "local-ipv4" else "public-hostname",
+    recordType ? if useLocalHostname then "A" else "CNAME"
   }: pkgs.writeScript "ec2-register-hostname" ''
     date=$(${curl} -I https://route53.amazonaws.com/date | ${awk} '/^Date: / {sub("Date: ", "", $0); sub("\\r", "", $0); print $0}')
 
@@ -35,7 +37,7 @@ let
     signature=$(echo -n $date | ${openssl} dgst -binary -sha1 -hmac $1 | ${base64})
     auth_header="X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=$2,Algorithm=HmacSHA1,Signature=$signature"
     hostname=$(${hostname}).${zone}
-    local_hostname=$(${wget} http://169.254.169.254/latest/meta-data/${prefix}-hostname)
+    record_value=$(${wget} http://169.254.169.254/latest/meta-data/${query})
 
     ${curl} -d @/dev/stdin \
           -H "Content-Type: text/xml" \
@@ -51,10 +53,10 @@ let
              <Action>UPSERT</Action>
              <ResourceRecordSet>
                 <Name>$hostname</Name>
-                <Type>CNAME</Type>
+                <Type>${recordType}</Type>
                 <TTL>30</TTL>
                 <ResourceRecords>
-                   <ResourceRecord><Value>$local_hostname</Value></ResourceRecord>
+                   <ResourceRecord><Value>$record_value</Value></ResourceRecord>
                 </ResourceRecords>
              </ResourceRecordSet>
           </Change>

@@ -170,6 +170,8 @@ in rec {
 
   replicator = fns.staticHaskellCallPackage ./replicator {};
 
+  retry = pkgs.callPackage ./retry {};
+
   solr = pkgs.callPackage ./solr {};
 
   sproxy = fns.staticHaskellCallPackage ./sproxy {};

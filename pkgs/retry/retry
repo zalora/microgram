@@ -1,0 +1,54 @@
+#! /bin/sh
+#
+# usage: retry COMMAND [ARGS...]
+#
+set -euf
+
+# By default try to run command 10 times with a delay of 3s between retries.
+retry_count=${retry_count-10}
+retry_delay=${retry_delay-3}
+
+# retry_delay_seq specifies the delays between unsuccessful attempts to run the
+# command as space separated list of sleep arguments.  See also sleep(1).
+#
+# Notice how this sequence is one less than the desired number of retries
+# because we don't need to wait after the last failed attempt.
+#
+# You can override this variable to e.g. implement a non-linear retry schema.
+retry_delay_seq=${retry_delay_seq-$(
+  for i in $(seq 2 $retry_count); do
+    echo $retry_delay
+  done
+)}
+
+# In order to retry stdin-reading commands, we have to cache and resupply it.
+#
+# Notice how this expects stdin to fit into memory.
+#
+stdin_cache=$(cat)
+
+# main COMMAND [ARGS...]
+main() {
+  try_exec "$@"
+  for delay in $retry_delay_seq; do
+    echo "$0: \`$@\` exit code $exit_code; retrying after sleep $delay..." >&2
+    sleep $delay
+    try_exec "$@"
+  done
+  echo "$0: \`$@\` exit code $exit_code; giving up." >&2
+  exit $exit_code
+}
+
+# try_exec COMMAND [ARGS...]
+# If command exits with a zero exit code, then try_exec will exit the current
+# process (mimicking the behavior of exec).  Otherwise set the exit_code
+# variable for further inspection (or retry in our case).
+try_exec() {
+  if echo "$stdin_cache" | env "$@"; then
+    exit
+  else
+    exit_code=$?
+  fi
+}
+
+main "$@"

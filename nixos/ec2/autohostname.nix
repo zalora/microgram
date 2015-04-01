@@ -82,6 +82,8 @@ let
   ec2-autohostname = ''
     ${ip} route delete blackhole 169.254.169.254 2>/dev/null || true
 
+    export CURL_CA_BUNDLE=${pkgs.cacert}/etc/ca-bundle.crt
+
     # applying the hostname from UserData if any:
     set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname)
     if [ -z $1 ]; then

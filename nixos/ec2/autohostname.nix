@@ -2,6 +2,8 @@
 let
   inherit (lib) concatStringsSep mapAttrsToList mkOverride mkOption types optionalString;
 
+  plat-pkgs = import <platform/pkgs> { inherit pkgs; };
+  retry = "${plat-pkgs.retry}/bin/retry";
   base64 = "${pkgs.coreutils}/bin/base64";
   jq = "/usr/bin/env LD_LIBRARY_PATH=${pkgs.jq}/lib ${pkgs.jq}/bin/jq";
   curl = "${pkgs.curl}/bin/curl -s --retry 3 --retry-delay 0 --fail";
@@ -40,7 +42,7 @@ let
     hostname=$(${hostname}).${zone}
     record_value=$(${wget} http://169.254.169.254/latest/meta-data/${query})
 
-    ${curl-nofail} -d @/dev/stdin \
+    ${retry} ${curl-nofail} -d @/dev/stdin \
           -H "Content-Type: text/xml" \
           -H "x-amz-date: $date" \
           -H "$auth_header" \
@@ -89,7 +91,7 @@ let
         mapAttrsToList (_: args: register-hostname {
          zone = args.name;
          inherit (args) zoneId iamCredentialName useLocalHostname;
-       }) config.ec2.route53RegisterHostname)} | ${xargs} -n1 -P6 ${bash}
+       }) config.ec2.route53RegisterHostname)} | ${xargs} -n1 -P2 ${bash}
 
     ${optionalString (!config.ec2.metadata) ''
     ip route add blackhole 169.254.169.254/32

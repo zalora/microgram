@@ -16,12 +16,17 @@ let
   bash = "${pkgs.bash}/bin/bash";
   xargs = "${pkgs.findutils}/bin/xargs";
 
+  retry-wrapper = script: pkgs.writeScript "retry-${script.name}" ''
+    ${retry} ${script}
+  '';
+
   register-hostname = {
     zoneId, zone, iamCredentialName,
     useLocalHostname,
     query ? if useLocalHostname then "local-ipv4" else "public-hostname",
     recordType ? if useLocalHostname then "A" else "CNAME"
-  }: pkgs.writeScript "ec2-register-hostname" ''
+  }: pkgs.writeScript "ec2-register-hostname-${zone}" ''
+    #!${bash}
     date=$(${curl} -I https://route53.amazonaws.com/date | ${awk} '/^Date: / {sub("Date: ", "", $0); sub("\\r", "", $0); print $0}')
 
     iam="${iamCredentialName}"
@@ -42,7 +47,7 @@ let
     hostname=$(${hostname}).${zone}
     record_value=$(${wget} http://169.254.169.254/latest/meta-data/${query})
 
-    ${retry} ${curl-nofail} -d @/dev/stdin \
+    ${curl-nofail} -d @/dev/stdin \
           -H "Content-Type: text/xml" \
           -H "x-amz-date: $date" \
           -H "$auth_header" \
@@ -88,10 +93,10 @@ let
 
     # registering route 53 hostnames if any:
     echo ${concatStringsSep " " (
-        mapAttrsToList (_: args: register-hostname {
+        mapAttrsToList (_: args: retry-wrapper (register-hostname {
          zone = args.name;
          inherit (args) zoneId iamCredentialName useLocalHostname;
-       }) config.ec2.route53RegisterHostname)} | ${xargs} -n1 -P2 ${bash}
+       })) config.ec2.route53RegisterHostname)} | ${xargs} -n1 -P2 ${bash}
 
     ${optionalString (!config.ec2.metadata) ''
     ip route add blackhole 169.254.169.254/32
@@ -143,21 +148,16 @@ in
   };
 
   config = {
-    system.activationScripts = {
-      inherit ec2-autohostname;
-    };
-
     systemd.services.ec2-autohostname = {
       description = "EC2: apply dynamic hostname";
 
-      wantedBy = [ "multi-user.target" "sshd.service" ];
-      before = [ "sshd.service" ];
       after = [ "fetch-ec2-data.service" ];
 
       script = ec2-autohostname;
 
       serviceConfig.Type = "oneshot";
       serviceConfig.RemainAfterExit = true;
+      unitConfig.X-StopOnReconfiguration = true;
     };
   };
 }

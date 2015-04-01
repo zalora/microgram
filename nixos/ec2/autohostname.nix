@@ -64,9 +64,11 @@ let
     </ChangeBatch>
     </ChangeResourceRecordSetsRequest>
     __EOF
+    
+    curl_error=$?
 
     echo
-    exit 0
+    exit $curl_error
  '';
 
   ec2-autohostname = ''

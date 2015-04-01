@@ -151,6 +151,7 @@ in
     systemd.services.ec2-autohostname = {
       description = "EC2: apply dynamic hostname";
 
+      wantedBy = [ "multi-user.target" ];
       after = [ "fetch-ec2-data.service" ];
 
       script = ec2-autohostname;

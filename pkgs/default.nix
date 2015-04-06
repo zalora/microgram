@@ -151,6 +151,10 @@ in rec {
 
   newrelic-php = pkgs.callPackage ./newrelic-php {};
 
+  newrelic-plugin-agent = with pythonPackages; pkgs.callPackage ./newrelic-plugin-agent {
+    inherit helper requests2;
+  };
+
   newrelic-sysmond = pkgs.callPackage ./newrelic-sysmond {};
 
   nginx = overrideDerivation (pkgs.nginx.override { ngx_lua = true; }) (args: {

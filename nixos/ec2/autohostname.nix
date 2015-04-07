@@ -151,15 +151,19 @@ in
 
   config = {
     systemd.services.ec2-autohostname = {
-      description = "EC2: apply dynamic hostname";
+      description = "EC2: periodically apply dynamic hostname";
 
       wantedBy = [ "multi-user.target" ];
       after = [ "fetch-ec2-data.service" ];
 
-      script = ec2-autohostname;
+      script = ''
+        while true; do
+          ${pkgs.writeScript "ec2-autohostname" ec2-autohostname}
+          sleep $((120 + $RANDOM % 40))m
+        done
+      '';
 
-      serviceConfig.Type = "oneshot";
-      serviceConfig.RemainAfterExit = true;
+      serviceConfig.Restart = "always";
       unitConfig.X-StopOnReconfiguration = true;
     };
   };

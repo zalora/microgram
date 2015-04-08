@@ -42,6 +42,8 @@ in rec {
 
   angel = fns.staticHaskellCallPackage ./angel {};
 
+  bridge-utils = pkgs.bridge_utils;
+
   couchbase = pkgs.callPackage ./couchbase {};
 
   curl-loader = pkgs.callPackage ./curl-loader {};
@@ -51,6 +53,8 @@ in rec {
     exec env PERL5LIB=${lib.makePerlPath (with perlPackages; [ AnyEvent GetoptLong TermReadKey YAML ])} \
       ${pkgs.perl}/bin/perl ${./memcached/damemtop} "$@"
   '';
+
+  docker = pkgs.callPackage ./docker { inherit go bridge-utils; };
 
   elasticsearch-cloud-aws = pkgs.stdenv.mkDerivation rec {
     name = "elasticsearch-cloud-aws-${version}";

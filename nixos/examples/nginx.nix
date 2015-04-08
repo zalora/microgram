@@ -3,10 +3,10 @@ rec {
     config.services.nginx.enable = true;
   };
 
-  # <platform/nixos> is a thin wrapper around <nixpkgs/nixos>
-  nginx-nixos = import <platform/nixos> { configuration = nginx-module; };
+  # <microgram/nixos> is a thin wrapper around <nixpkgs/nixos>
+  nginx-nixos = import <microgram/nixos> { configuration = nginx-module; };
 
-  nginx-ami = import <platform/nixos/backends/ami.nix> {
+  nginx-ami = import <microgram/nixos/backends/ami.nix> {
     modules = [ nginx-module ];
     upload-context = rec {
       region = "ap-southeast-1";
@@ -14,7 +14,7 @@ rec {
     };
   };
 
-  nginx-vm = import <platform/nixos/backends/vm.nix> {
+  nginx-vm = import <microgram/nixos/backends/vm.nix> {
     modules = [ nginx-module ];
     fileName = "nginx.ova";
     vmName = "Nginx on NixOS Platform";

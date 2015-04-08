@@ -1,12 +1,8 @@
-## Zalora Platform
+## Microgram
 
-Converge diverse software development and deployment practices under
-an interface that lets developers and operations reuse
-effort and write code that can be evaluated to a cloud or on-premise
-deployment for various backends (VirtualBox, Docker containers, AWS
-EC2, managed hosting environments, etc).
+Bring your own web app store to the Internets.
 
-Zalora Platform uses Nix for expressing deployment topologies and packaging software
+Microgram uses Nix for expressing deployment topologies and packaging software
 using the [Nix package manager](http://nixos.org/nix/).
 
 ### Packaging software
@@ -19,11 +15,11 @@ using the [Nix package manager](http://nixos.org/nix/).
 
 ### Utility scripts
 
-* [bin/](bin) - Lightweight nix related tooling
+* [bin/](bin) - Lightweight Nix-related tooling
 
 ### NixOS
 
-Zalora is using [NixOS](https://github.com/nixos/nixpkgs/tree/release-14.12) as the core
+Microgram is based on [NixOS](https://github.com/nixos/nixpkgs/tree/release-14.12) as the core
 codebase for building AMIs and other image types for cloud provides, and Nix packages collection
 as the core package base.
 

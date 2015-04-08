@@ -2,7 +2,7 @@
 let
   inherit (lib) concatStringsSep mapAttrsToList mkOverride mkOption types optionalString;
 
-  plat-pkgs = import <platform/pkgs> { inherit pkgs; };
+  plat-pkgs = import <microgram/pkgs> { inherit pkgs; };
   retry = "${plat-pkgs.retry}/bin/retry";
   base64 = "${pkgs.coreutils}/bin/base64";
   jq = "/usr/bin/env LD_LIBRARY_PATH=${pkgs.jq}/lib ${pkgs.jq}/bin/jq";

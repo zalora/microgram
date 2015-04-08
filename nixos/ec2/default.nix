@@ -1,13 +1,13 @@
 { config, lib, pkgs, ... }:
 let
   inherit (lib) mkOverride mkDefault;
-  inherit (import <platform/nixos/kernel> { inherit pkgs; }) cleanLinux;
+  inherit (import <microgram/nixos/kernel> { inherit pkgs; }) cleanLinux;
   cloudKernel = pkgs.linuxPackages_3_18 // { kernel = cleanLinux pkgs.linux_3_18 true; };
 in
 {
   imports = [
     ./amazon-image.nix
-    <platform/nixos/cloud-config.nix>
+    <microgram/nixos/cloud-config.nix>
   ];
 
   config = {

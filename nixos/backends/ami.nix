@@ -2,10 +2,10 @@ let
   nixos = modules:
     let
       hvm-config = { config, ... }: {
-        imports = [ <platform/nixos/ec2> ] ++ modules;
+        imports = [ <microgram/nixos/ec2> ] ++ modules;
         ec2.hvm = true; # pv is almost past :)
       };
-    in (import <platform/nixos> { configuration = hvm-config; });
+    in (import <microgram/nixos> { configuration = hvm-config; });
 in
 { pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
 , lib ? pkgs.lib

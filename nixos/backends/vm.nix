@@ -1,8 +1,8 @@
 let
   nixos = modules:
-    import <platform/nixos> {
+    import <microgram/nixos> {
       configuration = { config, ...}: {
-        imports = [ <platform/nixos/virtualbox> ] ++ modules;
+        imports = [ <microgram/nixos/virtualbox> ] ++ modules;
       };
     };
 in

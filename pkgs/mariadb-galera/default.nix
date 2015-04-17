@@ -22,6 +22,9 @@ stdenv.mkDerivation rec {
     "-DHAVE_IPV6=yes"
     "-DWITHOUT_TOKUDB=1"
     "-DINSTALL_SCRIPTDIR=bin"
+    # Galera Cluster:
+    "-DWITH_WSREP=ON"
+    "-DWITH_INNODB_DISALLOW_WRITES=1"
   ];
 
   NIX_LDFLAGS = stdenv.lib.optionalString stdenv.isLinux "-lgcc_s";

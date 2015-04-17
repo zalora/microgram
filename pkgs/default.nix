@@ -123,6 +123,8 @@ in rec {
 
   mariadb = pkgs.callPackage ./mariadb {};
 
+  mariadb-galera = pkgs.callPackage ./mariadb-galera {};
+
   memcached-tool = pkgs.writeScriptBin "memcached-tool" ''
     #!${pkgs.bash}/bin/bash
     exec ${pkgs.perl}/bin/perl ${./memcached/memcached-tool} "$@"

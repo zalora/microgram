@@ -19,9 +19,9 @@ in
   nix.readOnlyStore = true;
   nix.trustedBinaryCaches = [ "http://hydra.nixos.org" ];
 
-  services.nixosManual.enable = cloudDefault false
-  security.polkit.enable = cloudDefault false
-  services.udisks2.enable = cloudDefault false
+  services.nixosManual.enable = cloudDefault false;
+  security.polkit.enable = cloudDefault false;
+  services.udisks2.enable = cloudDefault false;
 
   services.openssh.enable = cloudDefault true;
   services.openssh.passwordAuthentication = cloudDefault false;

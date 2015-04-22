@@ -47,8 +47,12 @@ in {
 
       script = ''
         memSize=$(grep MemTotal: /proc/meminfo | tr -d '[:alpha:][:space:]:')
-        if [[ $memSize > ${toString (cfg.memoryLimit * 1024)} ]]; then
+        if (( $memSize > ${toString (cfg.memoryLimit * 1024)} )); then
           echo "Instance has enough memory, skipping swapfile"
+          exit 0
+        fi
+        if ! [ -w "$(dirname "${cfg.filePath}")" ]; then
+          echo "Can't write to swapfile's dir, skipping swapfile"
           exit 0
         fi
         if ! [ -f "${cfg.filePath}" ]; then

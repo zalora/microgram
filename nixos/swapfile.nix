@@ -57,7 +57,7 @@ in {
         fi
         if ! [ -f "${cfg.filePath}" ]; then
           diskSize=$(($(df --output=size "$(dirname "${cfg.filePath}")" | tail -n1) / 2))
-          if [[ $diskSize < $memSize ]]; then
+          if (( $diskSize < $memSize )); then
             swapSize=$diskSize
           else
             swapSize=$memSize

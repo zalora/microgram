@@ -130,6 +130,8 @@ in rec {
     exec ${pkgs.perl}/bin/perl ${./memcached/memcached-tool} "$@"
   '';
 
+  mergex = pkgs.callPackage ./mergex {};
+
   myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servantClient; };
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};

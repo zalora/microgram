@@ -35,7 +35,12 @@ stdenv.mkDerivation rec {
   postInstall = ''
     sed -i -e "s|-lssl|-L${openssl}/lib -lssl|g" $out/bin/mysql_config
     sed -i -e "s|basedir=\"\"|basedir=\"$out\"|" $out/bin/mysql_install_db
-    rm -rf $out/mysql-test $out/sql-bench
+    # https://github.com/NixOS/nixpkgs/issues/7117
+    rm -r $out/mysql-test $out/sql-bench $out/data # Don't need testing data
+    rm $out/share/man/man1/mysql-test-run.pl.1
+    rm $out/bin/rcmysql # Not needed with nixos units
+    rm $out/bin/mysqlbug # Encodes a path to gcc and not really useful
+    find $out/bin -name \*test\* -exec rm {} \;
   '';
 
   meta = {

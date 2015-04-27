@@ -23,7 +23,7 @@ stdenv.mkDerivation {
     cat > config/newrelic_plugin.yml <<EOF
     newrelic:
       license_key: ${config.newrelic.license_key}
-      verbose: 1
+      verbose: 0
     agents:
       rabbitmq:
         management_api_url: ${toString config.rabbitmq.management_api_url}

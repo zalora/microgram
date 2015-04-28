@@ -11,7 +11,8 @@ let
   inherit (pkgs)
     lib
     pythonPackages perlPackages haskellPackages
-    stdenv fetchurl;
+    stdenv_32bit gnome
+    stdenv fetchurl newScope;
   inherit (lib) overrideDerivation;
 
   fns = {
@@ -287,5 +288,10 @@ in rec {
     ];
 
     NIX_CFLAGS_COMPILE = "-I${imagemagick}/include/ImageMagick-6";
+  };
+
+  virtualbox = linuxPackages: (newScope linuxPackages) ./virtualbox {
+    stdenv = stdenv_32bit;
+    inherit (gnome) libIDL;
   };
 }

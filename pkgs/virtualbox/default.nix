@@ -15,7 +15,7 @@ with stdenv.lib;
 let
   buildType = "release";
 
-  version = "4.3.20"; # changes ./guest-additions as well
+  version = "4.3.20";
 
   forEachModule = action: ''
     for mod in \
@@ -200,7 +200,7 @@ in stdenv.mkDerivation {
   meta = {
     description = "PC emulator";
     homepage = http://www.virtualbox.org/;
-    maintainers = [ lib.maintainers.sander ];
+    maintainers = [ ];
     platforms = lib.platforms.linux;
   };
 }

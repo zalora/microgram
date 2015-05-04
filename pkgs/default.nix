@@ -74,6 +74,8 @@ in rec {
 
   erlang = pkgs.callPackage ./erlang {};
 
+  exim = pkgs.callPackage ./exim {};
+
   gdb-quiet = stdenv.mkDerivation {
     name = "gdb-quiet";
     unpackPhase = ''

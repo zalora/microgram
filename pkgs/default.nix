@@ -197,6 +197,8 @@ in rec {
     inherit awsEc2 vkPosixPty vkAwsRoute53;
   };
 
+  xd = pkgs.callPackage ./xd {};
+
   #
   # python libraries
   #

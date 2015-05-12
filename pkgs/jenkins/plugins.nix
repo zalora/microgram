@@ -24,6 +24,11 @@
     sha1 = "15fe1d3947a7c64b67f653ba0aa48413fdb7304e";
     depends = [  ];
   };
+  "credentials-binding" = {
+    version = "1.4";
+    sha1 = "f0717qgkah19pnkmgnys4b20cmb58hf8";
+    depends = [ "credentials" "plain-credentials" ];
+  };
   "dashboard-view" = {
     version = "2.9.4";
     sha1 = "798487d96cffeda0da051ee632666b7148c6ae10";
@@ -138,6 +143,11 @@
     version = "0.3";
     sha1 = "4c355b5b36445ef15754c3e9ea1e885c9acad7ee";
     depends = [  ];
+  };
+  "plain-credentials" = {
+    version = "1.1";
+    sha1 = "mqlca1rppkc41vnrlh3g57c5h6cy0ngl";
+    depends = [ "credentials" ];
   };
   "promoted-builds" = {
     version = "2.21";

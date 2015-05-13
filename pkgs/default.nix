@@ -76,6 +76,10 @@ in rec {
 
   exim = pkgs.callPackage ./exim {};
 
+  galera-wsrep = pkgs.callPackage ./galera-wsrep {
+    boost = pkgs.boost.override { enableStatic = true; };
+  };
+
   gdb-quiet = stdenv.mkDerivation {
     name = "gdb-quiet";
     unpackPhase = ''

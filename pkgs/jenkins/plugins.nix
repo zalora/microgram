@@ -27,7 +27,7 @@
   "credentials-binding" = {
     version = "1.4";
     sha1 = "f0717qgkah19pnkmgnys4b20cmb58hf8";
-    depends = [ "credentials" "plain-credentials" ];
+    depends = [ "credentials" "plain-credentials" "workflow-step-api" ];
   };
   "dashboard-view" = {
     version = "2.9.4";
@@ -213,5 +213,10 @@
     version = "1.10";
     sha1 = "ff86c407c184cce1eaa35f499fc16a7a724a96e2";
     depends = [  ];
+  };
+  "workflow-step-api" = {
+    version = "1.6";
+    sha1 = "6kgkyp0nx2b0al2iqhk6k36i5n9divix";
+    depends = [ "git" ];
   };
 }

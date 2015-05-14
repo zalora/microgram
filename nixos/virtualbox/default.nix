@@ -5,13 +5,15 @@ let
   clientKeyPath = "/root/.vbox-nixops-client-key";
 in
 {
-  require = [
+  imports = [
     <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
     <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
     <microgram/nixos/cloud-config.nix>
   ];
 
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];
+
+  boot.kernelPackages = (import <microgram/pkgs> { inherit pkgs; }).linuxPackages;
 
   boot.vesa = false;
 

@@ -15,7 +15,7 @@ let
     stdenv fetchurl newScope;
   inherit (lib) overrideDerivation;
 
-  fns = {
+  fns = rec {
     # Make a statically linked version of a haskell package.
     # Use wisely as it may accidentally kill useful files.
     staticHaskellCallPackage = path: { cabal ? pkgs.haskellPackages.cabal
@@ -36,6 +36,38 @@ let
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
       inherit (pkgs) php stdenv autoreconfHook fetchurl;
     };
+
+    # Until https://github.com/NixOS/nixpkgs/pull/6411 is in
+
+    # Create a single file.
+    writeTextFile =
+      { name # the name of the derivation
+      , text
+      , executable ? false # run chmod +x ?
+      , destination ? ""   # relative path appended to $out eg "/bin/foo"
+      }:
+      pkgs.runCommand name
+        { inherit text executable;
+          passAsFile = [ "text" ];
+          # Pointless to do this on a remote machine.
+          preferLocalBuild = true;
+        }
+        ''
+          n=$out${destination}
+          mkdir -p "$(dirname "$n")"
+          if [ -e "$textPath" ]; then
+            mv "$textPath" "$n"
+          else
+            echo -n "$text" > "$n"
+          fi
+          (test -n "$executable" && chmod +x "$n") || true
+        '';
+
+    # Shorthands for `writeTextFile'.
+    writeText = name: text: writeTextFile {inherit name text;};
+    writeTextDir = name: text: writeTextFile {inherit name text; destination = "/${name}";};
+    writeScript = name: text: writeTextFile {inherit name text; executable = true;};
+    writeScriptBin = name: text: writeTextFile {inherit name text; executable = true; destination = "/bin/${name}";};
   };
 
 in rec {
@@ -302,38 +334,4 @@ in rec {
     stdenv = stdenv_32bit;
     inherit (gnome) libIDL;
   };
-
-
-  # Until https://github.com/NixOS/nixpkgs/pull/6411 is in
-
-  # Create a single file.
-  writeTextFile =
-    { name # the name of the derivation
-    , text
-    , executable ? false # run chmod +x ?
-    , destination ? ""   # relative path appended to $out eg "/bin/foo"
-    }:
-    pkgs.runCommand name
-      { inherit text executable;
-        passAsFile = [ "text" ];
-        # Pointless to do this on a remote machine.
-        preferLocalBuild = true;
-      }
-      ''
-        n=$out${destination}
-        mkdir -p "$(dirname "$n")"
-        if [ -e "$textPath" ]; then
-          mv "$textPath" "$n"
-        else
-          echo -n "$text" > "$n"
-        fi
-        (test -n "$executable" && chmod +x "$n") || true
-      '';
-
-  # Shorthands for `writeTextFile'.
-  writeText = name: text: writeTextFile {inherit name text;};
-  writeTextDir = name: text: writeTextFile {inherit name text; destination = "/${name}";};
-  writeScript = name: text: writeTextFile {inherit name text; executable = true;};
-  writeScriptBin = name: text: writeTextFile {inherit name text; executable = true; destination = "/bin/${name}";};
-
 }

@@ -6,7 +6,7 @@
 , pythonBindings ? false, python ? null
 , enableExtensionPack ? false, requireFile ? null, patchelf ? null, fakeroot ? null
 , pulseSupport ? false, pulseaudio ? null
-, guiSupport ? true, xproto ? null, libX11 ? null, libXext ? null, libXcursor ? null, qt4 ? null, SDL ? null, libXmu ? null
+, guiSupport ? false, xproto ? null, libX11 ? null, libXext ? null, libXcursor ? null, qt4 ? null, SDL ? null, libXmu ? null
 , enableHardening ? false
 }:
 
@@ -15,7 +15,7 @@ with stdenv.lib;
 let
   buildType = "release";
 
-  version = "4.3.20";
+  version = "4.3.28";
 
   forEachModule = action: ''
     for mod in \
@@ -66,7 +66,7 @@ in stdenv.mkDerivation {
 
   src = fetchurl {
     url = "http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}.tar.bz2";
-    sha256 = "1484f8e9993ec4fe3892c5165db84d238713d2506e147ed8236541ece642e965";
+    sha256 = "0cbw55rdfnzx680f7l3a921dxwxz9wcpaf1adg2y52lms5vanmz1";
   };
 
   buildInputs =

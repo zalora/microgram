@@ -16,6 +16,7 @@ in
   time.timeZone = cloudDefault "UTC";
   i18n.supportedLocales = cloudDefault ["en_US.UTF-8/UTF-8"];
 
+  nix.package = pkgs.nixUnstable;
   nix.readOnlyStore = true;
   nix.trustedBinaryCaches = [ "http://hydra.nixos.org" ];
 
@@ -52,7 +53,7 @@ in
     config.boot.kernelPackages.sysdig
     config.boot.kernelPackages.perf
   ];
-  boot.extraModulePackages = [ config.boot.kernelPackages.sysdig ];                                                               
+  boot.extraModulePackages = [ config.boot.kernelPackages.sysdig ];
   boot.kernelModules = [ "sysdig-probe" ];
 
   boot.kernel.sysctl = {

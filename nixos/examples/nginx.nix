@@ -1,5 +1,8 @@
 rec {
   nginx-module = { config, ... }: {
+    imports = [
+      <nixpkgs/nixos/modules/services/web-servers/nginx>
+    ];
     config.services.nginx.enable = true;
   };
 
@@ -17,6 +20,6 @@ rec {
   nginx-vm = import <microgram/nixos/backends/vm.nix> {
     modules = [ nginx-module ];
     fileName = "nginx.ova";
-    vmName = "Nginx on NixOS Platform";
+    vmName = "Nginx on Microgram";
   };
 }

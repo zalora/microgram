@@ -4,12 +4,16 @@ let
 
   deps = {
     logback-classic = fetchurl {
-      url = "http://repo.maven.apache.org/maven2/ch/qos/logback/logback-classic/1.0.13/logback-classic-1.0.13.jar";
-      sha256 = "13s1qxv4jyf4hfiww8125p6iy6xyx3y37slzqhm44lqnm4697h8j";
+      url = "http://repo1.maven.org/maven2/ch/qos/logback/logback-classic/1.1.3/logback-classic-1.1.3.jar";
+      sha256 = "1map874h9mrv2iq8zn674sb686fdcr2p5k17ygajqr0dbn7z3hwq";
     };
     logback-core = fetchurl {
-      url = "http://repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.0.13/logback-core-1.0.13.jar";
-      sha256 = "1f7kjvslamql9danfyzlr0qwn8778crzym7ik172hh99kd7z5n7c";
+      url = "http://repo1.maven.org/maven2/ch/qos/logback/logback-core/1.1.3/logback-core-1.1.3.jar";
+      sha256 = "052w3z1sp7m2ssrd8c644wxi8xia9crcrjmcixdk3lwm54sgvh27";
+    };
+    logback-access = fetchurl {
+      url = "http://repo1.maven.org/maven2/ch/qos/logback/logback-access/1.1.3/logback-access-1.1.3.jar";
+      sha256 = "169hk1zr0z4cwgksf1yaq6s4v5lnjfws5s7gqyzln5l2z8lf00yw";
     };
     netty = fetchurl {
       url = "http://repo.maven.apache.org/maven2/io/netty/netty/3.6.1.Final/netty-3.6.1.Final.jar";

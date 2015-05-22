@@ -1,5 +1,5 @@
 { stdenv, fetchurl, pkgconfig, libpng, libjpeg
-, yacc, libtool, fontconfig, pango, gd, gts
+, yacc, libtool, fontconfig, pango, gd, gts, expat
 }:
 
 # this is a stripped version of graphviz that does not support include xlibs, pango, expat and smth else
@@ -21,8 +21,8 @@ stdenv.mkDerivation rec {
       "--with-pnglibdir=${libpng}/lib"
       "--with-jpegincludedir=${libjpeg}/include"
       "--with-jpeglibdir=${libjpeg}/lib"
-     # "--with-expatincludedir=${expat}/include" # see http://thread.gmane.org/gmane.comp.video.graphviz/5041/focus=5046
-     # "--with-expatlibdir=${expat}/lib"
+      "--with-expatincludedir=${expat}/include" # see http://thread.gmane.org/gmane.comp.video.graphviz/5041/focus=5046
+      "--with-expatlibdir=${expat}/lib"
       "--without-x"
     ];
 

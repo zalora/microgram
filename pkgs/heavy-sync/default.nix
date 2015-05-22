@@ -6,8 +6,8 @@ buildPythonPackage rec {
 
   src = fetchgit {
     url = "https://github.com/zalora/heavy-sync.git";
-    rev = "27186e17bdbca911492041316a1a11ab5335b57b";
-    sha256 = "6b269c2ad01f55dccb4915cdac95631093b5e2e82b0e9d71f5a7c53756cf0484";
+    rev = "23fb3a1b7528f0eb65ef433249b9de93aac40eaf";
+    sha256 = "86fdc719c04b6495152adb49bdc458e1fcf6812fbb53131af66e8356308a8655";
   };
 
   propagatedBuildInputs = [

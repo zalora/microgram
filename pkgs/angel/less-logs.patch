@@ -1,0 +1,45 @@
+diff --git a/src/Angel/Job.hs b/src/Angel/Job.hs
+index f62d6fd..dd7725e 100644
+--- a/src/Angel/Job.hs
++++ b/src/Angel/Job.hs
+@@ -69,7 +69,6 @@ ifEmpty s ioa iob = if s == "" then ioa else iob
+ -- |tail call.
+ supervise :: TVar GroupConfig -> String -> IO ()
+ supervise sharedGroupConfig id' = do
+-    logger' "START"
+     cfg <- atomically $ readTVar sharedGroupConfig
+     let my_spec = find_me cfg
+     ifEmpty (name my_spec)
+@@ -92,8 +91,6 @@ supervise sharedGroupConfig id' = do
+             let onPidError lph ph = do logger' "Failed to create pidfile"
+                                        killProcess $ toKillDirective my_spec ph lph
+ 
+-            logger' $ "Spawning process with env " ++ show (env procSpec)
+-
+             startMaybeWithPidFile procSpec mPfile (\pHandle -> do
+               updateRunningPid my_spec (Just pHandle) lHandle
+               logProcess logger' pHandle
+@@ -101,11 +98,9 @@ supervise sharedGroupConfig id' = do
+ 
+             cfg' <- atomically $ readTVar sharedGroupConfig
+             if M.notMember id' (spec cfg')
+-              then logger'  "QUIT"
++              then return ()
+               else do
+-                logger'  "WAITING"
+                 sleepSecs . fromMaybe defaultDelay . delay $ my_spec
+-                logger'  "RESTART"
+                 supervise sharedGroupConfig id'
+         )
+ 
+@@ -163,9 +158,8 @@ supervise sharedGroupConfig id' = do
+ 
+ logProcess :: (String -> IO ()) -> ProcessHandle -> IO ()
+ logProcess logSink pHandle = do
+-  logSink "RUNNING"
+   waitForProcess pHandle
+-  logSink "ENDED"
++  return ()
+ 
+ --TODO: paralellize
+ killProcesses :: [KillDirective] -> IO ()

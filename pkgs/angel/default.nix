@@ -1,20 +1,20 @@
 { cabal, configurator, hspec, mtl, stm, text, time
-, unorderedContainers, optparseApplicative
+, unorderedContainers
 }:
 
 cabal.mkDerivation (self: {
   pname = "angel";
-  version = "0.5.2";
-  sha256 = "0h2nyxv56cshkxlbq5j54220w7x2y0m1aaqzqz6dhipff29pmr39";
+  version = "0.5.1";
+  sha256 = "1ag5bpwfmshcwhycp12ywqvhf4d1fdfs9haawzhawnjpcm5h2hha";
   isLibrary = false;
   isExecutable = true;
   buildDepends = [
     configurator mtl stm text time unorderedContainers
   ];
   testDepends = [
-    configurator hspec mtl stm text time unorderedContainers optparseApplicative
+    configurator hspec mtl stm text time unorderedContainers
   ];
-  patches = [ ./static.patch ];
+  patches = [ ./static.patch ./less-logs.patch ];
   meta = {
     homepage = "http://github.com/MichaelXavier/Angel";
     description = "Process management and supervision daemon";

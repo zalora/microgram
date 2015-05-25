@@ -32,7 +32,6 @@
   <nixpkgs/nixos/modules/services/misc/nix-ssh-serve.nix>
   <nixpkgs/nixos/modules/services/networking/dhcpcd.nix>
   <nixpkgs/nixos/modules/services/networking/firewall.nix>
-  <nixpkgs/nixos/modules/services/networking/ntpd.nix>
   <nixpkgs/nixos/modules/services/networking/ssh/sshd.nix>
   <nixpkgs/nixos/modules/services/scheduling/cron.nix>
   <nixpkgs/nixos/modules/services/system/dbus.nix>

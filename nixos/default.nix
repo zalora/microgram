@@ -4,7 +4,9 @@
 
 let
   eval-config = import <nixpkgs/nixos/lib/eval-config.nix>;
-  baseModules = [stub-module] ++ import <microgram/nixos/vendor-module-list.nix>;
+  baseModules = [stub-module]
+             ++ [<microgram/nixos/ntpd.nix>]
+             ++ import <microgram/nixos/vendor-module-list.nix>;
 
   lib = import <nixpkgs/lib>;
 

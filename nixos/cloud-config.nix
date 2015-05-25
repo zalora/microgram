@@ -16,6 +16,16 @@ in
   time.timeZone = cloudDefault "UTC";
   i18n.supportedLocales = cloudDefault ["en_US.UTF-8/UTF-8"];
 
+  services.ntp.enable = true;
+  services.ntp.servers = [
+    "0.amazon.pool.ntp.org"
+    "1.amazon.pool.ntp.org"
+    "3.amazon.pool.ntp.org"
+  ];
+  services.ntp.interfaces = [
+    "lo"
+  ];
+
   nix.package = pkgs.nixUnstable;
   nix.readOnlyStore = true;
   nix.trustedBinaryCaches = [ "http://hydra.nixos.org" ];

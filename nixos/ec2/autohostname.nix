@@ -44,8 +44,10 @@ let
 
     signature=$(echo -n $date | ${openssl} dgst -binary -sha1 -hmac $1 | ${base64})
     auth_header="X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=$2,Algorithm=HmacSHA1,Signature=$signature"
-    hostname=$(${hostname}).${zone}
     record_value=$(${wget} http://169.254.169.254/latest/meta-data/${query})
+
+    set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname)
+    [ -n "$1" ] && HOSTNAME="$1"; HOSTNAME="$HOSTNAME.${zone}"
 
     ${curl-nofail} -d @/dev/stdin \
           -H "Content-Type: text/xml" \
@@ -60,7 +62,7 @@ let
           <Change>
              <Action>UPSERT</Action>
              <ResourceRecordSet>
-                <Name>$hostname</Name>
+                <Name>$HOSTNAME</Name>
                 <Type>${recordType}</Type>
                 <TTL>30</TTL>
                 <ResourceRecords>
@@ -83,15 +85,6 @@ let
     ${ip} route delete blackhole 169.254.169.254 2>/dev/null || true
 
     export CURL_CA_BUNDLE=${pkgs.cacert}/etc/ca-bundle.crt
-
-    # applying the hostname from UserData if any:
-    set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname)
-    if [ -z $1 ]; then
-      echo "current hostname: $(${hostname})"
-    else
-      echo "setting hostname from EC2 user-data: '$1'"
-      ${hostname} $1
-    fi
 
     # registering route 53 hostnames if any:
     echo ${concatStringsSep " " (

@@ -20,7 +20,7 @@ in rec {
   deps = {
     nixpkgs = {
       url = "git://github.com/NixOS/nixpkgs.git";
-      rev = "99bfc89a97c86db6180d9fc927eeef3d84f30a41"; # branch: release-14.12
+      rev = "79effb88a0d342ffc423b7044548c34c7f5c1aa4"; # branch: release-14.12
     };
   };
 

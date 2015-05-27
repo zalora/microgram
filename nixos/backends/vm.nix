@@ -7,7 +7,7 @@ args@{
 , ... }:
 
 let
-  nixos = args.nixos or import <microgram/nixos> {
+  nixos = args.nixos or (import <microgram/nixos> {
     configuration = { config, lib, ...}: {
       imports = [ <microgram/nixos/virtualbox> ] ++ modules;
 
@@ -19,7 +19,7 @@ let
       services.openssh.permitRootLogin = lib.mkDefault "yes";
       services.openssh.challengeResponseAuthentication = lib.mkDefault true;
     };
-  };
+  });
 in
 rec {
   inherit nixos;

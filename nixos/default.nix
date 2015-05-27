@@ -18,6 +18,7 @@ let
       nsswins = false;
       syncPasswordsByPam = false;
       isContainer = false;
+      devices = [];
     };
   };
 
@@ -34,6 +35,8 @@ let
       powerManagement = stub;
       security.pam.usb = stub;
       boot.isContainer = lib.mkOption { default = false; };
+      boot.initrd.luks = stub;
+      networking.wireless = stub;
     };
     config = {
       powerManagement.enable = false;
@@ -50,25 +53,29 @@ let
 
   inherit (eval) pkgs;
 
-  vm-modules = [ configuration <nixpkgs/nixos/modules/virtualisation/qemu-vm.nix> ];
+  vm-modules = [
+    configuration
+    <nixpkgs/nixos/modules/virtualisation/qemu-vm.nix>
+    ({ virtualisation.graphics = false; })
+  ];
 
-  vm = (eval-config {
+  virt = (eval-config {
     inherit system baseModules;
     modules = vm-modules;
-  }).config;
+  });
 
-  vm-bootloader = (eval-config {
+  virt-bootloader = eval-config {
     inherit system baseModules;
     modules = vm-modules ++ [ { virtualisation.useBootLoader = true; } ];
-  }).config;
-
+  };
 in
-{
+rec {
   inherit (eval) config options;
 
   system = eval.config.system.build.toplevel;
 
-  vm = vm.config.system.build.vm;
+  vm = virt.config.system.build.vm;
+  qemu = vm;
 
-  vmWithBootLoader = vm-bootloader.system.build.vm;
+  vmWithBootLoader = virt-bootloader.config.system.build.vm;
 }

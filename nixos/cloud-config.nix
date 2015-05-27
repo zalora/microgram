@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }: with lib;
 let
+  ugpkgs = import <microgram/pkgs> { inherit pkgs; };
+
   cloudDefault = mkOverride 900;
 
   fd-limit.soft = "262140";
@@ -48,11 +50,12 @@ in
   '';
 
   # Don't start a tty on the serial consoles.
-  systemd.services."serial-getty@ttyS0".enable = false;
-  systemd.services."serial-getty@hvc0".enable = false;
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@".enable = false;
+  #systemd.services."serial-getty@ttyS0".enable = false;
+  #systemd.services."serial-getty@hvc0".enable = false;
+  #systemd.services."getty@tty1".enable = false;
+  #systemd.services."autovt@".enable = false;
 
+  boot.kernelPackages = ugpkgs.linuxPackages;
   boot.kernelParams = [ "panic=1" "boot.panic_on_fail" ];
 
   boot.tmpOnTmpfs = cloudDefault true;

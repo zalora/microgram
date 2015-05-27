@@ -1,28 +1,34 @@
-let
-  nixos = modules:
-    import <microgram/nixos> {
-      configuration = { config, ...}: {
-        imports = [ <microgram/nixos/virtualbox> ] ++ modules;
-      };
-    };
-in
 { pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
-, lib ? pkgs.lib
-, vmName ? "NixOS Platform"
+, ugpkgs ? import <microgram/pkgs> { inherit pkgs; }
+, vmName ? "Microgram"
 , fileName ? "platform.ova"
 , modules ? []
-, config ? (nixos modules).config
 , ... }:
 
-rec {
-  # standard qemu-kvm VMs
-  inherit (config) vm vmWithBootLoader;
+let
+  nixos = import <microgram/nixos> {
+    configuration = { config, lib, ...}: {
+      imports = [ <microgram/nixos/virtualbox> ] ++ modules;
 
-  vdi = config.system.build.virtualBoxImage;
+      users.extraUsers.root = lib.mkDefault {
+        hashedPassword = null;
+        password = "root";
+      };
+      services.openssh.passwordAuthentication = lib.mkDefault true;
+      services.openssh.permitRootLogin = lib.mkDefault "yes";
+      services.openssh.challengeResponseAuthentication = lib.mkDefault true;
+    };
+  };
+in
+rec {
+  inherit nixos;
+  inherit (nixos) qemu;
+
+  vdi = nixos.config.system.build.virtualBoxImage;
 
   ova =
    pkgs.runCommand "virtualbox-ova" {
-     buildInputs = [ pkgs.linuxPackages.virtualbox ];
+     buildInputs = [ ugpkgs.linuxPackages.virtualbox ];
      inherit vmName fileName;
    } ''
     mkdir -p $out

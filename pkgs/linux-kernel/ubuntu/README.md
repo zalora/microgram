@@ -63,5 +63,6 @@ drivers/xen/xen-acpi-processor.ko
 drivers/xen/xen-gntalloc.ko
 drivers/xen/xen-privcmd.ko
 drivers/xen/xen-gntdev.ko
+drivers/block/virtio_blk.ko
 EOF
 ```

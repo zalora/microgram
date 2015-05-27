@@ -5,7 +5,7 @@ let
   clientKeyPath = "/root/.vbox-nixops-client-key";
 in
 {
-  require = [
+  imports = [
     <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
     <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
     <microgram/nixos/cloud-config.nix>

@@ -161,9 +161,11 @@ in rec {
   };
 
   # microgram default linux
-  linux = pkgs.callPackage ./linux-kernel/ubuntu/ubuntu-overrides.nix {
-    kernel = linux_3_19;
-  };
+#  linux = pkgs.callPackage ./linux-kernel/ubuntu/ubuntu-overrides.nix {
+#    kernel = linux_3_19;
+#  };
+
+  linux = linux_3_19;
 
   linux_3_19 = pkgs.makeOverridable (import ./linux-kernel/3.19.nix) {
     inherit (pkgs) fetchurl stdenv perl buildLinux;

@@ -7,9 +7,9 @@ rec {
   };
 
   # <microgram/nixos> is a thin wrapper around <nixpkgs/nixos>
-  nginx-nixos = import <microgram/nixos> { configuration = nginx-module; };
+  nixos = import <microgram/nixos> { configuration = nginx-module; };
 
-  nginx-ami = import <microgram/nixos/backends/ami.nix> {
+  ami = import <microgram/nixos/backends/ami.nix> {
     modules = [ nginx-module ];
     upload-context = rec {
       region = "ap-southeast-1";
@@ -17,7 +17,7 @@ rec {
     };
   };
 
-  nginx-vm = import <microgram/nixos/backends/vm.nix> {
+  vm = import <microgram/nixos/backends/vm.nix> {
     modules = [ nginx-module ];
     fileName = "nginx.ova";
     vmName = "Nginx on Microgram";

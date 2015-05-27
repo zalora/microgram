@@ -6,27 +6,25 @@
 , ... }:
 
 let
-  nixos = modules:
-    import <microgram/nixos> {
-      configuration = { config, lib, ...}: {
-        imports = [ <microgram/nixos/virtualbox> ] ++ modules;
+  nixos = import <microgram/nixos> {
+    configuration = { config, lib, ...}: {
+      imports = [ <microgram/nixos/virtualbox> ] ++ modules;
 
-        users.extraUsers.root = lib.mkDefault {
-          hashedPassword = null;
-          password = "root";
-        };
-        services.openssh.passwordAuthentication = lib.mkDefault true;
-        services.openssh.permitRootLogin = lib.mkDefault "yes";
-        services.openssh.challengeResponseAuthentication = lib.mkDefault true;
+      users.extraUsers.root = lib.mkDefault {
+        hashedPassword = null;
+        password = "root";
       };
+      services.openssh.passwordAuthentication = lib.mkDefault true;
+      services.openssh.permitRootLogin = lib.mkDefault "yes";
+      services.openssh.challengeResponseAuthentication = lib.mkDefault true;
     };
- inherit ((nixos modules)) config;
+  };
 in
 rec {
-  # standard qemu-kvm VMs
-  inherit (config) vm vmWithBootLoader;
+  inherit nixos;
+  inherit (nixos) qemu;
 
-  vdi = config.system.build.virtualBoxImage;
+  vdi = nixos.config.system.build.virtualBoxImage;
 
   ova =
    pkgs.runCommand "virtualbox-ova" {

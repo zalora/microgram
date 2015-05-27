@@ -1,4 +1,5 @@
-{ pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
+args@{
+  pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
 , ugpkgs ? import <microgram/pkgs> { inherit pkgs; }
 , vmName ? "Microgram"
 , fileName ? "platform.ova"
@@ -6,7 +7,7 @@
 , ... }:
 
 let
-  nixos = import <microgram/nixos> {
+  nixos = args.nixos or import <microgram/nixos> {
     configuration = { config, lib, ...}: {
       imports = [ <microgram/nixos/virtualbox> ] ++ modules;
 

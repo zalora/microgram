@@ -13,8 +13,6 @@ in
 
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];
 
-  boot.kernelPackages = (import <microgram/pkgs> { inherit pkgs; }).linuxPackages;
-
   boot.vesa = false;
 
   boot.loader.grub.timeout = 1;

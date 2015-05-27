@@ -10,7 +10,6 @@ in
 
   config = {
     nixpkgs.system = mkOverride 100 "x86_64-linux";
-    boot.kernelPackages = (import <microgram/pkgs> { inherit pkgs; }).linuxPackages;
 
     #boot.loader.grub.extraPerEntryConfig = mkIf isEc2Hvm ( mkOverride 10 "root (hd0,0)" );
 

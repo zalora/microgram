@@ -39,7 +39,7 @@ let
       fi
     fi
 
-    set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname)
+    set -- $(${curl} http://169.254.169.254/latest/user-data | ${jq} -r .hostname || true)
     [ -n "$1" ] && HOSTNAME="$1"; HOSTNAME="$HOSTNAME.${zone}"
 
     set -- $(${wget} http://169.254.169.254/latest/meta-data/iam/security-credentials/${iamCredentialName} \

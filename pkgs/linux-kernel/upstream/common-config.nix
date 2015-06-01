@@ -304,9 +304,12 @@ with stdenv.lib;
     BINFMT_SCRIPT y
   ''}
 
-  # Enable the 9P cache to speed up NixOS VM tests.
-  #9P_FSCACHE? y
-  #9P_FS_POSIX_ACL? y
+  # 9P is used by NixOS Tests (via qemu support).
+  # 9P_FS y
+  9P_FSCACHE y
+  9P_FS_POSIX_ACL y
+  # NET_9P y
+  # NET_9P_VIRTIO y
 
   # Enable transparent support for huge pages.
   TRANSPARENT_HUGEPAGE? y
@@ -349,7 +352,6 @@ with stdenv.lib;
   AX25 n
   AF_RXRPC n
   RFKILL n
-  #9P2000 n
   CAIF n
   PARPORT n
   IDE n # deprecated

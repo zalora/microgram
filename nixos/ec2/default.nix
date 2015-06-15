@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) mkOverride mkDefault optionalString;
+  inherit (lib) mkOverride mkDefault optionalString mkForce;
 in
 {
   imports = [
@@ -15,12 +15,14 @@ in
 
     ec2.metadata = mkDefault true;
 
-    systemd.services."fetch-ec2-data".script = ''
+    # By default, 'fetch-ec2-data' assigns hostnames and writes SSH host keys
+    # from user data. We don't want that.
+    systemd.services."fetch-ec2-data".script = mkForce (''
       ip route del blackhole 169.254.169.254/32 || true
     '' + optionalString (!config.ec2.metadata) ("\n" + ''
       # Since the user data is sensitive, prevent it from being
       # accessed from now on.
       ip route add blackhole 169.254.169.254/32
-    '');
+    ''));
   };
 }

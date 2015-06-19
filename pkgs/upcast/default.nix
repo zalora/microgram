@@ -10,8 +10,8 @@ cabal.mkDerivation (self: {
   pname = "upcast";
   src = fetchgit {
     url = "git://github.com/zalora/upcast.git";
-    rev = "2af0b9e107fd3f2000bcd16bd8e20e1e15c9a1e4";
-    sha256 = "25facc97abfddb3a91404d7877db31edacb8a573af60ae5d9d6824519e711e79";
+    rev = "88d565f36453198c2e999ae07fdfc5dd98c382e5";
+    sha256 = "06313b5ebcece5100310236effed2f83694bec5c88f7b951dd697c3acb2f6fc2";
   };
   version = "pre";
   noHaddock = true;

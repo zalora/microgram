@@ -13,7 +13,7 @@ let
     pythonPackages perlPackages haskellPackages
     stdenv_32bit gnome
     stdenv fetchurl newScope;
-  inherit (lib) concatMapStringsSep overrideDerivation;
+  inherit (lib) concatMapStringsSep overrideDerivation optionalAttrs;
 
   fns = rec {
 
@@ -248,7 +248,20 @@ in rec {
 
   newrelic-sysmond = pkgs.callPackage ./newrelic-sysmond {};
 
-  nginx = overrideDerivation (pkgs.nginx.override { ngx_lua = true; }) (args: {
+  nginx = let
+    version = "1.9.1";
+    fetchFromGitHub = args@{ repo, ... }:
+      # XXX: hack https://github.com/openresty/lua-nginx-module/issues/499
+      pkgs.fetchFromGitHub (args // optionalAttrs (repo == "lua-nginx-module") {
+        rev = "91ff51faf418e5bf283eff0e52c2a8a2348056ab";
+        sha256 = "144lj4amjpjgkilbpp4al5bisnkvmb5insn3l28597qcfn887b1d";
+      });
+  in overrideDerivation (pkgs.nginx.override { ngx_lua = true; rtmp = false; inherit fetchFromGitHub; }) (args: {
+    name = "nginx-${version}";
+    src = fetchurl {
+      url = "http://nginx.org/download/nginx-${version}.tar.gz";
+      sha256 = "1b8xikrr19p07n28xnar8p8l0vgm7795lmrb2x7r9h4lwvx5bx89";
+    };
     configureFlags = args.configureFlags ++ ["--with-http_stub_status_module"];
   });
 

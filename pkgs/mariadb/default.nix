@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   name = "mariadb-${version}";
-  version = "10.0.17";
+  version = "10.0.20";
 
   src = fetchurl {
     url = "https://downloads.mariadb.org/interstitial/${name}/source/${name}.tar.gz";
-    md5 = "3101d1e79c1b04699cde10780f959625";
+    md5 = "59d6c00827ad56f2ac76340fece32fc0";
   };
 
   buildInputs = [ cmake bison ncurses openssl perl readline zlib ]

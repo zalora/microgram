@@ -49,6 +49,11 @@ in
     DefaultLimitNOFILE=${fd-limit.soft}
   '';
 
+  environment.etc."systemd/coredump.conf".text = ''
+    [Coredump]
+    Storage=journal
+  '';
+
   # Don't start a tty on the serial consoles.
   #systemd.services."serial-getty@ttyS0".enable = false;
   #systemd.services."serial-getty@hvc0".enable = false;

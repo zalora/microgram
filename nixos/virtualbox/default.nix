@@ -21,4 +21,10 @@ in
   # may get a different IP address if dhcpcd is restarted.  So don't
   # restart dhcpcd.
   systemd.services.dhcpcd.restartIfChanged = false;
+
+  nix = {
+    extraOptions = ''
+      allow-unsafe-native-code-during-evaluation = true
+    '';
+  };
 }

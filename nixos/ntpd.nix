@@ -16,15 +16,16 @@ let
     restrict 127.0.0.1
     restrict -6 ::1
 
+    interface listen all
+    ${toString (map (interface: "interface ignore ${interface}\n") config.services.ntp.ignoreInterfaces)}
+
     ${toString (map (server: "server " + server + " iburst\n") config.services.ntp.servers)}
   '';
 
   ntpFlags = lib.concatStringsSep " " ([
     "-c ${configFile}"
     "-u ${ntpUser}:nogroup"
-  ] ++ map (interface:
-    "-I ${interface}"
-  ) config.services.ntp.interfaces);
+  ]);
 in
 { options = {
     services.ntp = {
@@ -48,11 +49,10 @@ in
         '';
       };
 
-      interfaces = mkOption {
+      ignoreInterfaces = mkOption {
         default = [];
         description = ''
-          The name or address of interfaces to listen on.
-          If this list is empty, we listen on every address.
+          Don't try binding on any of these interfaces.
         '';
       };
     };

@@ -24,9 +24,6 @@ in
     "1.amazon.pool.ntp.org"
     "3.amazon.pool.ntp.org"
   ];
-  services.ntp.interfaces = [
-    "lo"
-  ];
 
   nix.package = pkgs.nixUnstable;
   nix.readOnlyStore = true;

@@ -290,6 +290,8 @@ in rec {
 
   sproxy = fns.staticHaskellCallPackage ./sproxy {};
 
+  syslog-ng = pkgs.callPackage ./syslog-ng {};
+
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
 
   upcast = pkgs.haskellPackages.callPackage ./upcast {

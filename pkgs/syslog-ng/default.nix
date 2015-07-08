@@ -6,6 +6,11 @@ stdenv.mkDerivation rec {
 
   version = "3.6.4";
 
+  dontStrip = true;
+  stripAllFlags = "";
+  stripDebugFlags = "";
+  stripDebugList = [];
+
   src = fetchurl {
     url = "https://github.com/balabit/syslog-ng/releases/download/syslog-ng-${version}/syslog-ng-${version}.tar.gz";
     sha256 = "1rzl0s8kv1bafwiv4h9scgfrw172x1d2pqjjz7qidmy73brivqbv";

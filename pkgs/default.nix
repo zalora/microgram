@@ -16,6 +16,11 @@ let
   inherit (lib) concatMapStringsSep overrideDerivation optionalAttrs;
 
   fns = rec {
+    # exports dependency graph of a derivation as a separate derivation
+    exportGraph = drv:
+      pkgs.runCommand "${drv.name}-graph" { exportReferencesGraph = [ "graph" drv ]; } ''
+        cat graph > $out
+      '';
 
     # Take a Haskell file together with its dependencies, produce a binary.
     # Note: dependencies that are included in GHC itself must not be provided,

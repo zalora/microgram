@@ -8,7 +8,7 @@ let
     in (import <microgram/nixos> { configuration = hvm-config; });
 in
 { pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
-, lib ? pkgs.lib
+, ugpkgs ? import <microgram/pkgs> { inherit pkgs; }
 , modules ? []
 , config ? (nixos modules).config
 , aws-env ? {}
@@ -19,7 +19,7 @@ in
 , ... }:
 
 let
-  inherit (lib) listToAttrs nameValuePair;
+  inherit (import <nixpkgs/lib>) listToAttrs nameValuePair;
 
   env =
     let
@@ -75,4 +75,19 @@ rec {
       --virtualization-type "hvm" | ${jq} -r .ImageId > $out || rm -f $out
     cat $out
   '';
+
+  # should be rebuilt on every ug/nixpkgs bump
+  aminate = aminate1 "snap-e665e8d3";
+
+  aminate1 = sdk-snapshot:
+    let
+      toplevel = config.system.build.toplevel;
+      graph = ugpkgs.fns.exportGraph toplevel;
+    in pkgs.runCommand "aminate-ebs" {
+      __noChroot = true;
+      preferLocalBuild = true;
+    } ''
+      echo env graph=${graph} toplevel=${toplevel} baseSnapshot=${sdk-snapshot} ${ugpkgs.mkebs} | tee $out
+      chmod +x $out
+    '';
 }

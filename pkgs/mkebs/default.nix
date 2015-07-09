@@ -13,9 +13,8 @@ stdenv.mkDerivation rec {
   script = ./mkebs.sh;
 
   buildCommand = ''
-    mkdir -p $out/bin
-    substituteAll $script $out/bin/${name}
-    chmod +x $out/bin/${name}
+    substituteAll $script $out
+    chmod +x $out
   '';
 
   meta = with stdenv.lib; {

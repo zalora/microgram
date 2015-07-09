@@ -271,6 +271,14 @@ in rec {
     configureFlags = args.configureFlags ++ ["--with-http_stub_status_module"];
   });
 
+  openssl = overrideDerivation pkgs.openssl (_: (rec {
+    name = "openssl-1.0.1p";
+    src = fetchurl {
+      url = "https://www.openssl.org/source/${name}.tar.gz";
+      sha256 = "1wdjx4hr3hhhyqx3aw8dmb9907sg4k7wmfpcpdhgph35660fcpmx";
+    };
+  }));
+
   percona-toolkit = import ./percona-toolkit { inherit perlPackages fetchurl; };
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};

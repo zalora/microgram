@@ -7,8 +7,8 @@ set -euf
 export PATH=@coreutils@/bin"${PATH+:$PATH}"
 
 # By default try to run command 10 times with a delay of 3s between retries.
-retry_count=${retry_count-10}
-retry_delay=${retry_delay-3}
+retry_count=${RETRY_COUNT:-10}
+retry_delay=${RETRY_DELAY:-3}
 
 # retry_delay_seq specifies the delays between unsuccessful attempts to run the
 # command as space separated list of sleep arguments.  See also sleep(1).
@@ -17,7 +17,7 @@ retry_delay=${retry_delay-3}
 # because we don't need to wait after the last failed attempt.
 #
 # You can override this variable to e.g. implement a non-linear retry schema.
-retry_delay_seq=${retry_delay_seq-$(
+retry_delay_seq=${RETRY_DELAY_SEQ:-$(
   for i in $(seq 2 $retry_count); do
     echo $retry_delay
   done

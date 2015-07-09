@@ -20,6 +20,8 @@ in
     systemd.services."fetch-ec2-data".script = mkForce (''
       ip route del blackhole 169.254.169.254/32 || true
 
+      wget="wget -q --retry-connrefused -O -"
+
       # Don't download the SSH key if it has already been injected
       # into the image (a Nova feature).
       if ! [ -e /root/.ssh/authorized_keys ]; then

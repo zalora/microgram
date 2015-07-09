@@ -221,6 +221,8 @@ in rec {
 
   mergex = pkgs.callPackage ./mergex {};
 
+  mkebs = pkgs.callPackage ./mkebs {};
+
   myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servantClient; };
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};

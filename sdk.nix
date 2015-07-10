@@ -110,7 +110,7 @@ rec {
       damemtop docker
       elasticsearch-cloud-aws elastisch
       exim
-      galera-wsrep gdb-quiet graphviz
+      galera-wsrep get-user-data gdb-quiet graphviz
       heavy-sync
       jackson-core-asl jenkins
       kibana4 kiries

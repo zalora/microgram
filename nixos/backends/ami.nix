@@ -19,7 +19,7 @@ in
 , ... }:
 
 let
-  inherit (import <nixpkgs/lib>) listToAttrs nameValuePair;
+  inherit (import <nixpkgs/lib>) listToAttrs nameValuePair optionalString;
 
   env =
     let
@@ -79,6 +79,7 @@ rec {
   # should be rebuilt on every ug/nixpkgs bump
   aminate = aminate1 "snap-e665e8d3";
 
+  # the builder instance IAM role must be able to manage EBS volumes and register images
   aminate1 = sdk-snapshot:
     let
       toplevel = config.system.build.toplevel;
@@ -87,7 +88,9 @@ rec {
       __noChroot = true;
       preferLocalBuild = true;
     } ''
-      echo env graph=${graph} toplevel=${toplevel} baseSnapshot=${sdk-snapshot} ${ugpkgs.mkebs} | tee $out
+      echo env graph=${graph} toplevel=${toplevel} ${
+        optionalString (sdk-snapshot != null) "baseSnapshot=${sdk-snapshot}"
+      } ${ugpkgs.mkebs} | tee $out
       chmod +x $out
     '';
 }

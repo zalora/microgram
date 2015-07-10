@@ -21,7 +21,7 @@ meta() {
 
 # global in: $aminame
 amitest() {
-    set -- $(aws --region ap-southeast-1 ec2 describe-images --filters Name=name,Values=/nix/store/nl1kx7wjihx8k6cvg5n3zkdmp2l65mh7-nixos-14.12pre-git-hvm | jq -r '.Images | .[] | [.Name, .ImageId] | .[]')
+    set -- $(aws --region ap-southeast-1 ec2 describe-images --filters "Name=name,Values=$aminame" | jq -r '.Images | .[] | [.Name, .ImageId] | .[]')
 
     if [ "$1" = "$aminame" ]; then
         echo AMI already exists: $2 >&2

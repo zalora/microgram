@@ -84,7 +84,7 @@ rec {
       diffutils dnsmasq dstat
       elasticsearch erlang
       file findutils
-      gawk gcc git glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
+      gawk gcc git glibcLocales gnugrep gnumake gnupg gnused go gzip
       htop iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod
@@ -128,8 +128,6 @@ rec {
     inherit (pkgs.haskellPackages) ghc;
     inherit (pkgs) haskellngPackages;
     cabal = pkgs.haskellPackages.cabalInstall;
-
-    inherit (ugpkgs.linuxPackages) virtualbox;
   };
 
   phpPackages = {

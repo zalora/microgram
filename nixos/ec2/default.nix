@@ -5,7 +5,10 @@ in
 {
   imports = [
     ./amazon-image.nix
-    <microgram/nixos/cloud-config.nix>
+    ./ami-ebs.nix
+    ./ami-s3.nix
+    <microgram/nixos/cloud/cloud-config.nix>
+    <nixpkgs/nixos/modules/virtualisation/ec2-data.nix> # fetch-ec2-data and print-host-key
   ];
 
   config = {

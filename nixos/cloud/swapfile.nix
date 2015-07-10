@@ -45,7 +45,7 @@ in {
 
       path = [ pkgs.coreutils pkgs.utillinux pkgs.gnugrep ];
 
-      script = ''
+      script = ''g
         memSize=$(grep MemTotal: /proc/meminfo | tr -d '[:alpha:][:space:]:')
         if (( $memSize > ${toString (cfg.memoryLimit * 1024)} )); then
           echo "Instance has enough memory, skipping swapfile"

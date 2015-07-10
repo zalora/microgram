@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }: with lib;
 let
-  ugpkgs = import <microgram/pkgs> { inherit pkgs; };
+  inherit (import <microgram/sdk.nix>) ugpkgs nixpkgs-config;
 
   cloudDefault = mkOverride 900;
 
@@ -9,6 +9,12 @@ let
   core-limit = "1048576"; # one gigabyte
 in
 {
+  imports = [
+    <microgram/nixos/ntpd.nix>
+  ];
+
+  nixpkgs.config = nixpkgs-config;
+
   # usually covered by things like security groups
   networking.firewall.enable = cloudDefault false;
 

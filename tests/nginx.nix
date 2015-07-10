@@ -43,6 +43,7 @@ rec {
   s3-bundle = ec2.config.system.build.s3Bundle;
   s3-ami = ec2.config.system.build.s3Register;
 
+  vdi = virtualbox.config.system.build.virtualBoxImage;
   ova = virtualbox.config.system.build.ova;
 
   qemu-test = testlib.runInMachine {

@@ -10,7 +10,7 @@ let
 in
 {
   imports = [
-    <microgram/nixos/ntpd.nix>
+    ./ntpd.nix
   ];
 
   nixpkgs.config = nixpkgs-config;

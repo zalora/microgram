@@ -1,15 +1,11 @@
-{ pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
-, ...
-}:
-
 #
 # Library packages here are grouped by programming language
 # and sorted alphabetically within those groups.
 #
 
 let
+  inherit (import <microgram/sdk.nix>) pkgs lib;
   inherit (pkgs)
-    lib
     pythonPackages perlPackages haskellPackages
     stdenv_32bit gnome
     stdenv fetchurl newScope;
@@ -279,6 +275,8 @@ in rec {
   });
 
   percona-toolkit = import ./percona-toolkit { inherit perlPackages fetchurl; };
+
+  php54 = pkgs.callPackage ./php/5.4.nix {};
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 

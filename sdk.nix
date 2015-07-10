@@ -84,7 +84,7 @@ rec {
       diffutils dnsmasq dstat
       elasticsearch erlang
       file findutils
-      gawk gcc git glibcLocales gnugrep gnumake gnupg gnused go gzip
+      gawk gcc git glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod

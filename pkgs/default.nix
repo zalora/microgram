@@ -1,21 +1,22 @@
-{ pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
-, ...
-}:
-
 #
 # Library packages here are grouped by programming language
 # and sorted alphabetically within those groups.
 #
 
 let
+  inherit (import <microgram/sdk.nix>) pkgs lib;
   inherit (pkgs)
-    lib
     pythonPackages perlPackages haskellPackages
     stdenv_32bit gnome
     stdenv fetchurl newScope;
   inherit (lib) concatMapStringsSep overrideDerivation optionalAttrs;
 
   fns = rec {
+    # exports dependency graph of a derivation as a separate derivation
+    exportGraph = drv:
+      pkgs.runCommand "${drv.name}-graph" { exportReferencesGraph = [ "graph" drv ]; } ''
+        cat graph > $out
+      '';
 
     # Take a Haskell file together with its dependencies, produce a binary.
     # Note: dependencies that are included in GHC itself must not be provided,
@@ -221,6 +222,8 @@ in rec {
 
   mergex = pkgs.callPackage ./mergex {};
 
+  mkebs = pkgs.callPackage ./mkebs {};
+
   myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servantClient; };
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};
@@ -280,6 +283,8 @@ in rec {
   }));
 
   percona-toolkit = import ./percona-toolkit { inherit perlPackages fetchurl; };
+
+  php54 = pkgs.callPackage ./php/5.4.nix {};
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 

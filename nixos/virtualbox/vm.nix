@@ -1,35 +1,16 @@
-args@{
-  pkgs ? import <nixpkgs> { system = "x86_64-linux"; config.allowUnfree = true; }
-, ugpkgs ? import <microgram/pkgs> { inherit pkgs; }
-, vmName ? "Microgram"
-, fileName ? "platform.ova"
-, modules ? []
-, ... }:
+{ config, pkgs, ... }:
 
 let
-  nixos = args.nixos or (import <microgram/nixos> {
-    configuration = { config, lib, ...}: {
-      imports = [ <microgram/nixos/virtualbox> ] ++ modules;
-
-      users.extraUsers.root = lib.mkDefault {
-        hashedPassword = null;
-        password = "root";
-      };
-      services.openssh.passwordAuthentication = lib.mkDefault true;
-      services.openssh.permitRootLogin = lib.mkDefault "yes";
-      services.openssh.challengeResponseAuthentication = lib.mkDefault true;
-    };
-  });
+  inherit (import <microgram/sdk.nix>) sdk ugpkgs;
+  vmName = "Microgram";
+  fileName = "platform.ova";
 in
-rec {
-  inherit nixos;
-  inherit (nixos) qemu;
-
-  vdi = nixos.config.system.build.virtualBoxImage;
+(x: { config.system.build = x; }) rec {
+  vdi = config.system.build.virtualBoxImage;
 
   ova =
    pkgs.runCommand "virtualbox-ova" {
-     buildInputs = [ ugpkgs.linuxPackages.virtualbox ];
+     buildInputs = [ config.boot.kernelPackages.virtualbox ];
      inherit vmName fileName;
    } ''
     mkdir -p $out

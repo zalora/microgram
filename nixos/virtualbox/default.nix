@@ -8,7 +8,8 @@ in
   imports = [
     <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
     <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
-    <microgram/nixos/cloud-config.nix>
+    <microgram/nixos/cloud/cloud-config.nix>
+    ./vm.nix
   ];
 
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];
@@ -27,4 +28,12 @@ in
       allow-unsafe-native-code-during-evaluation = true
     '';
   };
+
+  users.extraUsers.root = lib.mkDefault {
+    hashedPassword = null;
+    password = "root";
+  };
+  services.openssh.passwordAuthentication = lib.mkDefault true;
+  services.openssh.permitRootLogin = lib.mkDefault "yes";
+  services.openssh.challengeResponseAuthentication = lib.mkDefault true;
 }

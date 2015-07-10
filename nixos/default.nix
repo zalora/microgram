@@ -5,7 +5,6 @@
 let
   eval-config = import <nixpkgs/nixos/lib/eval-config.nix>;
   baseModules = [stub-module]
-             ++ [<microgram/nixos/ntpd.nix>]
              ++ import <microgram/nixos/vendor-module-list.nix>;
 
   lib = import <nixpkgs/lib>;
@@ -50,32 +49,8 @@ let
     inherit system baseModules;
     modules = [ configuration ];
   };
-
-  inherit (eval) pkgs;
-
-  vm-modules = [
-    configuration
-    <nixpkgs/nixos/modules/virtualisation/qemu-vm.nix>
-    ({ virtualisation.graphics = false; })
-  ];
-
-  virt = (eval-config {
-    inherit system baseModules;
-    modules = vm-modules;
-  });
-
-  virt-bootloader = eval-config {
-    inherit system baseModules;
-    modules = vm-modules ++ [ { virtualisation.useBootLoader = true; } ];
-  };
-in
-rec {
+in rec {
   inherit (eval) config options;
 
   system = eval.config.system.build.toplevel;
-
-  vm = virt.config.system.build.vm;
-  qemu = vm;
-
-  vmWithBootLoader = virt-bootloader.config.system.build.vm;
 }

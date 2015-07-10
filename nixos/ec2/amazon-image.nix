@@ -9,11 +9,6 @@ let
   cfg = config.ec2;
 in
 {
-  imports = [
-    #<nixpkgs/nixos/modules/profiles/headless.nix> # incorporated into cloud-config.nix
-    <nixpkgs/nixos/modules/virtualisation/ec2-data.nix>
-  ];
-
   options = {
     ec2 = {
       hvm = lib.mkOption {
@@ -113,13 +108,12 @@ in
     boot.loader.grub.timeout = 0;
     boot.loader.grub.extraPerEntryConfig = "root (hd0${lib.optionalString cfg.hvm ",0"})";
 
-    boot.initrd.postDeviceCommands =
-      ''
-        # Force udev to exit to prevent random "Device or resource busy
-        # while trying to open /dev/xvda" errors from fsck.
-        udevadm control --exit || true
-        kill -9 -1
-      '';
+    boot.initrd.postDeviceCommands = ''
+      # Force udev to exit to prevent random "Device or resource busy
+      # while trying to open /dev/xvda" errors from fsck.
+      udevadm control --exit || true
+      kill -9 -1
+    '';
 
     # Mount all formatted ephemeral disks and activate all swap devices.
     # We cannot do this with the ‘fileSystems’ and ‘swapDevices’ options
@@ -129,47 +123,45 @@ in
     # devices).  Also, put /tmp and /var on /disk0, since it has a lot
     # more space than the root device.
     #
-    # UPCAST: DO NOT "move" /nix to /disk0 and use unionfs on instance-store volumes.
-    boot.initrd.postMountCommands =
-      ''
-        diskNr=0
-        firstNonRootExt3Disk=
-        for device in /dev/xvd[abcde]*; do
-            if [ "$device" = /dev/xvda -o "$device" = /dev/xvda1 ]; then continue; fi
-            fsType=$(blkid -o value -s TYPE "$device" || true)
-            if [ "$fsType" = swap ]; then
-                echo "activating swap device $device..."
-                swapon "$device" || true
-            elif [ "$fsType" = ext3 ]; then
-                mp="/disk$diskNr"
-                diskNr=$((diskNr + 1))
-                echo "mounting $device on $mp..."
-                if mountFS "$device" "$mp" "" ext3; then
-                    if [ -z "$firstNonRootExt3Disk" ]; then firstNonRootExt3Disk="$mp"; fi
-                fi
-            else
-                echo "skipping unknown device type $device"
-            fi
-        done
+    # MICROGRAM: DO NOT "move" /nix to /disk0 and use unionfs on instance-store volumes.
+    boot.initrd.postMountCommands = ''
+      diskNr=0
+      firstNonRootExt3Disk=
+      for device in /dev/xvd[abcde]*; do
+          if [ "$device" = /dev/xvda -o "$device" = /dev/xvda1 ]; then continue; fi
+          fsType=$(blkid -o value -s TYPE "$device" || true)
+          if [ "$fsType" = swap ]; then
+              echo "activating swap device $device..."
+              swapon "$device" || true
+          elif [ "$fsType" = ext3 ]; then
+              mp="/disk$diskNr"
+              diskNr=$((diskNr + 1))
+              echo "mounting $device on $mp..."
+              if mountFS "$device" "$mp" "" ext3; then
+                  if [ -z "$firstNonRootExt3Disk" ]; then firstNonRootExt3Disk="$mp"; fi
+              fi
+          else
+              echo "skipping unknown device type $device"
+          fi
+      done
 
-        if [ -n "$firstNonRootExt3Disk" ]; then
-            mkdir -m 755 -p $targetRoot/$firstNonRootExt3Disk/root
+      if [ -n "$firstNonRootExt3Disk" ]; then
+          mkdir -m 755 -p $targetRoot/$firstNonRootExt3Disk/root
 
-            mkdir -m 1777 -p $targetRoot/$firstNonRootExt3Disk/root/tmp $targetRoot/tmp
-            mount --bind $targetRoot/$firstNonRootExt3Disk/root/tmp $targetRoot/tmp
+          mkdir -m 1777 -p $targetRoot/$firstNonRootExt3Disk/root/tmp $targetRoot/tmp
+          mount --bind $targetRoot/$firstNonRootExt3Disk/root/tmp $targetRoot/tmp
 
-            if [ ! -e $targetRoot/.ebs ]; then
-                mkdir -m 755 -p $targetRoot/$firstNonRootExt3Disk/root/var $targetRoot/var
-                mount --bind $targetRoot/$firstNonRootExt3Disk/root/var $targetRoot/var
-            fi
-        fi
-      '';
+          if [ ! -e $targetRoot/.ebs ]; then
+              mkdir -m 755 -p $targetRoot/$firstNonRootExt3Disk/root/var $targetRoot/var
+              mount --bind $targetRoot/$firstNonRootExt3Disk/root/var $targetRoot/var
+          fi
+      fi
+    '';
 
-    boot.initrd.extraUtilsCommands =
-      ''
-        # We need swapon in the initrd.
-        cp --remove-destination ${pkgs.utillinux}/sbin/swapon $out/bin
-      '';
+    boot.initrd.extraUtilsCommands = ''
+      # We need swapon in the initrd.
+      cp --remove-destination ${pkgs.utillinux}/sbin/swapon $out/bin
+    '';
 
     # Don't put old configurations in the GRUB menu.  The user has no
     # way to select them anyway.
@@ -180,7 +172,6 @@ in
     services.openssh.enable = true;
     services.openssh.permitRootLogin = "without-password";
 
-    # Force getting the hostname from EC2.
     networking.hostName = mkDefault "";
   };
 }

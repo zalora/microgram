@@ -2,8 +2,8 @@
 let
   inherit (lib) concatStringsSep mapAttrsToList mkOverride mkOption types optionalString;
 
-  plat-pkgs = import <microgram/pkgs> { inherit pkgs; };
-  retry = "${plat-pkgs.retry}/bin/retry";
+  inherit (import <microgram/sdk.nix>) sdk pkgs;
+  retry = "${sdk.retry}/bin/retry";
   base64 = "${pkgs.coreutils}/bin/base64";
   jq = "/usr/bin/env LD_LIBRARY_PATH=${pkgs.jq}/lib ${pkgs.jq}/bin/jq";
   curl = "${pkgs.curl}/bin/curl -s --retry 3 --retry-delay 0 --fail";
@@ -20,6 +20,7 @@ let
     ${retry} ${script}
   '';
 
+  # TODO: move to a proper package
   register-hostname = {
     zoneId, zone, iamCredentialName,
     useLocalHostname,
@@ -74,7 +75,7 @@ let
     </ChangeBatch>
     </ChangeResourceRecordSetsRequest>
     __EOF
-    
+
     curl_error=$?
 
     echo
@@ -134,7 +135,7 @@ in
             description = ''
               CNAMEs to the internal hostname. Useful when doing VPC tunneling.
             '';
-          }; 
+          };
         };
       }));
 

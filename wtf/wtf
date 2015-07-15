@@ -19,17 +19,17 @@ nottags=( "slow" )
 alwayschecks=()
 
 wtfdb() {
-    jq "$@" < "$WTFDB"
+  jq "$@" < "$WTFDB"
 }
 
 while [ $# -gt 0 ]; do
   case "$1" in
     -h|--help)
-    echo "wtf [-w] [-t <tag>]... [-n <tag>]... [<check>...]"
-    echo ""
-    echo "Available checks (name [tags]):"
-    wtfdb -M -r 'to_entries | map({ name: .key, tags: .value.tags }) | .[] | "\(.name) \(.tags)"'
-    exit 0
+      echo "wtf [-w] [-t <tag>]... [-n <tag>]... [<check>...]"
+      echo ""
+      echo "Available checks (name [tags]):"
+      wtfdb -M -r 'to_entries | map({ name: .key, tags: .value.tags }) | .[] | "\(.name) \(.tags)"'
+      exit 0
     ;;
     -t|--tag)
       tags+=("$2")

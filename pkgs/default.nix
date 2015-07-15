@@ -257,6 +257,8 @@ in rec {
 
   newrelic-sysmond = pkgs.callPackage ./newrelic-sysmond {};
 
+  nix = pkgs.callPackage ./nix {};
+
   nginx = let
     version = "1.9.1";
     fetchFromGitHub = args@{ repo, ... }:

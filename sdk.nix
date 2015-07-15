@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) imagemagick go docker;
+      inherit (ugpkgs) imagemagick go docker nix;
       mysql = ugpkgs.mariadb;
       php = pkgs.php54;
       s3cmd = pkgs.s3cmd_15_pre_81e3842f7a;
@@ -90,7 +90,7 @@ rec {
       kibana kmod
       libjpeg libjpeg_turbo libxml2 lsof
       memcached
-      netcat-openbsd nfs-utils nix nodejs ntp
+      netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
       parallel perl postgresql procps psmisc pv pxz python
       renameutils riemann runit rxvt_unicode
@@ -115,7 +115,7 @@ rec {
       jackson-core-asl jenkins
       kibana4 kiries
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
-      newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx
+      newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
       percona-toolkit php54 pivotal_agent put-metric
       rabbitmq replicator retry
       solr sproxy syslog-ng

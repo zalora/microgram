@@ -9,4 +9,4 @@ let
     '';
   };
 in
-import ./. { inherit diagnostics; }
+(import ./. { inherit diagnostics; }).config.wtf

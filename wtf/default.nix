@@ -13,6 +13,9 @@ let
         type = types.attrsOf (types.submodule (import ./api.nix));
         default = diagnostics;
       };
+
+      wtf = mkOption { type = types.path; default = wtf; };
+      wtfdb = mkOption { type = types.path; default = wtfdb; };
     };
   };
 
@@ -45,4 +48,4 @@ let
 
     inherit wtfenv wtfdb;
   };
-in wtf
+in eval

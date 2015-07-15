@@ -71,7 +71,7 @@ done
 checks=( ${checks[@]} ${alwayschecks[@]} )
 
 run() {
-  (for c in "${checks[@]}"; do echo "$c"; done) | \
+  for c in "${checks[@]}"; do echo "$c"; done | \
     sort -u | xargs -d"\n" -P0 -n1 check-wrapper
 }
 

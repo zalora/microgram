@@ -2,7 +2,7 @@
 let
   inherit (import <microgram/sdk.nix>) lib sdk pkgs;
   inherit (pkgs) stdenv;
-  inherit (lib) types mkOption concatStrings mapAttrsToList;
+  inherit (lib) types mkOption concatStrings mapAttrsToList mapAttrs;
 
   eval = lib.evalModules { modules = [ module ]; };
   diags = eval.config.diagnostics;
@@ -14,8 +14,20 @@ let
         default = diagnostics;
       };
 
-      wtf = mkOption { type = types.path; default = wtf; };
-      wtfdb = mkOption { type = types.path; default = wtfdb; };
+      paths = {
+        wtf = mkOption { type = types.path; default = wtf; };
+        wtfdb = mkOption { type = types.path; default = wtfdb; };
+      };
+
+      test = mkOption {
+        type = types.attrsOf types.str;
+        default = mapAttrs (_: diag: "${wtf}/bin/wtf ${diag.name}") diags;
+      };
+
+      wait = mkOption {
+        type = types.attrsOf types.str;
+        default = mapAttrs (_: diag: "${wtf}/bin/wtf -w ${diag.name}") diags;
+      };
     };
   };
 

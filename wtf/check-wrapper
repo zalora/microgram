@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+test -d "$WTFBIN"
+
+# <3 nix
+export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+export GIT_SSL_CAINFO=/etc/ssl/certs/ca-certificates.crt
+export OPENSSL_X509_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+
+chkname="$1"
+chk="$WTFBIN/$chkname"
+
+if ! [ -x "$chk" ]; then
+  echo "No such check: $chk"
+  exit 1
+fi
+
+logfile=/dev/null
+if [ -d "$WTFLOGS" ]; then
+  logfile="$WTFLOGS/$1.log"
+fi
+
+prefix() {
+  date "+%Y-%m-%d %H:%M:%S $chkname START" >> "$logfile"
+  while read line; do
+    echo "$chkname: $line"
+    echo "$line" >> "$logfile"
+  done
+  date "+%Y-%m-%d %H:%M:%S $chkname DONE" >> "$logfile"
+}
+
+set -o pipefail
+"$chk" 2>&1 | prefix

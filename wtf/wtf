@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+set -ef
+set -o pipefail
+
+# must include check-wrapper
+export PATH=@out@/bin:@wtfenv@/bin:$PATH
+
+export WTFBIN=${WTFBIN:-@out@/checks}
+export WTFDB=${WTFDB:-@wtfdb@}
+
+test -d "$WTFBIN"
+test -f "$WTFDB"
+
+wait=0
+checks=()
+tags=()
+nottags=( "slow" )
+alwayschecks=()
+
+wtfdb() {
+    jq "$@" < "$WTFDB"
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help)
+    echo "wtf [-t <tag>] [-n <tag>] [-w] [<check>]"
+    echo ""
+    echo "Available checks (name [tags]):"
+    wtfdb -M -r 'to_entries | map({ name: .key, tags: .value.tags }) | .[] | "\(.name) \(.tags)"'
+    exit 0
+    ;;
+    -t|--tag)
+      tags+=("$2")
+      shift
+    ;;
+    -n|--nottag)
+      nottags+=("$2")
+      shift
+    ;;
+    -w|--wait)
+      wait=1 # poll until the check starts returning zero
+    ;;
+    *)
+      checks+=("$1")
+      alwayschecks+=("$1")
+    ;;
+  esac
+  shift
+done
+
+if [ ${#checks[@]} -eq 0 ] && [ ${#tags[@]} -eq 0 ]; then
+  checks=( $(wtfdb -r "keys | .[]") )
+fi
+
+for t in "${tags[@]}"; do
+  checks+=("$(wtfdb -r \
+    "to_entries | map({ name: .key, tags: .value.tags }) | .[] | select(.tags | (index(\"$t\") >= 0)) | .name" | \
+    tr '\n' ' ')")
+done
+
+for t in "${nottags[@]}"; do
+  for c in $(wtfdb -r \
+    "to_entries | map({ name: .key, tags: .value.tags }) | .[] | select(.tags | (index(\"$t\") >= 0)) | .name")
+  do
+    checks=(${checks[@]/$c})
+  done
+done
+
+checks=( ${checks[@]} ${alwayschecks[@]} )
+
+run() {
+  (for c in "${checks[@]}"; do echo "$c"; done) | \
+    sort -u | xargs -d"\n" -P0 -n1 check-wrapper
+}
+
+if [ ${#checks[@]} -eq 0 ]; then
+  echo "No checks selected!" >&2
+else
+  while ! run && [ $wait -eq 1 ]; do
+    sleep 1
+  done
+fi

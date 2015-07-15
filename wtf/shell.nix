@@ -58,6 +58,12 @@ let
                 | ${timeoutCmd} nc ${replaceChars [":"] [" "] target} \
                 | awk '/^VALUE/ {exists=1; next}  exists { print $1; exit }')
       ''
+    else if check.memcached-kvmetric-exists != null then let inherit (check.memcached-kvmetric-exists) key target; in ''
+      metric=$(echo get ${key} \
+                | ${timeoutCmd} nc ${replaceChars [":"] [" "] target} \
+                | awk -v exists=1 '/^VALUE/ {exists=0; next} END { print exists }')
+      ${zero-is-ok}
+      ''
     else if check.script-metric != null then ''
         metric=$(${timeoutCmd} ${writeBashScript check.name check.script-metric})
       ''

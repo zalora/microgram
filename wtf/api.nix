@@ -1,6 +1,14 @@
 { config, options, lib, name, ... }:
 let
   inherit (lib) types mkOption replaceChars;
+
+  memcached-tuple =
+    types.nullOr (types.submodule ({ ... }: {
+        options = {
+          key = mkOption { type = types.str; default = "hello"; };
+          target = mkOption { type = types.str; default = "localhost:11211"; };
+        };
+    }));
 in
 {
   imports = [
@@ -173,14 +181,15 @@ in
     };
 
     memcached-kvmetric = mkOption {
-      type = types.nullOr (types.submodule ({ ... }: {
-        options = {
-          key = mkOption { type = types.str; default = "hello"; };
-          target = mkOption { type = types.str; default = "localhost:11211"; };
-        };
-      }));
+      type = memcached-tuple;
       default = null;
       description = "Memcached key lookup that returns a numeric value.";
+    };
+
+    memcached-kvmetric-exists = mkOption {
+      type = memcached-tuple;
+      default = null;
+      description = "Memcached key lookup that returns a positive status code when a key is there.";
     };
   };
 }

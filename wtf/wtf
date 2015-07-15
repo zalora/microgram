@@ -58,6 +58,7 @@ for t in "${tags[@]}"; do
   checks+=("$(wtfdb -r \
     "to_entries | map({ name: .key, tags: .value.tags }) | .[] | select(.tags | (index(\"$t\") >= 0)) | .name" | \
     tr '\n' ' ')")
+  nottags=(${nottags[@]/$t})
 done
 
 for t in "${nottags[@]}"; do

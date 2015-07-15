@@ -55,6 +55,7 @@ let
       '') diags)}
     '';
 
+    inherit (sdk) bash;
     wtf = ./wtf;
     checkWrapper = ./check-wrapper;
 

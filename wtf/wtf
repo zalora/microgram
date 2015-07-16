@@ -19,17 +19,17 @@ nottags=( "slow" )
 alwayschecks=()
 
 wtfdb() {
-    jq "$@" < "$WTFDB"
+  jq "$@" < "$WTFDB"
 }
 
 while [ $# -gt 0 ]; do
   case "$1" in
     -h|--help)
-    echo "wtf [-t <tag>] [-n <tag>] [-w] [<check>]"
-    echo ""
-    echo "Available checks (name [tags]):"
-    wtfdb -M -r 'to_entries | map({ name: .key, tags: .value.tags }) | .[] | "\(.name) \(.tags)"'
-    exit 0
+      echo "wtf [-w] [-t <tag>]... [-n <tag>]... [<check>...]"
+      echo ""
+      echo "Available checks (name [tags]):"
+      wtfdb -M -r 'to_entries | map({ name: .key, tags: .value.tags }) | .[] | "\(.name) \(.tags)"'
+      exit 0
     ;;
     -t|--tag)
       tags+=("$2")
@@ -58,6 +58,7 @@ for t in "${tags[@]}"; do
   checks+=("$(wtfdb -r \
     "to_entries | map({ name: .key, tags: .value.tags }) | .[] | select(.tags | (index(\"$t\") >= 0)) | .name" | \
     tr '\n' ' ')")
+  nottags=(${nottags[@]/$t})
 done
 
 for t in "${nottags[@]}"; do
@@ -71,7 +72,7 @@ done
 checks=( ${checks[@]} ${alwayschecks[@]} )
 
 run() {
-  (for c in "${checks[@]}"; do echo "$c"; done) | \
+  for c in "${checks[@]}"; do echo "$c"; done | \
     sort -u | xargs -d"\n" -P0 -n1 check-wrapper
 }
 

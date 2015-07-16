@@ -7,6 +7,13 @@ let
     metric.script-metric = ''
       echo 42
     '';
+    slow = {
+      tags = [ "slow" ];
+      script-metric = ''
+        sleep 2
+        echo 42
+      '';
+    };
   };
 in
 (import ./. { inherit diagnostics; }).config.paths.wtf

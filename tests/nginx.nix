@@ -27,7 +27,7 @@ let
     };
   };
 
-  qemu  = import <microgram/nixos> {
+  qemu = import <microgram/nixos> {
     configuration = {
       imports = [
         nginx-module

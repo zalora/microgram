@@ -88,7 +88,7 @@ rec {
       htop iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod
-      libjpeg libjpeg_turbo libxml2 lsof
+      libjpeg libjpeg_turbo libxml2 logrotate lsof
       memcached
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng

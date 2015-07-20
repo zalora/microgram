@@ -95,7 +95,7 @@ rec {
       parallel perl postgresql procps psmisc pv pxz python
       renameutils riemann runit rxvt_unicode
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
-      tcpdump tmux tree
+      tcpdump tmux tree tzdata
       unzip utillinux
       vim
       wget

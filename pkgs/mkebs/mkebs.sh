@@ -3,7 +3,6 @@
 set -e
 set -o pipefail
 set -u
-set -x
 
 # inputs:
 # $toplevel is nixos top level closure
@@ -14,6 +13,7 @@ test -f "$graph"
 baseSnapshot=${baseSnapshot:-""}
 volume=${volume:-""}
 aminame=${toplevel}-hvm
+volume_args="--volume-type gp2 --size 40"
 
 meta() {
     curl -s "http://169.254.169.254/latest/meta-data/$1"
@@ -24,8 +24,9 @@ amitest() {
     set -- $(aws --region ap-southeast-1 ec2 describe-images --filters "Name=name,Values=$aminame" | jq -r '.Images | .[] | [.Name, .ImageId] | .[]')
 
     if [ "${1:-}" = "$aminame" ]; then
-        echo AMI already exists: $2 >&2
-        exit 11
+        echo AMI already exists >&2
+        echo "$2" # stdout
+        exit 42
     fi
 }
 
@@ -38,9 +39,10 @@ ec2="aws --region ${az%%[abcdef]} ec2"
 # global in: $volume
 vwait() {
     while ! $ec2 describe-volumes --volume-ids "$volume" | grep -q available; do
-        echo waiting for the volume "$volume"
+        echo waiting for the volume "$volume" >&2
         sleep 20
     done
+    $ec2 create-tags --resources "$volume" --tags Key=ug-mkebs,Value="$toplevel" Key=Name,Value=mkebs-scratch >&2
 }
 
 # global in: $volume
@@ -50,16 +52,16 @@ attach() {
     attached=0
     for i in {d..z}; do
         device=/dev/xvd${i}
-        if $ec2 attach-volume --volume-id "$volume" --instance-id "$(meta instance-id)" --device "$(basename $device)"; then
+        if $ec2 attach-volume --volume-id "$volume" --instance-id "$(meta instance-id)" --device "$(basename $device)" >&2; then
             attached=1
             # danger: successful attachment may hang forever when reattaching new volumes sometimes
-            while ! lsblk "$device"; do echo waiting for $device...; sleep 1; done
+            while ! lsblk "$device" >&2; do echo waiting for $device... >&2; sleep 1; done
             break
         fi
     done
 
     if [ "$attached" -eq 0 ]; then
-        echo could not attach the ebs volume anywhere, leaking "$volume" 2>&1
+        echo could not attach the ebs volume anywhere, leaking "$volume" >&2
         exit 11
     fi
 }
@@ -68,19 +70,19 @@ amitest
 
 if [ -n "$baseSnapshot" ]; then
     # starting from a base snapshot
-    volume=$($ec2 create-volume --availability-zone "$az" --size 40 --snapshot-id "$baseSnapshot" | jq -r .VolumeId)
+    volume=$($ec2 create-volume --availability-zone "$az" $volume_args --snapshot-id "$baseSnapshot" | jq -r .VolumeId)
     vwait
     attach
 else
     # starting from scratch
-    volume=$($ec2 create-volume --availability-zone "$az" --size 40 | jq -r .VolumeId)
+    volume=$($ec2 create-volume --availability-zone "$az" $volume_args | jq -r .VolumeId)
     vwait
     attach
 
-    parted -s "$device" -- mklabel msdos
-    parted -s "$device" -- mkpart primary ext2 1M -1s
+    parted -s "$device" -- mklabel msdos >&2
+    parted -s "$device" -- mkpart primary ext2 1M -1s >&2
 
-    mkfs.ext4 -L nixos "$device"1
+    mkfs.ext4 -L nixos "$device"1 >&2
 fi
 
 mountpoint=$(mktemp -d)
@@ -107,14 +109,14 @@ fi
 storePaths=$(perl "$pathsFromGraph" "$graph")
 
 echo "copying everything (will take a while)..."
-rsync -auv $storePaths "$mountpoint/nix/store/"
+rsync --stats -au $storePaths "$mountpoint/nix/store/" >&2
 
 # Register the paths in the Nix database.
 printRegistration=1 perl "$pathsFromGraph" "$graph" | \
-    chroot "$mountpoint" "$toplevel"/sw/bin/nix-store --load-db --option build-users-group ""
+    chroot "$mountpoint" "$toplevel"/sw/bin/nix-store --load-db --option build-users-group "" >&2
 
 # Create the system profile to allow nixos-rebuild to work.
-chroot "$mountpoint" "$toplevel"/sw/bin/nix-env --option build-users-group "" -p /nix/var/nix/profiles/system --set "$toplevel"
+chroot "$mountpoint" "$toplevel"/sw/bin/nix-env --option build-users-group "" -p /nix/var/nix/profiles/system --set "$toplevel" >&2
 
 # `nixos-rebuild' requires an /etc/NIXOS.
 touch "$mountpoint"/etc/NIXOS
@@ -124,7 +126,7 @@ ln -sf "$(readlink "$toplevel"/sw/bin/sh)" "$mountpoint"/bin/sh
 
 # XXX: we don't really need to generate any menus as there are no rollbacks
 # Generate the GRUB menu.
-LC_ALL=C NIXOS_INSTALL_GRUB=0 chroot "$mountpoint" "$toplevel"/bin/switch-to-configuration switch || true
+LC_ALL=C NIXOS_INSTALL_GRUB=0 chroot "$mountpoint" "$toplevel"/bin/switch-to-configuration switch >&2 || true
 
 
 umount "$mountpoint"/proc
@@ -133,33 +135,40 @@ umount "$mountpoint"/sys
 umount "$mountpoint"
 
 if [ -n "$baseSnapshot" ]; then
-    grub-install "$device"
+    grub-install "$device" >&2
 fi
 
 if [ -n "$volume" ]; then
-    $ec2 detach-volume --volume-id "$volume"
+    $ec2 detach-volume --volume-id "$volume" >&2
 
-    date
+    date >&2
     snapshot=$($ec2 create-snapshot --volume-id "$volume" | jq -r .SnapshotId)
-    echo now wait two years for: $snapshot
+    echo now wait two years for: $snapshot >&2
+
+    $ec2 create-tags --resources "$snapshot" --tags Key=ug-mkebs,Value="$toplevel" Key=Name,Value=mkebs-ami >&2
 
     progress=$($ec2 describe-snapshots --snapshot-ids "$snapshot" | jq -r '.Snapshots | .[] | .Progress')
 
     while [ "$progress" != "100%" ]; do
-        echo creating snapshot: $progress
+        echo creating snapshot: $progress >&2
         sleep 10
         progress=$($ec2 describe-snapshots --snapshot-ids "$snapshot" | jq -r '.Snapshots | .[] | .Progress')
     done
 
-    while ! $ec2 describe-snapshots --snapshot-ids "$snapshot" | grep completed; do
-        echo waiting for state "'completed'"
+    while ! $ec2 describe-snapshots --snapshot-ids "$snapshot" | grep -q completed; do
+        echo waiting for state "'completed'" >&2
         sleep 10
     done
-    date
+    date >&2
 
-    $ec2 register-image --architecture x86_64 --name "$aminame" \
+    # probably need to delete the volume
+
+    ami=$($ec2 register-image --architecture x86_64 --name "$aminame" \
          --root-device-name /dev/xvda \
          --block-device-mappings \
          "[{\"DeviceName\": \"/dev/xvda\",\"Ebs\":{\"SnapshotId\":\"$snapshot\"}}]" \
-         --virtualization-type hvm
+         --virtualization-type hvm | jq -r .ImageId)
+
+    $ec2 create-tags --resources "$ami" --tags Key=ug-mkebs,Value="$toplevel" >&2
+    echo $ami # only this gets printed to stdout
 fi

@@ -145,7 +145,7 @@ umount "$mountpoint"/dev
 umount "$mountpoint"/sys
 umount "$mountpoint"
 
-if [ -n "$baseSnapshot" ]; then
+if [ -n "$BASE_RESOURCE" ]; then
     grub-install "$device" >&2
 fi
 

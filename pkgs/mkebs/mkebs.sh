@@ -23,7 +23,7 @@ meta() {
 amitest() {
     set -- $(aws --region ap-southeast-1 ec2 describe-images --filters "Name=name,Values=$aminame" | jq -r '.Images | .[] | [.Name, .ImageId] | .[]')
 
-    if [ "$1" = "$aminame" ]; then
+    if [ "${1:-}" = "$aminame" ]; then
         echo AMI already exists: $2 >&2
         exit 11
     fi

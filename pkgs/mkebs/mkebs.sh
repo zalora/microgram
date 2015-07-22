@@ -119,7 +119,7 @@ fi
 
 storePaths=$(perl "$pathsFromGraph" "$graph")
 
-echo "rsyncing graph for $toplevel (will take a while)..."
+echo "rsyncing graph for $toplevel (will take a while)..." >&2
 rsync --stats -au $storePaths "$mountpoint/nix/store/" >&2
 
 # Register the paths in the Nix database.

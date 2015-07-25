@@ -2,11 +2,13 @@
 
 stdenv.mkDerivation rec {
   name = "mariadb-${version}";
-  version = "10.0.20";
+
+  # Do not bump until https://mariadb.atlassian.net/browse/MDEV-8540 is fixed
+  version = "10.0.15";
 
   src = fetchurl {
-    url = "https://downloads.mariadb.org/interstitial/${name}/source/${name}.tar.gz";
-    md5 = "59d6c00827ad56f2ac76340fece32fc0";
+    url = "https://github.com/MariaDB/server/archive/${name}.tar.gz";
+    sha256 = "1maa0mwqxljh9nd0kjbcr9hy9v9k2x25b15xb5d5p41wadrxk6jy";
   };
 
   buildInputs = [ cmake bison ncurses openssl perl readline zlib ]

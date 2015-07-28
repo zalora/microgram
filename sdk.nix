@@ -82,7 +82,7 @@ rec {
       bash binutils
       cacert coreutils curl
       diffutils dnsmasq dstat
-      elasticsearch erlang
+      e2fsprogs elasticsearch erlang
       file findutils
       gawk gcc git glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables

@@ -96,7 +96,9 @@ else
     mkfs.ext4 -L nixos "$device"1 >&2
 fi
 
-mountpoint=$(mktemp -d)
+while ! lsblk "$device"1 >&2; do echo waiting for $device... >&2; sleep 1; done
+
+mountpoint=${mountpoint:-$(mktemp -d)}
 
 if ! mount | grep -q "$device.*$mountpoint"; then
     mount "$device"1 "$mountpoint"

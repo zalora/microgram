@@ -78,8 +78,13 @@ let
   # String $out is for humans running `wtf`.
   # Each check may call humanize_* to define $out
   wtfWrapper = check: writeBashScript check.name ''
-    failed="\e[1;31mFAILED\e[0m"
-    ok="\e[0;32mOK\e[0m"
+    if [ ''${WTF_ON_TERMINAL:-0} -eq 1 ]; then
+      failed="\e[1;31mFAILED\e[0m"
+      ok="\e[0;32mOK\e[0m"
+    else
+      failed="FAILED"
+      ok="OK"
+    fi
     out=
     metric=
     trap 'echo -e "--> $out"' EXIT

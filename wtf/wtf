@@ -12,6 +12,13 @@ export WTFDB=${WTFDB:-@wtfdb@}
 test -d "$WTFBIN"
 test -f "$WTFDB"
 
+if [ -t 1 ]; then
+  WTF_ON_TERMINAL=1
+else
+  WTF_ON_TERMINAL=0
+fi
+export WTF_ON_TERMINAL
+
 wait=0
 checks=()
 tags=()

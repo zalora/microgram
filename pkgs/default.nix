@@ -148,8 +148,9 @@ in rec {
 
   get-user-data = pkgs.writeScriptBin "get-user-data" ''
     #! /bin/sh
-    exec ${retry}/bin/retry \
-      ${pkgs.curl}/bin/curl -sf http://169.254.169.254/latest/user-data
+    exec ${pkgs.wget}/bin/wget \
+      --retry-connrefused \
+      -q -O - http://169.254.169.254/latest/user-data
   '';
 
   go = pkgs.callPackage ./go/1.4.nix {};

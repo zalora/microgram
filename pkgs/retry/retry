@@ -2,6 +2,10 @@
 #
 # usage: retry COMMAND [ARGS...]
 #
+# Retry to run a command successfully with configurable delays between runs.
+#
+# Notice that the command won't receive any data via standard input.
+#
 set -euf
 
 export PATH=@coreutils@/bin"${PATH+:$PATH}"
@@ -23,12 +27,6 @@ retry_delay_seq=${RETRY_DELAY_SEQ:-$(
   done
 )}
 
-# In order to retry stdin-reading commands, we have to cache and resupply it.
-#
-# Notice how this expects stdin to fit into memory.
-#
-stdin_cache=$(cat)
-
 # main COMMAND [ARGS...]
 main() {
   try_exec "$@"
@@ -46,7 +44,7 @@ main() {
 # process (mimicking the behavior of exec).  Otherwise set the exit_code
 # variable for further inspection (or retry in our case).
 try_exec() {
-  if echo "$stdin_cache" | env "$@"; then
+  if env "$@" </dev/null; then
     exit
   else
     exit_code=$?

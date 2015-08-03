@@ -3,7 +3,7 @@
 , aws-env ? {}
 , upload-context ? rec {
     region = "eu-west-1";
-    bucket = "platform-{region}";
+    bucket = "platform-${region}";
   }
 ,  ... }:
 let

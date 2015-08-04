@@ -177,7 +177,10 @@ if [ -n "$volume" ]; then
     ami=$($ec2 register-image --architecture x86_64 --name "$aminame" \
          --root-device-name /dev/xvda \
          --block-device-mappings \
-         "[{\"DeviceName\": \"/dev/xvda\",\"Ebs\":{\"SnapshotId\":\"$snapshot\"}}]" \
+         "[{\"DeviceName\": \"/dev/xvda\",
+            \"Ebs\":{\"SnapshotId\":\"$snapshot\",
+                     \"VolumeType\":\"gp2\",
+                     \"DeleteOnTermination\":true}}]" \
          --virtualization-type hvm | jq -r .ImageId)
 
     $ec2 create-tags --resources "$ami" --tags Key=ug-mkebs,Value="$toplevel" >&2

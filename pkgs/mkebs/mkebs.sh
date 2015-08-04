@@ -12,7 +12,8 @@ test -f "$graph"
 
 BASE_RESOURCE=${BASE_RESOURCE:-""}
 volume=${volume:-""}
-aminame=${toplevel}-hvm
+suffix=${suffix:-""}
+aminame=${toplevel}-hvm${suffix}
 volume_args="--volume-type gp2 --size 40"
 
 meta() {

@@ -40,7 +40,7 @@ ec2="aws --region ${az%%[abcdef]} ec2"
 # global in: $volume
 vwait() {
     while ! $ec2 describe-volumes --volume-ids "$volume" | grep -q available; do
-        echo waiting for the volume "$volume" >&2
+        echo waiting for volume "$volume" >&2
         sleep 20
     done
     $ec2 create-tags --resources "$volume" --tags Key=ug-mkebs,Value="$toplevel" Key=Name,Value=mkebs-scratch >&2
@@ -142,15 +142,12 @@ ln -sf "$(readlink "$toplevel"/sw/bin/sh)" "$mountpoint"/bin/sh
 # Generate the GRUB menu.
 LC_ALL=C NIXOS_INSTALL_GRUB=0 chroot "$mountpoint" "$toplevel"/bin/switch-to-configuration switch >&2 || true
 
-
 umount "$mountpoint"/proc
 umount "$mountpoint"/dev
 umount "$mountpoint"/sys
 umount "$mountpoint"
 
-if [ -n "$BASE_RESOURCE" ]; then
-    grub-install "$device" >&2
-fi
+grub-install "$device" >&2
 
 if [ -n "$volume" ]; then
     $ec2 detach-volume --volume-id "$volume" >&2

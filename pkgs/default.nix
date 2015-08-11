@@ -302,8 +302,6 @@ in rec {
 
   retry = pkgs.callPackage ./retry {};
 
-  solr = pkgs.callPackage ./solr {};
-
   sproxy = fns.staticHaskellCallPackage ./sproxy {};
 
   syslog-ng = pkgs.callPackage ./syslog-ng {};

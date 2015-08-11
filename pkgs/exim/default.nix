@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
   name = "exim-4.85";
 
   src = fetchurl {
-    url = "http://mirror.switch.ch/ftp/mirror/exim/exim/exim4/${name}.tar.bz2";
+    url = "http://mirror.switch.ch/ftp/mirror/exim/exim/exim4/old/${name}.tar.bz2";
     sha256 = "195a3ll5ck9viazf9pvgcyc0sziln5g0ggmlm6ax002lphmiy88k";
   };
 

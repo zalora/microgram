@@ -5,8 +5,8 @@ stdenv.mkDerivation rec {
   version = "10.0.17";
 
   src = fetchurl {
-    url = "https://downloads.mariadb.org/interstitial/${name}/source/${name}.tar.gz";
-    md5 = "c9da022abc6023b06320c31ae26a0f2e";
+    url = "https://github.com/MariaDB/server/archive/${name}.tar.gz";
+    sha256 = "0x9jsr1i42nvfhkwpybf4vbi1mcmghl5q127x3adcl7y0ac8pvqp";
   };
 
   buildInputs = [ cmake bison ncurses openssl perl readline zlib ]

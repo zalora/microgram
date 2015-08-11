@@ -118,7 +118,7 @@ rec {
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry
-      solr sproxy syslog-ng
+      sproxy syslog-ng
       thumbor
       upcast
       xd;

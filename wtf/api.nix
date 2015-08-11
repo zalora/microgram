@@ -133,6 +133,15 @@ in
       }));
     };
 
+    zero-is-fine = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''If true and metric is 0, "OK" will be printed instead of "0".
+        For some checks this option is ignored and effectively "true",
+        e. g. for "script-retcode" and "http-ok".
+      '';
+    };
+
     timeout = mkOption {
       type = types.str;
       default = "10s";

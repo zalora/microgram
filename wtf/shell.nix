@@ -1,6 +1,6 @@
 { config, options, name, ... }:
 let
-  inherit (import <nixpkgs/lib>) types mkOption replaceChars;
+  inherit (import <nixpkgs/lib>) types mkOption replaceChars optionalString;
   inherit (import <microgram/sdk.nix>) sdk lib;
 
 
@@ -30,7 +30,7 @@ let
     let
       timeout = toString (toSeconds check.timeout);
       timeoutCmd = "timeout ${timeout}";
-      zero-is-ok =
+      zero-is-ok = zero-is-fine: optionalString zero-is-fine
       ''
         if declare -F humanize_zero_is_ok >/dev/null; then
           humanize_zero_is_ok
@@ -40,10 +40,11 @@ let
     if check.http-ok != null then ''
         metric=0
         curl --max-time ${timeout} -f -sS -o /dev/null "${check.http-ok}" || metric=$?
-        ${zero-is-ok}
+        ${zero-is-ok true}
       ''
     else if check.mysql-metric != null then ''
         metric=$(${timeoutCmd} ${sdk.mariadb}/bin/mysql -h 127.0.0.1 -qrN -B < ${builtins.toFile "mysql-metric" check.mysql-metric})
+        ${zero-is-ok (check.zero-is-fine or false)}
       ''
     else if check.mysql-status != null then ''
         metric=$(${timeoutCmd} ${sdk.mariadb}/bin/mysql -h 127.0.0.1 -qrN -B < ${builtins.toFile "mysql-status" ''
@@ -62,7 +63,7 @@ let
       metric=$(echo get ${key} \
                 | ${timeoutCmd} nc ${replaceChars [":"] [" "] target} \
                 | awk -v exists=1 '/^VALUE/ {exists=0; next} END { print exists }')
-      ${zero-is-ok}
+      ${zero-is-ok true}
       ''
     else if check.script-metric != null then ''
         metric=$(${timeoutCmd} ${writeBashScript check.name check.script-metric})
@@ -70,7 +71,7 @@ let
     else if check.script-retcode != null then ''
         metric=0
         ${timeoutCmd} ${writeBashScript check.name check.script-retcode} || metric=$?
-        ${zero-is-ok}
+        ${zero-is-ok true}
       ''
     else abort "need at least one implementation for diagnostic ${check.name}";
 

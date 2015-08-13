@@ -10,8 +10,8 @@ cabal.mkDerivation (self: {
   version = "git";
   src = fetchgit {
     url = "git://github.com/zalora/replicator.git";
-    rev = "a1f60adf0f593473a7bc7ea751129edd8894811a";
-    sha256 = "98c7a0e81fd1f74cdd80d0464b14624a1bcb4d7d38aa590beeb2522bd1a7e992";
+    rev = "07f09121e6e91304db831910f0b8ba477f477e04";
+    sha256 = "5c0446ae528a576639b194c4eb3d154504ef95c56c1a9c06e72902c3c2ca0624";
   };
   isLibrary = false;
   isExecutable = true;

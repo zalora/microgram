@@ -35,7 +35,10 @@ stdenv.mkDerivation rec {
   name = "ImageMagick-${version}";
 
   src = fetchurl {
-    url = "mirror://imagemagick/releases/${name}.tar.xz";
+    urls = [
+      "http://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/releases/${name}.tar.xz"
+      "mirror://imagemagick/releases/${name}.tar.xz"
+    ];
     sha256 = "18wbsjfccxlgsdsd6h9wvhcjrsglyi086jk4bk029ik07rh81laz";
   };
 

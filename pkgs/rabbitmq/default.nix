@@ -1,5 +1,5 @@
-{ stdenv, fetchurl, erlang, python, libxml2, libxslt, xmlto
-, docbook_xml_dtd_45, docbook_xsl, zip, unzip }:
+{ stdenv, fetchurl, substituteAll, coreutils, erlang, python, libxml2, libxslt
+, xmlto, docbook_xml_dtd_45, docbook_xsl, zip, unzip }:
 
 stdenv.mkDerivation rec {
   name = "rabbitmq-server-${version}";
@@ -13,6 +13,13 @@ stdenv.mkDerivation rec {
 
   buildInputs =
     [ erlang python libxml2 libxslt xmlto docbook_xml_dtd_45 docbook_xsl zip unzip ];
+
+  patches = [
+    (substituteAll {
+      src = ./df.patch;
+      inherit coreutils;
+    })
+  ];
 
   preBuild =
     ''

@@ -73,7 +73,14 @@ rec {
       symlinkJoin
       runCommand writeScriptBin writeScript
       substituteAll buildEnv writeTextDir writeTextFile;
-    inherit (ugpkgs.fns) compileHaskell staticHaskellCallPackage writeText;
+    inherit (ugpkgs.fns)
+      compileHaskell
+      staticHaskellCallPackage
+      writeBashScript
+      writeBashScriptBin
+      writeBashScriptBinOverride
+      writeBashScriptOverride
+      writeText;
   };
 
   exports = rec {

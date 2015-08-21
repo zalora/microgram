@@ -83,6 +83,44 @@ let
     writeTextDir = name: text: writeTextFile {inherit name text; destination = "/${name}";};
     writeScript = name: text: writeTextFile {inherit name text; executable = true;};
     writeScriptBin = name: text: writeTextFile {inherit name text; executable = true; destination = "/bin/${name}";};
+
+    writeBashScriptOverride =
+      let
+        # Notice how we have to use a newer version of ShellCheck than provided
+        # by nixpkgs because we might want to override SC1001.
+        # TODO remove this as soon as the used nixpkgs provides a recent enough
+        # ShellCheck
+        ShellCheck = pkgs.haskellPackages.callPackage ./ShellCheck {};
+      in
+      skipchecks: name: script:
+      let
+        skipchecks' = skipchecks ++ [
+          # pipefail by default doesn't play with SC2143:
+          #   https://github.com/koalaman/shellcheck/wiki/SC2143#exceptions
+          "SC2143"
+          "SC2148"
+        ];
+      in
+      pkgs.runCommand name { inherit script; } ''
+        echo '#!${pkgs.bash}/bin/bash' > "$out"
+        echo 'set -e' >> "$out"
+        #echo 'set -u' >> "$out" # we are not ready for this yet
+        echo 'set -o pipefail' >> "$out"
+        echo -n "$script" >> "$out"
+        chmod +x "$out"
+        ${ShellCheck}/bin/shellcheck \
+          -e ${pkgs.lib.concatStringsSep "," skipchecks'} \
+          "$out"
+      '';
+
+    writeBashScriptBinOverride = skipchecks: name: script: pkgs.runCommand name {} ''
+      mkdir -p "$out/bin"
+      ln -s "${writeBashScriptOverride skipchecks name script}" "$out/bin/${name}"
+    '';
+
+    writeBashScript = writeBashScriptOverride [];
+
+    writeBashScriptBin = writeBashScriptBinOverride [];
   };
 
 in rec {

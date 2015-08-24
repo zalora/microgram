@@ -90,11 +90,7 @@ let
 
     writeBashScriptOverride =
       let
-        # Notice how we have to use a newer version of ShellCheck than provided
-        # by nixpkgs because we might want to override SC1001.
-        # TODO remove this as soon as the used nixpkgs provides a recent enough
-        # ShellCheck
-        ShellCheck = pkgs.haskellPackages.callPackage ./ShellCheck {};
+        ShellCheck = pkgs.haskellPackages.ShellCheck;
       in
       skipchecks: name: script:
       let

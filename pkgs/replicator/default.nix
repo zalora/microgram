@@ -1,28 +1,25 @@
-{ cabal, ConfigFile, filepath, Glob, hflags, lensFamilyCore, MissingH
-, monadParallel, mtl, pipes, pipesBytestring, pipesGroup, pipesSafe
-, pipesShell, pipesZlib, rawStringsQq, regexApplicative, time
-, transformers
-, fetchgit
+{ mkDerivation, base, bytestring, ConfigFile, containers, directory
+, fetchgit, filepath, Glob, hflags, lens-family-core, MissingH
+, monad-parallel, mtl, pipes, pipes-bytestring, pipes-group
+, pipes-safe, pipes-shell, pipes-zlib, raw-strings-qq
+, regex-applicative, stdenv, time, transformers, unix
 }:
-
-cabal.mkDerivation (self: {
+mkDerivation {
   pname = "replicator";
-  version = "git";
+  version = "0.5.0";
   src = fetchgit {
-    url = "git://github.com/zalora/replicator.git";
-    rev = "07f09121e6e91304db831910f0b8ba477f477e04";
+    url = "https://github.com/zalora/replicator.git";
     sha256 = "5c0446ae528a576639b194c4eb3d154504ef95c56c1a9c06e72902c3c2ca0624";
+    rev = "07f09121e6e91304db831910f0b8ba477f477e04";
   };
   isLibrary = false;
   isExecutable = true;
-  buildDepends = [
-    ConfigFile filepath Glob hflags lensFamilyCore MissingH monadParallel
-    mtl pipes pipesBytestring pipesGroup pipesSafe pipesShell pipesZlib
-    rawStringsQq regexApplicative time transformers
+  executableHaskellDepends = [
+    base bytestring ConfigFile containers directory filepath Glob
+    hflags lens-family-core MissingH monad-parallel mtl pipes
+    pipes-bytestring pipes-group pipes-safe pipes-shell pipes-zlib
+    raw-strings-qq regex-applicative time transformers unix
   ];
-  meta = {
-    description = "Automate creating MySQL multi-source slaves";
-    license = self.stdenv.lib.licenses.mit;
-    platforms = self.ghc.meta.platforms;
-  };
-})
+  description = "Automate creating MySQL multi-source slaves";
+  license = stdenv.lib.licenses.mit;
+}

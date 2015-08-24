@@ -41,8 +41,8 @@ rec {
       inherit (ugpkgs) imagemagick go docker nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
-      s3cmd = pkgs.s3cmd_15_pre_81e3842f7a;
-      gnupg = pkgs.gnupg.override { pinentry = null; openldap = null; libusb = null; };
+      gnupg = pkgs.gnupg.override { pinentry = null;
+                                    x11Support = false; openldap = null; libusb = null; };
     };
   };
 
@@ -109,7 +109,7 @@ rec {
       wget
       xz;
 
-    inherit (pkgs.rubyLibs) bundler;
+    inherit (pkgs) bundler;
 
     solr4 = pkgs.solr;
     inherit (ugpkgs)
@@ -138,7 +138,7 @@ rec {
 
     inherit (pkgs.haskellPackages) ghc;
     inherit (pkgs) haskellngPackages;
-    cabal = pkgs.haskellPackages.cabalInstall;
+    #cabal = pkgs.haskellPackages.cabalInstall;
   };
 
   phpPackages = {

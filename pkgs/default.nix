@@ -37,20 +37,16 @@ let
 
     # Make a statically linked version of a haskell package.
     # Use wisely as it may accidentally kill useful files.
-    staticHaskellCallPackage = path: { cabal ? pkgs.haskellPackages.cabal
-                                     , ...
-                                     }@args:
-      let
-        orig = pkgs.haskellPackages.callPackage path (args // {
-          cabal = cabal.override {
-            enableSharedExecutables = false;
-            enableSharedLibraries = false;
-          };
-        });
-      in pkgs.runCommand "${orig.name}-static" {} ''
-        mkdir -p $out
-        (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -I% cp -r --parents % $out)
-      '';
+    # Uses GHC 7.8.
+    staticHaskellCallPackage = path: args:
+      pkgs.haskell.lib.overrideCabal (pkgs.haskell.packages.ghc784.callPackage path args) (drv: {
+        enableSharedExecutables = false;
+        enableSharedLibraries = false;
+        isLibrary = false;
+        doHaddock = false;
+        postFixup = "rm -rf $out/lib $out/nix-support $out/share";
+      });
+
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
       inherit (pkgs) php stdenv autoreconfHook fetchurl;
@@ -263,7 +259,7 @@ in rec {
     sha256 = "1qmrq6gsirjzkmh2yd8h43vpi02c0na90i3i28z57a7nsg12185k";
   };
 
-  mariadb = pkgs.callPackage ./mariadb {};
+  mariadb = pkgs.callPackage ./mariadb/multilib.nix {};
 
   mariadb-galera = pkgs.callPackage ./mariadb-galera {};
 
@@ -276,7 +272,7 @@ in rec {
 
   mkebs = pkgs.callPackage ./mkebs {};
 
-  myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servantClient; };
+  myrapi = fns.staticHaskellCallPackage ./myrapi {};
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};
 
@@ -319,7 +315,7 @@ in rec {
         rev = "91ff51faf418e5bf283eff0e52c2a8a2348056ab";
         sha256 = "144lj4amjpjgkilbpp4al5bisnkvmb5insn3l28597qcfn887b1d";
       });
-  in overrideDerivation (pkgs.nginx.override { ngx_lua = true; rtmp = false; inherit fetchFromGitHub; }) (args: {
+  in overrideDerivation (pkgs.nginxUnstable.override { ngx_lua = true; rtmp = false; inherit fetchFromGitHub; }) (args: {
     name = "nginx-${version}";
     src = fetchurl {
       url = "http://nginx.org/download/nginx-${version}.tar.gz";
@@ -342,9 +338,11 @@ in rec {
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 
-  put-metric = pkgs.runCommand "${awsEc2.name}-put-metric" {} ''
+  put-metric = let
+    aws-ec2 = fns.staticHaskellCallPackage ./aws-ec2 {};
+  in pkgs.runCommand "${aws-ec2.name}-put-metric" {} ''
     mkdir -p $out/bin
-    cp ${awsEc2}/bin/put-metric $out/bin
+    cp ${aws-ec2}/bin/put-metric $out/bin
   '';
 
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
@@ -359,31 +357,10 @@ in rec {
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
 
-  # XXX after https://github.com/zalora/microgram/pull/29, this should be just
-  # unicron = fns.staticHaskellCallPackage ./unicron {};
-  unicron =
-    let
-      haskellPackages = pkgs.haskellPackages.override {
-        extension = self: super: {
-          transformers = self.transformers_0_4_1_0;
-          mtl = self.mtl_2_2_1;
-          mtlCompat = self.callPackage ./unicron/mtl-compat {};
-          transformersCompat = self.callPackage ./unicron/transformers-compat {};
-        };
-      };
-      orig = haskellPackages.callPackage ./unicron {
-        cabal = haskellPackages.cabal.override {
-          enableSharedExecutables = false;
-          enableSharedLibraries = false;
-        };
-      };
-    in pkgs.runCommand "${orig.name}-static" {} ''
-      mkdir -p $out
-      (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -I% cp -r --parents % $out)
-    '';
+  unicron = fns.staticHaskellCallPackage ./unicron {};
 
-  upcast = pkgs.haskellPackages.callPackage ./upcast {
-    inherit awsEc2 vkPosixPty vkAwsRoute53;
+  upcast = fns.staticHaskellCallPackage ./upcast {
+    inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
   };
 
   xd = pkgs.callPackage ./xd {};
@@ -434,13 +411,11 @@ in rec {
   # haskell libraries
   #
 
-  awsEc2 = pkgs.haskellPackages.callPackage ./aws-ec2 {};
-  servant = pkgs.haskellPackages.callPackage ./servant {};
-  servantClient = pkgs.haskellPackages.callPackage ./servant-client { inherit servant servantServer; };
-  servantServer = pkgs.haskellPackages.callPackage ./servant-server { inherit servant waiAppStatic; };
-  vkAwsRoute53 = pkgs.haskellPackages.callPackage ./vk-aws-route53 {};
-  vkPosixPty = pkgs.haskellPackages.callPackage ./vk-posix-pty {};
-  waiAppStatic = pkgs.haskellPackages.callPackage ./wai-app-static {};
+  amazonka = haskellPackages.callPackage ./amazonka { inherit amazonka-core; };
+  amazonka-core = haskellPackages.callPackage ./amazonka-core {};
+  amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2 { inherit amazonka-core; };
+  amazonka-elb = haskellPackages.callPackage ./amazonka-elb { inherit amazonka-core; };
+  amazonka-route53 = haskellPackages.callPackage ./amazonka-route53 { inherit amazonka-core; };
 
   #
   # clojure/java libraries

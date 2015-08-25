@@ -12,7 +12,7 @@
   <nixpkgs/nixos/modules/config/timezone.nix>
   <nixpkgs/nixos/modules/config/users-groups.nix>
   <nixpkgs/nixos/modules/misc/assertions.nix>
-  <nixpkgs/nixos/modules/misc/check-config.nix>
+  <nixpkgs/nixos/modules/misc/extra-arguments.nix>
   <nixpkgs/nixos/modules/misc/ids.nix>
   <nixpkgs/nixos/modules/misc/lib.nix>
   <nixpkgs/nixos/modules/misc/nixpkgs.nix>
@@ -41,6 +41,7 @@
   <nixpkgs/nixos/modules/system/activation/top-level.nix>
   <nixpkgs/nixos/modules/system/boot/kernel.nix>
   <nixpkgs/nixos/modules/system/boot/loader/grub/grub.nix>
+  <nixpkgs/nixos/modules/system/boot/loader/efi.nix>
   <nixpkgs/nixos/modules/system/boot/modprobe.nix>
   <nixpkgs/nixos/modules/system/boot/shutdown.nix>
   <nixpkgs/nixos/modules/system/boot/stage-1.nix>

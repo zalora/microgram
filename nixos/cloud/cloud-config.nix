@@ -66,7 +66,7 @@ in
   boot.kernelPackages = ugpkgs.linuxPackages;
   boot.kernelParams = [ "panic=1" "boot.panic_on_fail" ];
 
-  boot.tmpOnTmpfs = cloudDefault true;
+  boot.tmpOnTmpfs = cloudDefault false;
   boot.cleanTmpDir = cloudDefault true;
   boot.vesa = false;
 

@@ -12,6 +12,11 @@ let
   inherit (lib)
     concatMapStringsSep overrideDerivation optionalAttrs makeSearchPath concatStringsSep;
 
+  old_ghc784 = pkgs.callPackage ./haskell-modules {
+    ghc = pkgs.haskell.compiler.ghc784;
+    packageSetConfig = pkgs.callPackage <nixpkgs/pkgs/development/haskell-modules/configuration-ghc-7.8.x.nix> {};
+  };
+
   fns = rec {
 
     makeBinPath = makeSearchPath "bin";
@@ -37,9 +42,8 @@ let
 
     # Make a statically linked version of a haskell package.
     # Use wisely as it may accidentally kill useful files.
-    # Uses GHC 7.8.
-    staticHaskellCallPackage = path: args:
-      pkgs.haskell.lib.overrideCabal (pkgs.haskell.packages.ghc784.callPackage path args) (drv: {
+    staticHaskellCallPackageWith = ghc: path: args:
+      pkgs.haskell.lib.overrideCabal (ghc.callPackage path args) (drv: {
         enableSharedExecutables = false;
         enableSharedLibraries = false;
         isLibrary = false;
@@ -47,6 +51,7 @@ let
         postFixup = "rm -rf $out/lib $out/nix-support $out/share";
       });
 
+   staticHaskellCallPackage = staticHaskellCallPackageWith pkgs.haskell.packages.ghc784;
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
       inherit (pkgs) php stdenv autoreconfHook fetchurl;
@@ -351,7 +356,7 @@ in rec {
 
   retry = pkgs.callPackage ./retry {};
 
-  sproxy = fns.staticHaskellCallPackage ./sproxy {};
+  sproxy = (fns.staticHaskellCallPackageWith old_ghc784) ./sproxy {};
 
   syslog-ng = pkgs.callPackage ./syslog-ng {};
 

@@ -24,12 +24,6 @@ mkDerivation {
     tls unix utf8-string x509 yaml
   ];
   executableHaskellDepends = [ base optparse-applicative ];
-  testHaskellDepends = [
-    aeson attoparsec base bytestring connection containers
-    crypto-random data-default hspec http-conduit http-kit http-types
-    interpolatedstring-perl6 logging-facade logsink network
-    postgresql-simple resource-pool SHA split string-conversions time
-    tls unix utf8-string wai warp x509 yaml
-  ];
+  doCheck = false;
   license = stdenv.lib.licenses.mit;
 }

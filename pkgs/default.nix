@@ -277,7 +277,7 @@ in rec {
 
   mkebs = pkgs.callPackage ./mkebs {};
 
-  myrapi = fns.staticHaskellCallPackage ./myrapi {};
+  myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servant-client; };
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};
 
@@ -421,6 +421,11 @@ in rec {
   amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2 { inherit amazonka-core; };
   amazonka-elb = haskellPackages.callPackage ./amazonka-elb { inherit amazonka-core; };
   amazonka-route53 = haskellPackages.callPackage ./amazonka-route53 { inherit amazonka-core; };
+
+  # servant 0.2.x
+  servant = haskellPackages.callPackage ./servant {};
+  servant-client = haskellPackages.callPackage ./servant-client { inherit servant; };
+  servant-server = haskellPackages.callPackage ./servant-server { inherit servant; };
 
   #
   # clojure/java libraries

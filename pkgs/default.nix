@@ -7,10 +7,11 @@ let
   inherit (import <microgram/sdk.nix>) pkgs lib;
   inherit (import <microgram/lib>) exportSessionVariables;
   inherit (pkgs)
-    pythonPackages perlPackages haskellPackages stdenv_32bit gnome stdenv
-    fetchurl newScope;
+    pythonPackages perlPackages stdenv_32bit gnome stdenv fetchurl newScope;
   inherit (lib)
     concatMapStringsSep overrideDerivation optionalAttrs makeSearchPath concatStringsSep;
+
+  haskellPackages = pkgs.haskell.packages.ghc784;
 
   old_ghc784 = pkgs.callPackage ./haskell-modules {
     ghc = pkgs.haskell.compiler.ghc784;
@@ -51,7 +52,7 @@ let
         postFixup = "rm -rf $out/lib $out/nix-support $out/share";
       });
 
-   staticHaskellCallPackage = staticHaskellCallPackageWith pkgs.haskell.packages.ghc784;
+   staticHaskellCallPackage = staticHaskellCallPackageWith haskellPackages;
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
       inherit (pkgs) php stdenv autoreconfHook fetchurl;
@@ -91,7 +92,7 @@ let
 
     writeBashScriptOverride =
       let
-        ShellCheck = pkgs.haskellPackages.ShellCheck;
+        inherit (haskellPackages) ShellCheck;
       in
       skipchecks: name: script:
       let

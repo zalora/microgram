@@ -120,8 +120,8 @@ in
     # because the set of devices is dependent on the instance type
     # (e.g. "m1.large" has one ephemeral filesystem and one swap device,
     # while "m1.large" has two ephemeral filesystems and no swap
-    # devices).  Also, put /tmp and /var on /disk0, since it has a lot
-    # more space than the root device.
+    # devices).  Also, /var on /disk0, since it has a lot more space than the
+    # root device.
     #
     # MICROGRAM: DO NOT "move" /nix to /disk0 and use unionfs on instance-store volumes.
     boot.initrd.postMountCommands = ''
@@ -147,9 +147,6 @@ in
 
       if [ -n "$firstNonRootExt3Disk" ]; then
           mkdir -m 755 -p $targetRoot/$firstNonRootExt3Disk/root
-
-          mkdir -m 1777 -p $targetRoot/$firstNonRootExt3Disk/root/tmp $targetRoot/tmp
-          mount --bind $targetRoot/$firstNonRootExt3Disk/root/tmp $targetRoot/tmp
 
           if [ ! -e $targetRoot/.ebs ]; then
               mkdir -m 755 -p $targetRoot/$firstNonRootExt3Disk/root/var $targetRoot/var

@@ -124,7 +124,7 @@ rec {
       jackson-core-asl jenkins
       kibana4 kiries
       lua-json
-      mariadb mariadb-galera memcached-tool mergex mkebs myrapi
+      mariadb memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry

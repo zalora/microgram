@@ -267,8 +267,6 @@ in rec {
 
   mariadb = pkgs.callPackage ./mariadb/multilib.nix {};
 
-  mariadb-galera = pkgs.callPackage ./mariadb-galera {};
-
   memcached-tool = pkgs.writeScriptBin "memcached-tool" ''
     #!${pkgs.bash}/bin/bash
     exec ${pkgs.perl}/bin/perl ${./memcached/memcached-tool} "$@"

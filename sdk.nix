@@ -138,7 +138,7 @@ rec {
 
     inherit (pkgs.haskellPackages) ghc;
     inherit (pkgs) haskellngPackages;
-    #cabal = pkgs.haskellPackages.cabalInstall;
+    cabal = pkgs.haskellngPackages.cabal-install;
   };
 
   phpPackages = {

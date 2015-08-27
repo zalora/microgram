@@ -6,6 +6,7 @@ let
 in
 {
   imports = [
+    <nixpkgs/nixos/modules/rename.nix> # services.virtualboxGuest
     <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
     <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
     <microgram/nixos/cloud/cloud-config.nix>

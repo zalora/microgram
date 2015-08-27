@@ -32,6 +32,7 @@ let
       services.resolved = stub;
       services.fprintd = stub;
       security.grsecurity = stub;
+      services.virtualboxGuest = stub;
       users.ldap = stub;
       krb5 = stub;
       powerManagement = stub;
@@ -42,6 +43,7 @@ let
       networking.wireless = stub;
     };
     config = {
+      services.virtualboxGuest = true; # renamed
       services.xserver.enable = false;
       powerManagement.enable = false;
       powerManagement.resumeCommands = "";

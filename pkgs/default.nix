@@ -29,16 +29,9 @@ let
       '';
 
     # Take a Haskell file together with its dependencies, produce a binary.
-    # Note: dependencies that are included in GHC itself must not be provided,
-    # as that would result in empty elements in GHC_PACKAGE_PATH. FIXME maybe.
     compileHaskell = deps: file:
-      let
-        canonicalize = "${pkgs.coreutils}/bin/readlink --canonicalize";
-        ghc = "$(${canonicalize} ${pkgs.haskellngPackages.ghc}/lib/ghc-*/package.conf.d)";
-        depToPath = dep: "$(${canonicalize} ${dep}/nix-support/ghc-*-package.conf.d)";
-        paths = concatMapStringsSep ":" depToPath deps;
-      in pkgs.runCommand "${baseNameOf (toString file)}-compiled" {} ''
-        env GHC_PACKAGE_PATH=${ghc}:${paths} ${pkgs.haskellngPackages.ghc}/bin/ghc -Wall -threaded -o "$out" ${file}
+      pkgs.runCommand "${baseNameOf (toString file)}-compiled" {} ''
+        ${pkgs.haskellngPackages.ghcWithPackages (self: deps)}/bin/ghc -Wall -o "$out" ${file}
       '';
 
     # Make a statically linked version of a haskell package.

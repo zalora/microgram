@@ -7,11 +7,6 @@ let
   inherit (stdenv.lib) concatStringsSep;
   gems = map (gem: fetchurl { inherit (gem) url sha256; }) Gemfile;
 in
-
-# This package is actually a "package factory", because we (have to?) configure
-# the plugin at installPhase.
-config:
-
 stdenv.mkDerivation {
   inherit (base) name src buildInputs;
 
@@ -22,13 +17,15 @@ stdenv.mkDerivation {
 
     cat > config/newrelic_plugin.yml <<EOF
     newrelic:
-      license_key: ${config.newrelic.license_key}
+      license_key: FILLMEIN
       verbose: 0
     agents:
       rabbitmq:
-        management_api_url: ${toString config.rabbitmq.management_api_url}
+        management_api_url: http://admin:password@localhost:15672
         debug: false
     EOF
+
+    echo gem "'json'" >> Gemfile
 
     mkdir -p vendor/cache
     ${concatStringsSep ";" (map (x: "ln -s ${x} vendor/cache/${x.name}") gems)}

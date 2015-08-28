@@ -41,8 +41,15 @@ rec {
       inherit (ugpkgs) docker go imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
-      gnupg = pkgs.gnupg.override { pinentry = null;
-                                    x11Support = false; openldap = null; libusb = null; };
+      gnupg = pkgs.gnupg.override {
+        pinentry = null;
+        x11Support = false; openldap = null; libusb = null;
+      };
+      qemu = pkgs.qemu.override {
+        pulseSupport = false;
+        sdlSupport = false;
+        spiceSupport = false;
+      };
     };
   };
 

@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) imagemagick go docker nix;
+      inherit (ugpkgs) docker go imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       gnupg = pkgs.gnupg.override { pinentry = null;

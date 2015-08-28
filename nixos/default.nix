@@ -49,6 +49,8 @@ let
       powerManagement.resumeCommands = "";
       powerManagement.powerUpCommands = "";
       powerManagement.powerDownCommands = "";
+
+      nixpkgs.config = (import <microgram/sdk.nix>).nixpkgs-config;
     };
   };
 

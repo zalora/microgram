@@ -41,6 +41,7 @@ let
       boot.isContainer = lib.mkOption { default = false; };
       boot.initrd.luks = stub;
       networking.wireless = stub;
+      networking.connman = stub;
     };
     config = {
       services.virtualboxGuest = true; # renamed

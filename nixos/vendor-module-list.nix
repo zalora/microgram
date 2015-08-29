@@ -40,6 +40,7 @@
   <nixpkgs/nixos/modules/system/activation/activation-script.nix>
   <nixpkgs/nixos/modules/system/activation/top-level.nix>
   <nixpkgs/nixos/modules/system/boot/kernel.nix>
+  <nixpkgs/nixos/modules/system/boot/loader/loader.nix>
   <nixpkgs/nixos/modules/system/boot/loader/grub/grub.nix>
   <nixpkgs/nixos/modules/system/boot/loader/efi.nix>
   <nixpkgs/nixos/modules/system/boot/modprobe.nix>

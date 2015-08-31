@@ -9,9 +9,13 @@ let
     pythonPackages perlPackages haskellPackages
     stdenv_32bit gnome
     stdenv fetchurl newScope;
-  inherit (lib) concatMapStringsSep overrideDerivation optionalAttrs;
+  inherit (lib)
+    concatMapStringsSep overrideDerivation optionalAttrs makeSearchPath;
 
   fns = rec {
+
+    makeBinPath = makeSearchPath "bin";
+
     # exports dependency graph of a derivation as a separate derivation
     exportGraph = drv:
       pkgs.runCommand "${drv.name}-graph" { exportReferencesGraph = [ "graph" drv ]; } ''

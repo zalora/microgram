@@ -5,12 +5,12 @@
 
 let
   inherit (import <microgram/sdk.nix>) pkgs lib;
+  inherit (import <microgram/lib>) exportSessionVariables;
   inherit (pkgs)
-    pythonPackages perlPackages haskellPackages
-    stdenv_32bit gnome
-    stdenv fetchurl newScope;
+    pythonPackages perlPackages haskellPackages stdenv_32bit gnome stdenv
+    fetchurl newScope;
   inherit (lib)
-    concatMapStringsSep overrideDerivation optionalAttrs makeSearchPath;
+    concatMapStringsSep overrideDerivation optionalAttrs makeSearchPath concatStringsSep;
 
   fns = rec {
 
@@ -104,16 +104,20 @@ let
           "SC2143"
           "SC2148"
         ];
+        prelude = ''
+          #!${pkgs.bash}/bin/bash
+          set -e
+          set -o pipefail
+          # set -u # We are not ready for this yet
+          ${exportSessionVariables}
+        '';
       in
-      pkgs.runCommand name { inherit script; } ''
-        echo '#!${pkgs.bash}/bin/bash' > "$out"
-        echo 'set -e' >> "$out"
-        #echo 'set -u' >> "$out" # we are not ready for this yet
-        echo 'set -o pipefail' >> "$out"
-        echo -n "$script" >> "$out"
+      pkgs.runCommand name { inherit prelude script; } ''
+        echo "$prelude" >> "$out"
+        echo "$script" >> "$out"
         chmod +x "$out"
         ${ShellCheck}/bin/shellcheck \
-          -e ${pkgs.lib.concatStringsSep "," skipchecks'} \
+          -e ${concatStringsSep "," skipchecks'} \
           "$out"
       '';
 

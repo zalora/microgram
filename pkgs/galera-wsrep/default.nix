@@ -9,11 +9,11 @@ in
 
 stdenv.mkDerivation rec {
   name = "galera-wsrep-${version}";
-  version = "25.3.10";
+  version = "25.3.12";
 
   src = fetchurl {
-    url = "http://releases.galeracluster.com/source/galera-3-${version}.tar.gz";
-    md5 = "0a5083a7fb12b220405064ee5a792035";
+    url = "https://zalora-ug-mirror.s3.amazonaws.com/galera-3-${version}.tar.gz";
+    md5 = "cd981290a9767d51c97810786dbd211b";
   };
 
   buildInputs = [ scons boost openssl check ];

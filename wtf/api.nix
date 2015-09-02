@@ -45,8 +45,8 @@ in
 
       unit = mkOption {
         type = types.enum [
-          "Days" "Hours" "Minutes" "Seconds" "Microseconds" "Milliseconds"
-          "Bytes" "Kilobytes" "Megabytes" "Gigabytes" "Terabytes"
+          "Seconds" "Microseconds" "Milliseconds" "Bytes"
+          "Kilobytes" "Megabytes" "Gigabytes" "Terabytes"
           "Bits" "Kilobits" "Megabits" "Gigabits" "Terabits"
           "Percent" "Count" "Bytes/Second" "Kilobytes/Second"
           "Megabytes/Second" "Gigabytes/Second" "Terabytes/Second"

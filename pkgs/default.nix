@@ -32,7 +32,7 @@ let
         depToPath = dep: "$(${canonicalize} ${dep}/nix-support/ghc-*-package.conf.d)";
         paths = concatMapStringsSep ":" depToPath deps;
       in pkgs.runCommand "${baseNameOf (toString file)}-compiled" {} ''
-        env GHC_PACKAGE_PATH=${ghc}:${paths} ${pkgs.haskellngPackages.ghc}/bin/ghc -Wall -o "$out" ${file}
+        env GHC_PACKAGE_PATH=${ghc}:${paths} ${pkgs.haskellngPackages.ghc}/bin/ghc -Wall -threaded -o "$out" ${file}
       '';
 
     # Make a statically linked version of a haskell package.

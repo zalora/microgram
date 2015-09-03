@@ -359,6 +359,29 @@ in rec {
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
 
+  # XXX after https://github.com/zalora/microgram/pull/29, this should be just
+  # unicron = fns.staticHaskellCallPackage ./unicron {};
+  unicron =
+    let
+      haskellPackages = pkgs.haskellPackages.override {
+        extension = self: super: {
+          transformers = self.transformers_0_4_1_0;
+          mtl = self.mtl_2_2_1;
+          mtlCompat = self.callPackage ./unicron/mtl-compat {};
+          transformersCompat = self.callPackage ./unicron/transformers-compat {};
+        };
+      };
+      orig = haskellPackages.callPackage ./unicron {
+        cabal = haskellPackages.cabal.override {
+          enableSharedExecutables = false;
+          enableSharedLibraries = false;
+        };
+      };
+    in pkgs.runCommand "${orig.name}-static" {} ''
+      mkdir -p $out
+      (cd ${orig}; find . -type f | grep -vE './(nix-support|share/doc|lib/ghc-)' | xargs -I% cp -r --parents % $out)
+    '';
+
   upcast = pkgs.haskellPackages.callPackage ./upcast {
     inherit awsEc2 vkPosixPty vkAwsRoute53;
   };

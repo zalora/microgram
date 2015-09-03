@@ -129,6 +129,7 @@ rec {
       rabbitmq replicator retry
       sproxy syslog-ng
       thumbor
+      unicron
       upcast
       xd;
     inherit (ugpkgs)

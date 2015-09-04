@@ -4,7 +4,8 @@ module Main (main) where
 
 import Control.Applicative ((<$>), (<*>), pure)
 import Control.Exception (bracket)
-import System.Directory (canonicalizePath, getCurrentDirectory, getDirectoryContents, setCurrentDirectory)
+import Control.Monad (filterM)
+import System.Directory (canonicalizePath, doesFileExist, executable, getCurrentDirectory, getDirectoryContents, getPermissions, setCurrentDirectory)
 import System.Environment (getEnv)
 import System.Exit (exitWith)
 import System.FilePath.Posix ((</>), takeBaseName)
@@ -71,6 +72,7 @@ getApps c =
     withCurrentDirectory (configAppsRoot c) $
         getDirectoryContents "." >>=
         return . filter (\p -> p /= "." && p /= "..") >>=
+        filterM (executableExists . getAppExe c) >>=
         mapM (\p ->
             App <$> canonicalizePath (getAppExe c p)
                 <*> pure (getAppName p))
@@ -82,6 +84,13 @@ getAppExe c p =
 getAppName :: FilePath -> String
 getAppName =
     takeBaseName
+
+executableExists :: FilePath -> IO Bool
+executableExists p = do
+    exists <- doesFileExist p
+    if exists
+        then executable <$> getPermissions p
+        else return False
 
 getProcessID :: ProcessHandle -> IO (Maybe ProcessID)
 getProcessID ph =

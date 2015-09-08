@@ -3,13 +3,13 @@
 set -ef
 set -o pipefail
 
-# must include check-wrapper
-export PATH=@out@/bin:@wtfenv@/bin:$PATH
+export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+export GIT_SSL_CAINFO=/etc/ssl/certs/ca-certificates.crt
+export OPENSSL_X509_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
-export WTFBIN=${WTFBIN:-@out@/checks}
+export PATH=@wtfenv@/bin:$PATH
 export WTFDB=${WTFDB:-@wtfdb@}
 
-test -d "$WTFBIN"
 test -f "$WTFDB"
 
 if [ -t 1 ]; then
@@ -32,10 +32,10 @@ wtfdb() {
 while [ $# -gt 0 ]; do
   case "$1" in
     -h|--help)
-      echo "wtf [-w] [-t <tag>]... [-n <tag>]... [<check>...]"
-      echo ""
-      echo "Available checks (name [tags]):"
-      wtfdb -M -r 'to_entries | map({ name: .key, tags: .value.tags }) | .[] | "\(.name) \(.tags)"'
+      echo 'wtf [-w] [-t <tag>]... [-n <tag>]... [<check>...]'
+      echo
+      echo 'Available checks (name [tags]):'
+      wtfdb -M -r 'to_entries[] | "\(.key) \(.value.tags)"'
       exit 0
     ;;
     -t|--tag)
@@ -50,41 +50,72 @@ while [ $# -gt 0 ]; do
       wait=1 # poll until the check starts returning zero
     ;;
     *)
-      checks+=("$1")
       alwayschecks+=("$1")
     ;;
   esac
   shift
 done
 
-if [ ${#checks[@]} -eq 0 ] && [ ${#tags[@]} -eq 0 ]; then
-  checks=( $(wtfdb -r "keys | .[]") )
-fi
+checks=$(
+  wtfdb \
+      -r -s \
+      --arg ytags "${tags[*]}" \
+      --arg ntags "${nottags[*]}" \
+      --arg names "${alwayschecks[*]}" \
+      '
+        ($ytags / " ") as $ytags |
+        ($ntags / " " - $ytags) as $ntags |
+        ($names / " ") as $names |
 
-for t in "${tags[@]}"; do
-  checks+=("$(wtfdb -r \
-    "to_entries | map({ name: .key, tags: .value.tags }) | .[] | select(.tags | (index(\"$t\") >= 0)) | .name" | \
-    tr '\n' ' ')")
-  nottags=(${nottags[@]/$t})
-done
+        def in(xs):
+          . as $i | xs | map(. == $i) | any;
 
-for t in "${nottags[@]}"; do
-  for c in $(wtfdb -r \
-    "to_entries | map({ name: .key, tags: .value.tags }) | .[] | select(.tags | (index(\"$t\") >= 0)) | .name")
-  do
-    checks=(${checks[@]/$c})
-  done
-done
+        def enabled_by_name(x):
+          x.name | in($names);
 
-checks=( ${checks[@]} ${alwayschecks[@]} )
+        def enabled_by_ytags(x):
+          (($ytags | length) == 0 and ($names | length) == 0) or
+          (x.tags | map(in($ytags)) | any);
+
+        def disabled_by_ntags(x):
+          x.tags | map(in($ntags)) | any;
+
+        def enabled_by_tags(x):
+          enabled_by_ytags(x) and (disabled_by_ntags(x) | not);
+
+        def enabled(x):
+          enabled_by_name(x) or
+          enabled_by_tags(x);
+
+        add | to_entries[] | .value | select(enabled(.)) |
+          @sh "wtf_wrapper=\(."wtf-wrapper") name=\(.name)"
+      '
+)
 
 run() {
-  for c in "${checks[@]}"; do echo "$c"; done | \
-    sort -u | xargs -d"\n" -P0 -n1 check-wrapper
+  echo "$checks" | xargs -d '\n' -P 0 -I {} bash -o pipefail -e -c '
+    {}
+
+    logfile=/dev/null
+    if [ -d "$WTFLOGS" ]; then
+      logfile=$WTFLOGS/$name.log
+    fi
+
+    prefix() {
+      date "+%Y-%m-%d %H:%M:%S $name START" >> "$logfile"
+      while read line; do
+        echo "$name: $line"
+        echo "$line" >> "$logfile"
+      done
+      date "+%Y-%m-%d %H:%M:%S $name DONE" >> "$logfile"
+    }
+
+    "$wtf_wrapper" 2>&1 | prefix
+  '
 }
 
-if [ ${#checks[@]} -eq 0 ]; then
-  echo "No checks selected!" >&2
+if test -z "$checks"; then
+  echo 'No checks selected!' >&2
 else
   while ! run && [ $wait -eq 1 ]; do
     sleep 1

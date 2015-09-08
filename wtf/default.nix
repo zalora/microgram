@@ -45,19 +45,12 @@ let
     inherit name;
 
     buildCommand = ''
-      mkdir -p $out/{bin,checks}
-      substituteAll $wtf $out/bin/wtf
-      substituteAll $checkWrapper $out/bin/check-wrapper
-      chmod +x $out/bin/{wtf,check-wrapper}
-
-      ${concatStrings (mapAttrsToList (n: c: ''
-        cp -v "${c.wtf-wrapper}" "$out/checks/${n}"
-      '') diags)}
+      mkdir -p $out/bin
+      substituteAll ${./wtf} $out/bin/wtf
+      chmod +x $out/bin/wtf
     '';
 
     inherit (sdk) bash;
-    wtf = ./wtf;
-    checkWrapper = ./check-wrapper;
 
     inherit wtfenv wtfdb;
   };

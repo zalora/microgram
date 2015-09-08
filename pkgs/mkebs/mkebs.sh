@@ -10,19 +10,23 @@ test -d "$toplevel"
 # $graph should point to a file that contains exportReferencesGraph output from toplevel
 test -f "$graph"
 
-BASE_RESOURCE=${BASE_RESOURCE:-""}
-volume=${volume:-""}
-suffix=${suffix:-""}
-aminame=${toplevel}-hvm${suffix}
-volume_args="--volume-type gp2 --size 40"
-
 meta() {
     curl -s "http://169.254.169.254/latest/meta-data/$1"
 }
 
+BASE_RESOURCE=${BASE_RESOURCE:-""}
+AZ="${AZ:-$(meta placement/availability-zone)}"
+
+volume=${volume:-""}
+suffix=${suffix:-""}
+aminame=${toplevel}-hvm${suffix}
+volume_args="--volume-type gp2 --size 40"
+region=${region:-${AZ%%[abcdef]}}
+ec2="aws --region ${region} ec2"
+
 # global in: $aminame
 amitest() {
-    set -- $(aws --region ap-southeast-1 ec2 describe-images --filters "Name=name,Values=$aminame" | jq -r '.Images | .[] | [.Name, .ImageId] | .[]')
+    set -- $($ec2 describe-images --filters "Name=name,Values=$aminame" | jq -r '.Images | .[] | [.Name, .ImageId] | .[]')
 
     if [ "${1:-}" = "$aminame" ]; then
         echo AMI already exists >&2
@@ -33,9 +37,6 @@ amitest() {
 
 export PATH=@path@
 pathsFromGraph=${pathsFromGraph:-@pathsFromGraph@}
-
-az="$(meta placement/availability-zone)"
-ec2="aws --region ${az%%[abcdef]} ec2"
 
 # global in: $volume
 vwait() {

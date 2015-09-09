@@ -76,7 +76,7 @@ if [ -n "$BASE_RESOURCE" ]; then
             volume=$BASE_RESOURCE
             ;;
         snap) # starting from a base snapshot
-            volume=$($ec2 create-volume --availability-zone "$az" $volume_args --snapshot-id "$BASE_RESOURCE" | jq -r .VolumeId)
+            volume=$($ec2 create-volume --availability-zone "$AZ" $volume_args --snapshot-id "$BASE_RESOURCE" | jq -r .VolumeId)
             ;;
         *)
             echo "unkown base resource: $BASE_RESOURCE" >&2
@@ -88,7 +88,7 @@ if [ -n "$BASE_RESOURCE" ]; then
 else
     echo 'WARNING: starting from scratch. This is slow, consider setting $BASE_RESOURCE' >&2
     echo '$BASE_RESOURCE can look like snap-xxxxxx or vol-xxxxxx' >&2
-    volume=$($ec2 create-volume --availability-zone "$az" $volume_args | jq -r .VolumeId)
+    volume=$($ec2 create-volume --availability-zone "$AZ" $volume_args | jq -r .VolumeId)
     vwait
     attach
 

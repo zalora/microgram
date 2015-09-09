@@ -143,12 +143,12 @@ ln -sf "$(readlink "$toplevel"/sw/bin/sh)" "$mountpoint"/bin/sh
 # Generate the GRUB menu.
 LC_ALL=C NIXOS_INSTALL_GRUB=0 chroot "$mountpoint" "$toplevel"/bin/switch-to-configuration switch >&2 || true
 
+grub-install --recheck --root-directory="$mountpoint" "$device" >&2
+
 umount "$mountpoint"/proc
 umount "$mountpoint"/dev
 umount "$mountpoint"/sys
 umount "$mountpoint"
-
-grub-install "$device" >&2
 
 if [ -n "$volume" ]; then
     $ec2 detach-volume --volume-id "$volume" >&2

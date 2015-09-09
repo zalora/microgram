@@ -37,5 +37,15 @@ in
           fi
       fi
     '';
+
+    # By default, 'print-host-key' assumes DSA.
+    systemd.services."print-host-key".script = mkForce ''
+      # Print the host public key on the console so that the user
+      # can obtain it securely by parsing the output of
+      # ec2-get-console-output.
+      echo "-----BEGIN SSH HOST KEY FINGERPRINTS-----" > /dev/console
+      ${config.programs.ssh.package}/bin/ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key.pub > /dev/console
+      echo "-----END SSH HOST KEY FINGERPRINTS-----" > /dev/console
+    '';
   };
 }

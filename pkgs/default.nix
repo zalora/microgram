@@ -31,7 +31,7 @@ let
     # Take a Haskell file together with its dependencies, produce a binary.
     compileHaskell = deps: file:
       pkgs.runCommand "${baseNameOf (toString file)}-compiled" {} ''
-        ${pkgs.haskellngPackages.ghcWithPackages (self: deps)}/bin/ghc -Wall -o "$out" ${file}
+        ${haskellPackages.ghcWithPackages (self: deps)}/bin/ghc -Wall -o "$out" ${file}
       '';
 
     # Make a statically linked version of a haskell package.
@@ -128,7 +128,7 @@ in rec {
   angel = fns.staticHaskellCallPackage ./angel {};
 
   archangel =
-    let deps = with pkgs.haskellngPackages; [ temporary ]; in
+    let deps = with haskellPackages; [ temporary ]; in
     fns.compileHaskell deps ./archangel/Main.hs;
 
   bridge-utils = pkgs.bridge_utils;

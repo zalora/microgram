@@ -356,9 +356,11 @@ in rec {
 
   unicron = fns.staticHaskellCallPackage ./unicron {};
 
-  upcast = fns.staticHaskellCallPackage ./upcast {
+  upcast = pkgs.haskell.lib.overrideCabal (fns.staticHaskellCallPackage ./upcast {
     inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
-  };
+  }) (drv: {
+    postFixup = "rm -rf $out/lib $out/nix-support";
+  });
 
   xd = pkgs.callPackage ./xd {};
 

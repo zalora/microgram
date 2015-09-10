@@ -143,7 +143,7 @@ rec {
     inherit (ugpkgs)
       newrelic-java; # is a file
 
-    inherit (pkgs.haskellPackages) ghc;
+    inherit (pkgs.haskellPackages) ghc ShellCheck;
     inherit (pkgs) haskellngPackages;
     cabal = pkgs.haskellngPackages.cabal-install;
   };

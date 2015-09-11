@@ -38,11 +38,18 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) imagemagick go docker nix;
+      inherit (ugpkgs) docker go imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
-      s3cmd = pkgs.s3cmd_15_pre_81e3842f7a;
-      gnupg = pkgs.gnupg.override { pinentry = null; openldap = null; libusb = null; };
+      gnupg = pkgs.gnupg.override {
+        pinentry = null;
+        x11Support = false; openldap = null; libusb = null;
+      };
+      qemu = pkgs.qemu.override {
+        pulseSupport = false;
+        sdlSupport = false;
+        spiceSupport = false;
+      };
     };
   };
 
@@ -109,7 +116,7 @@ rec {
       wget
       xz;
 
-    inherit (pkgs.rubyLibs) bundler;
+    inherit (pkgs) bundler;
 
     solr4 = pkgs.solr;
     inherit (ugpkgs)
@@ -119,12 +126,12 @@ rec {
       damemtop docker
       elasticsearch-cloud-aws elastisch
       exim
-      galera-wsrep get-user-data gdb-quiet graphviz
+      get-user-data gdb-quiet graphviz
       heavy-sync
       jackson-core-asl jenkins
       kibana4 kiries
       lua-json
-      mariadb mariadb-galera memcached-tool mergex mkebs myrapi
+      mariadb memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry
@@ -136,9 +143,8 @@ rec {
     inherit (ugpkgs)
       newrelic-java; # is a file
 
-    inherit (pkgs.haskellPackages) ghc;
-    inherit (pkgs) haskellngPackages;
-    cabal = pkgs.haskellPackages.cabalInstall;
+    inherit (pkgs.haskell.packages.ghc784) ghc ShellCheck cabal-install;
+    cabal = cabal-install;
   };
 
   phpPackages = {

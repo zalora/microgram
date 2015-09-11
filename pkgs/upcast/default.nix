@@ -1,33 +1,39 @@
-{ cabal, aeson, aesonPretty, async, attoparsec, aws, awsEc2
-, base64Bytestring, conduit, conduitExtra, filepath, free
-, haskellSrcMeta, httpConduit, httpTypes, liftedBase, mtl
-, optparseApplicative, prettyShow, random, resourcet, scientific
-, text, time, unorderedContainers, vector, vkAwsRoute53, vkPosixPty
-, fetchgit
+{ mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
+, amazonka-ec2, amazonka-elb, amazonka-route53, async, attoparsec
+, base, base64-bytestring, bytestring, conduit, conduit-extra
+, containers, directory, exceptions, fetchgit, filepath, lens
+, lifted-base, mtl, natural-sort, optparse-applicative, pretty-show
+, process, random, resourcet, scientific, semigroups, stdenv
+, tagged, text, time, unix, unordered-containers, vector
+, vk-posix-pty, xml-conduit
 }:
-
-cabal.mkDerivation (self: {
+mkDerivation {
   pname = "upcast";
+  version = "0.1.1.0";
   src = fetchgit {
-    url = "git://github.com/zalora/upcast.git";
-    rev = "88d565f36453198c2e999ae07fdfc5dd98c382e5";
-    sha256 = "06313b5ebcece5100310236effed2f83694bec5c88f7b951dd697c3acb2f6fc2";
+    url = "https://github.com/zalora/upcast.git";
+    sha256 = "dbb721b2bbbe549cd4608d15c4abc8b6e25c7f5dd9c25fe9b7b62a381e17f8a0";
+    rev = "ed869de9551cce1eff1d35941d145e4075d9f1fe";
   };
-  version = "pre";
-  noHaddock = true;
-  isLibrary = false;
+  isLibrary = true;
   isExecutable = true;
-  jailbreak = true;
-  buildDepends = [
-    aeson aesonPretty async attoparsec aws base64Bytestring
-    conduit conduitExtra filepath free haskellSrcMeta httpConduit
-    httpTypes liftedBase mtl optparseApplicative prettyShow random
-    resourcet scientific text time unorderedContainers vector
-
-    awsEc2 vkAwsRoute53 vkPosixPty
+  libraryHaskellDepends = [
+    aeson aeson-pretty amazonka amazonka-core amazonka-ec2 amazonka-elb
+    amazonka-route53 async attoparsec base base64-bytestring bytestring
+    conduit conduit-extra containers directory exceptions filepath lens
+    lifted-base mtl natural-sort optparse-applicative pretty-show
+    process random resourcet scientific semigroups tagged text time
+    unix unordered-containers vector vk-posix-pty xml-conduit
   ];
-  meta = {
-    license = self.stdenv.lib.licenses.mit;
-    platforms = self.ghc.meta.platforms;
-  };
-})
+  executableHaskellDepends = [
+    aeson aeson-pretty amazonka amazonka-core amazonka-ec2 amazonka-elb
+    amazonka-route53 async attoparsec base base64-bytestring bytestring
+    conduit conduit-extra containers directory exceptions filepath lens
+    lifted-base mtl natural-sort optparse-applicative pretty-show
+    process random resourcet scientific semigroups tagged text time
+    unix unordered-containers vector vk-posix-pty xml-conduit
+  ];
+  homepage = "https://github.com/zalora/upcast#readme";
+  description = "Nix-based Linux deployment platform tools";
+  license = stdenv.lib.licenses.mit;
+}

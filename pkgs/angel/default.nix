@@ -1,24 +1,24 @@
-{ cabal, configurator, hspec, mtl, stm, text, time
-, unorderedContainers
+{ mkDerivation, base, configurator, containers, fetchzip, hspec
+, mtl, old-locale, process, stdenv, stm, text, time, unix
+, unordered-containers
 }:
-
-cabal.mkDerivation (self: {
+mkDerivation {
   pname = "angel";
+  # do not bump until https://github.com/MichaelXavier/Angel/issues/40 is fixed
   version = "0.5.1";
-  sha256 = "1ag5bpwfmshcwhycp12ywqvhf4d1fdfs9haawzhawnjpcm5h2hha";
+  src = fetchzip {
+    url = "http://hackage.haskell.org/package/angel-0.5.1/angel-0.5.1.tar.gz";
+    sha256 = "1qa7kfaia429la645naixfns5i9s775p9vzvlpk0xpz8zs8zfxcw";
+  };
+  patches = [ ./static.patch ./less-logs.patch ];
   isLibrary = false;
   isExecutable = true;
-  buildDepends = [
-    configurator mtl stm text time unorderedContainers
+  doCheck = false;
+  executableHaskellDepends = [
+    base configurator containers mtl old-locale process stm text time
+    unix unordered-containers
   ];
-  testDepends = [
-    configurator hspec mtl stm text time unorderedContainers
-  ];
-  patches = [ ./static.patch ./less-logs.patch ];
-  meta = {
-    homepage = "http://github.com/MichaelXavier/Angel";
-    description = "Process management and supervision daemon";
-    license = self.stdenv.lib.licenses.bsd3;
-    platforms = self.ghc.meta.platforms;
-  };
-})
+  homepage = "http://github.com/MichaelXavier/Angel";
+  description = "Process management and supervision daemon";
+  license = stdenv.lib.licenses.bsd3;
+}

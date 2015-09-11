@@ -37,8 +37,7 @@ let
   };
 in
 rec {
-  ebs-ami-builder = ec2.config.system.build.aminator1 null;
-  #ebs-ami-builder' = ec2.config.system.build.aminator1 "snap-xxx";
+  ebs-ami-builder = ec2.config.system.build.aminator;
 
   s3-bundle = ec2.config.system.build.s3Bundle;
   s3-ami = ec2.config.system.build.s3Register;

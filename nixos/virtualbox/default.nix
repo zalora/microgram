@@ -12,6 +12,8 @@ in
     ./vm.nix
   ];
 
+  virtualisation.virtualbox.guest.enable = true;
+
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];
 
   boot.vesa = false;

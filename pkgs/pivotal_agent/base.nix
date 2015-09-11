@@ -11,9 +11,6 @@
 
   buildInputs = [
     pkgs.ruby
-    pkgs.rubyLibs.bundler
-    pkgs.rubyLibs.newrelic_plugin
-    pkgs.rubyLibs.redis
-    pkgs.rubyLibs.rabbitmq_manager
+    pkgs.bundler
   ];
 }

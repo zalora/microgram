@@ -93,10 +93,6 @@ let
          zone = args.name;
          inherit (args) zoneId iamCredentialName useLocalHostname;
        })) config.ec2.route53RegisterHostname)} | ${xargs} -n1 -P2 ${bash}
-
-    ${optionalString (!config.ec2.metadata) ''
-    ip route add blackhole 169.254.169.254/32
-    ''}
   '';
 in
 {

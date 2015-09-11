@@ -36,7 +36,7 @@ let
   wtfenv = pkgs.buildEnv {
     name = "${name}-env";
     paths = with sdk; [
-      coreutils findutils inetutils gawk gnused
+      bash coreutils findutils inetutils gawk gnused
       jq curl put-metric netcat-openbsd ntp
     ];
   };

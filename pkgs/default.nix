@@ -31,7 +31,8 @@ let
     # Take a Haskell file together with its dependencies, produce a binary.
     compileHaskell = deps: file:
       pkgs.runCommand "${baseNameOf (toString file)}-compiled" {} ''
-        ${haskellPackages.ghcWithPackages (self: deps)}/bin/ghc -Wall -o "$out" ${file}
+        ${haskellPackages.ghcWithPackages (self: deps)}/bin/ghc -Wall -o a.out ${file}
+        mv a.out $out
       '';
 
     # Make a statically linked version of a haskell package.

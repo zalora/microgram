@@ -25,14 +25,13 @@ let
   };
 in
 goPackages.buildGoPackage rec {
-  rev = "116340830b56cd4a766a1a0a68826dff4155f16e";
+  rev = "5c1da0f157654a2a98bc6a074df39f18b62811a5";
   name = "ybc-${rev}";
   goPackagePath = "github.com/valyala/ybc";
   buildInputs = [ iniflags gomemcache ];
-  src = fetchFromGitHub {
+  src = fetchgit {
+    url = "https://${goPackagePath}";
     inherit rev;
-    owner = "valyala";
-    repo = "ybc";
-    sha256 = "0fy42716qrcfi4s7g3fh6jhcdd4svbabfi5qfh8620hc56f2h2nn";
+    sha256 = "34dfb8293a28240651c813229f400a0d52bae65c2b1345507143a82f72dcd9aa";
   };
 }

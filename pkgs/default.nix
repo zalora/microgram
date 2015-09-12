@@ -365,6 +365,8 @@ in rec {
 
   xd = pkgs.callPackage ./xd {};
 
+  ybc = pkgs.callPackage ./ybc {};
+
   #
   # python libraries
   #

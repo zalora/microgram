@@ -139,7 +139,8 @@ rec {
       thumbor
       unicron
       upcast
-      xd;
+      xd
+      ybc;
     inherit (ugpkgs)
       newrelic-java; # is a file
 

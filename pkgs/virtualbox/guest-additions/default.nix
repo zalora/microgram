@@ -94,6 +94,10 @@ stdenv.mkDerivation {
     install -m 755 bin/VBoxControl $out/bin
     install -m 755 bin/VBoxClient-all $out/bin
 
+    # Nixpkgs tends to prefer bin over sbin. See `dontMoveSbin` in
+    # http://nixos.org/nixpkgs/manual/#ssec-fixup-phase.
+    ln -s $out/sbin/* $out/bin/
+
     wrapProgram $out/bin/VBoxClient-all \
             --prefix PATH : "${which}/bin"
 

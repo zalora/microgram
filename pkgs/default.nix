@@ -19,7 +19,6 @@ let
   };
 
   fns = rec {
-
     makeBinPath = makeSearchPath "bin";
 
     # exports dependency graph of a derivation as a separate derivation
@@ -35,27 +34,25 @@ let
         mv a.out $out
       '';
 
+    staticHaskellOverride = pkg: pkgs.haskell.lib.overrideCabal pkg (drv: {
+      enableSharedExecutables = false;
+      enableSharedLibraries = false;
+      isLibrary = false;
+      doHaddock = false;
+      postFixup = "rm -rf $out/lib $out/nix-support $out/share";
+    });
+
     # Make a statically linked version of a haskell package.
     # Use wisely as it may accidentally kill useful files.
-    staticHaskellCallPackageWith = ghc: path: args:
-      pkgs.haskell.lib.overrideCabal (ghc.callPackage path args) (drv: {
-        enableSharedExecutables = false;
-        enableSharedLibraries = false;
-        isLibrary = false;
-        doHaddock = false;
-        postFixup = "rm -rf $out/lib $out/nix-support $out/share";
-      });
+    staticHaskellCallPackageWith = ghc: path: args: staticHaskellOverride (ghc.callPackage path args);
 
-   staticHaskellCallPackage = staticHaskellCallPackageWith haskellPackages;
+    staticHaskellCallPackage = staticHaskellCallPackageWith haskellPackages;
 
     buildPecl = import <nixpkgs/pkgs/build-support/build-pecl.nix> {
       inherit (pkgs) php stdenv autoreconfHook fetchurl;
     };
 
     writeBashScriptOverride =
-      let
-        inherit (haskellPackages) ShellCheck;
-      in
       skipchecks: name: script:
       let
         skipchecks' = skipchecks ++ [
@@ -90,6 +87,8 @@ let
 
     writeBashScriptBin = writeBashScriptBinOverride [];
   };
+
+  ShellCheck = fns.staticHaskellOverride haskellPackages.ShellCheck;
 
 in rec {
   inherit fns; # export functions as well
@@ -312,6 +311,8 @@ in rec {
   replicator = fns.staticHaskellCallPackage ./replicator {};
 
   retry = pkgs.callPackage ./retry {};
+
+  inherit ShellCheck;
 
   sproxy = (fns.staticHaskellCallPackageWith old_ghc784) ./sproxy {};
 

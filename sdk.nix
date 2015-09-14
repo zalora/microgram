@@ -135,7 +135,7 @@ rec {
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry
-      sproxy syslog-ng
+      ShellCheck sproxy syslog-ng
       thumbor
       unicron
       upcast
@@ -144,7 +144,7 @@ rec {
     inherit (ugpkgs)
       newrelic-java; # is a file
 
-    inherit (pkgs.haskell.packages.ghc784) ghc ShellCheck cabal-install;
+    inherit (pkgs.haskell.packages.ghc784) ghc cabal-install;
     cabal = cabal-install;
   };
 

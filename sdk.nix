@@ -79,7 +79,7 @@ rec {
     inherit (pkgs)
       symlinkJoin
       runCommand writeScriptBin writeScript
-      substituteAll buildEnv writeTextDir writeTextFile;
+      substituteAll buildEnv writeText writeTextDir writeTextFile;
     inherit (ugpkgs.fns)
       compileHaskell
       makeBinPath
@@ -87,8 +87,7 @@ rec {
       writeBashScript
       writeBashScriptBin
       writeBashScriptBinOverride
-      writeBashScriptOverride
-      writeText;
+      writeBashScriptOverride;
   };
 
   exports = rec {

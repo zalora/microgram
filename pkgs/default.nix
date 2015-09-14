@@ -128,10 +128,6 @@ in rec {
 
   angel = fns.staticHaskellCallPackage ./angel {};
 
-  archangel =
-    let deps = with haskellPackages; [ temporary ]; in
-    fns.compileHaskell deps ./archangel/Main.hs;
-
   bridge-utils = pkgs.bridge_utils;
 
   couchbase = pkgs.callPackage ./couchbase {};

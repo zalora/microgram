@@ -99,7 +99,7 @@ rec {
       diffutils dnsmasq dstat
       e2fsprogs elasticsearch erlang
       file findutils
-      gawk gcc git glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
+      gawk gcc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod
@@ -115,6 +115,8 @@ rec {
       vim
       wget
       xz;
+
+    git = pkgs.gitMinimal;
 
     inherit (pkgs) bundler;
 

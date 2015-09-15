@@ -318,7 +318,7 @@ in rec {
 
   syslog-ng = pkgs.callPackage ./syslog-ng {};
 
-  thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd; }).thumbor;
+  thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd tornado; }).thumbor;
 
   unicron = fns.staticHaskellCallPackage ./unicron {};
 
@@ -372,6 +372,19 @@ in rec {
       homepage = https://github.com/jsocol/pystatsd;
       license = licenses.mit;
     };
+  };
+
+  tornado = pythonPackages.buildPythonPackage rec {
+    name = "tornado-3.2";
+
+    propagatedBuildInputs = with pythonPackages; [ backports_ssl_match_hostname_3_4_0_2 ];
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/t/tornado/${name}.tar.gz";
+      md5 = "bd83cee5f1a5c5e139e87996d00b251b";
+    };
+
+    doCheck = false;
   };
 
   #

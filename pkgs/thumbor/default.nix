@@ -1,4 +1,4 @@
-{ pkgs, newrelic-python, statsd }:
+{ pkgs, newrelic-python, statsd, tornado }:
 let
   inherit (pkgs) pythonPackages fetchurl lib;
 in rec {
@@ -16,7 +16,6 @@ in rec {
 
     propagatedBuildInputs =
       (with pythonPackages; [
-        tornado
         pycrypto
         pycurl
         pillow
@@ -31,6 +30,7 @@ in rec {
             ffmpeg = null;
         })
       ]) ++ [
+        tornado
         statsd
       ];
 

@@ -34,13 +34,16 @@ let
         mv a.out $out
       '';
 
-    staticHaskellOverride = pkg: pkgs.haskell.lib.overrideCabal pkg (drv: {
+    staticHaskellOverride = staticHaskellOverrideF (_: {});
+
+    staticHaskellOverrideF = f: pkg: pkgs.haskell.lib.overrideCabal pkg (drv: {
       enableSharedExecutables = false;
       enableSharedLibraries = false;
       isLibrary = false;
       doHaddock = false;
       postFixup = "rm -rf $out/lib $out/nix-support $out/share";
-    });
+      doCheck = false;
+    } // (f drv));
 
     # Make a statically linked version of a haskell package.
     # Use wisely as it may accidentally kill useful files.
@@ -88,7 +91,9 @@ let
     writeBashScriptBin = writeBashScriptBinOverride [];
   };
 
-  ShellCheck = fns.staticHaskellOverride haskellPackages.ShellCheck;
+  ShellCheck = fns.staticHaskellOverrideF (_: {
+    preConfigure = "sed -i -e /ShellCheck,/d ShellCheck.cabal";
+  }) haskellPackages.ShellCheck;
 
 in rec {
   inherit fns; # export functions as well

@@ -1,7 +1,7 @@
-args@{ config, lib, ... }: with lib;
+{ config, lib, ... }: with lib;
 let
-  systemd-pkg = args.pkgs.systemd;
-  inherit (import <microgram/sdk.nix>) sdk ugpkgs nixpkgs-config;
+  inherit (import <microgram/sdk.nix>) sdk pkgs ugpkgs nixpkgs-config;
+  systemd-pkg = pkgs.systemd;
 
   cloudDefault = mkOverride 900;
 

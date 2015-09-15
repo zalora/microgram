@@ -1,6 +1,7 @@
-{ config, pkgs, lib, ... }: with lib;
+args@{ config, lib, ... }: with lib;
 let
-  inherit (import <microgram/sdk.nix>) ugpkgs nixpkgs-config;
+  systemd-pkg = args.pkgs.systemd;
+  inherit (import <microgram/sdk.nix>) sdk ugpkgs nixpkgs-config;
 
   cloudDefault = mkOverride 900;
 
@@ -31,7 +32,7 @@ in
     "3.amazon.pool.ntp.org"
   ];
 
-  nix.package = pkgs.nix;
+  nix.package = sdk.nix;
   nix.readOnlyStore = true;
   nix.trustedBinaryCaches = [ "http://hydra.nixos.org" ];
 
@@ -79,7 +80,7 @@ in
 
   boot.kernel.sysctl = {
     # allows control of core dumps with systemd-coredumpctl
-    "kernel.core_pattern" = cloudDefault "|${pkgs.systemd}/lib/systemd/systemd-coredump %p %u %g %s %t %e";
+    "kernel.core_pattern" = cloudDefault "|${systemd-pkg}/lib/systemd/systemd-coredump %p %u %g %s %t %e";
 
     "fs.file-max" = cloudDefault fd-limit.hard;
 

@@ -31,7 +31,7 @@ in
     "3.amazon.pool.ntp.org"
   ];
 
-  nix.package = pkgs.nixUnstable;
+  nix.package = pkgs.nix;
   nix.readOnlyStore = true;
   nix.trustedBinaryCaches = [ "http://hydra.nixos.org" ];
 

@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   name = "mariadb-galera-${version}";
-  version = "10.0.17";
+  version = "10.0.21";
 
   src = fetchurl {
     url = "https://github.com/MariaDB/server/archive/${name}.tar.gz";
-    sha256 = "0x9jsr1i42nvfhkwpybf4vbi1mcmghl5q127x3adcl7y0ac8pvqp";
+    sha256 = "0qi0yqh0h82avvppwa5538y9a4zf7b2jmfvchi3c5l588ybc0w01";
   };
 
   buildInputs = [ cmake bison ncurses openssl perl readline zlib ]

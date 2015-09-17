@@ -26,8 +26,8 @@ let
     useLocalHostname,
     query ? if useLocalHostname then "local-ipv4" else "public-hostname",
     recordType ? if useLocalHostname then "A" else "CNAME"
-  }: pkgs.writeScript "ec2-register-hostname-${zone}" ''
-    #!${bash}
+  }: sdk.writeBashScriptOverride ["SC2046"] "ec2-register-hostname-${zone}" ''
+
     date=$(${curl} -I https://route53.amazonaws.com/date | ${awk} '/^Date: / {sub("Date: ", "", $0); sub("\\r", "", $0); print $0}')
 
     iam="${iamCredentialName}"
@@ -46,7 +46,7 @@ let
     set -- $(${wget} http://169.254.169.254/latest/meta-data/iam/security-credentials/${iamCredentialName} \
               | ${jq} -r '.SecretAccessKey, .AccessKeyId, .Token')
 
-    signature=$(echo -n $date | ${openssl} dgst -binary -sha1 -hmac $1 | ${base64})
+    signature="$(echo -n "$date" | ${openssl} dgst -binary -sha1 -hmac "$1" | ${base64})"
     auth_header="X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=$2,Algorithm=HmacSHA1,Signature=$signature"
     record_value=$(${wget} http://169.254.169.254/latest/meta-data/${query})
 
@@ -84,9 +84,6 @@ let
 
   ec2-autohostname = ''
     ${ip} route delete blackhole 169.254.169.254 2>/dev/null || true
-
-    export CURL_CA_BUNDLE=${pkgs.cacert}/etc/ca-bundle.crt
-
     # registering route 53 hostnames if any:
     echo ${concatStringsSep " " (
         mapAttrsToList (_: args: retry-wrapper (register-hostname {

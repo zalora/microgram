@@ -92,6 +92,7 @@ rec {
 
   exports = rec {
     inherit (pkgs)
+      # One line per letter
       atop awscli
       bash binutils
       cacert coreutils curl
@@ -99,7 +100,8 @@ rec {
       e2fsprogs elasticsearch erlang
       file findutils
       gawk gcc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
-      htop iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
+      htop
+      iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod
       libjpeg libjpeg_turbo libxml2 logrotate lsof
@@ -107,13 +109,14 @@ rec {
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
       parallel perl php postgresql procps psmisc pv pxz python
-      renameutils riemann runit rxvt_unicode
+      renameutils riemann runit rxvt_unicode rsync
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
       tcpdump tmux tree tzdata
       unzip utillinux
       vim
-      wget
-      xz;
+      wget which
+      xz
+    ;
 
     git = pkgs.gitMinimal;
 

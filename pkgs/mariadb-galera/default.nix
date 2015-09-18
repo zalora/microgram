@@ -1,4 +1,7 @@
-{ stdenv, fetchurl, cmake, bison, ncurses, openssl, readline, zlib, perl }:
+{
+  stdenv, fetchurl, cmake, bison, ncurses, openssl, readline, zlib, perl,
+  findutils, gnutar, procps, gnugrep, gawk, rsync, which, lsof, coreutils
+}:
 
 stdenv.mkDerivation rec {
   name = "mariadb-galera-${version}";
@@ -32,13 +35,22 @@ stdenv.mkDerivation rec {
   prePatch = ''
     sed -i -e "s|/usr/bin/libtool|libtool|" cmake/libutils.cmake
   '';
-  postInstall = ''
+
+  postInstall =
+  let
+    inherit (import <microgram/lib>) makeBinPath;
+    # These deps are not passed in PATH when mysqld starts wsrep_* scripts
+    wsrep-deps = [
+      findutils gnutar procps gnugrep gawk rsync which lsof coreutils
+    ];
+  in ''
     sed -i -e "s|-lssl|-L${openssl}/lib -lssl|g" $out/bin/mysql_config
     sed -i -e "s|basedir=\"\"|basedir=\"$out\"|" $out/bin/mysql_install_db
     # https://github.com/NixOS/nixpkgs/issues/7117
     rm -r $out/mysql-test $out/sql-bench $out/data # Don't need testing data
     rm $out/bin/mysqlbug # Encodes a path to gcc and not really useful
     find $out/bin -name \*test\* -exec rm {} \;
+    sed -i -e "2iexport PATH=$out/bin:${makeBinPath wsrep-deps}" $out/bin/wsrep_*
   '';
 
   meta = {

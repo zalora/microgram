@@ -1,7 +1,9 @@
 let
   inherit (import <microgram/sdk.nix>) lib sdk;
-  inherit (lib) mapAttrsToList concatStringsSep;
+  inherit (lib) mapAttrsToList concatStringsSep makeSearchPath;
 in rec {
+
+  makeBinPath = makeSearchPath "bin";
 
   exportSessionVariables = mapcats (k: v: "export ${k}=${v}") {
 

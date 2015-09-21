@@ -82,7 +82,6 @@ rec {
       substituteAll buildEnv writeText writeTextDir writeTextFile;
     inherit (ugpkgs.fns)
       compileHaskell
-      makeBinPath
       staticHaskellCallPackage
       writeBashScript
       writeBashScriptBin

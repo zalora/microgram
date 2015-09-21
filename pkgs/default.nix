@@ -9,7 +9,7 @@ let
   inherit (pkgs)
     pythonPackages perlPackages stdenv_32bit gnome stdenv fetchurl newScope;
   inherit (lib)
-    concatMapStringsSep overrideDerivation optionalAttrs makeSearchPath concatStringsSep;
+    concatMapStringsSep overrideDerivation optionalAttrs concatStringsSep;
 
   haskellPackages = pkgs.haskell.packages.ghc784;
 
@@ -19,7 +19,6 @@ let
   };
 
   fns = rec {
-    makeBinPath = makeSearchPath "bin";
 
     # exports dependency graph of a derivation as a separate derivation
     exportGraph = drv:

@@ -14,9 +14,9 @@ stdenv.mkDerivation rec {
   installPhase = ''
     ensureDir $out/bin
     cp daemon/newrelic-daemon.x64 $out/bin/
-    ${patchelf}/bin/patchelf --interpreter "$(cat $NIX_GCC/nix-support/dynamic-linker)" $out/bin/newrelic-daemon.x64
+    ${patchelf}/bin/patchelf --interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" $out/bin/newrelic-daemon.x64
     cp scripts/newrelic-iutil.x64 $out/bin/
-    ${patchelf}/bin/patchelf --interpreter "$(cat $NIX_GCC/nix-support/dynamic-linker)" $out/bin/newrelic-iutil.x64
+    ${patchelf}/bin/patchelf --interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" $out/bin/newrelic-iutil.x64
     ensureDir $out/extensions
     cp agent/x64/newrelic-20100525.so $out/extensions/newrelic.so
     eval fixupPhase

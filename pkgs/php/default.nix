@@ -9,7 +9,10 @@ let
   generic =
     { version, sha256, url ? "http://www.php.net/distributions/php-${version}.tar.bz2" }:
 
-    let php7 = lib.versionAtLeast version "7.0"; in
+    let
+      use-php53 = lib.versionOlder "5.3.0" version && lib.versionOlder version "5.4.0";
+      use-php7 = lib.versionAtLeast version "7.0";
+    in
 
     composableDerivation.composableDerivation {} (fixed: {
 
@@ -213,7 +216,7 @@ let
         imapSupport = config.php.imap or true;
         ldapSupport = config.php.ldap or true;
         mhashSupport = config.php.mhash or true;
-        mysqlSupport = (!php7) && (config.php.mysql or true);
+        mysqlSupport = (!use-php7) && (config.php.mysql or true);
         mysqliSupport = config.php.mysqli or true;
         pdo_mysqlSupport = config.php.pdo_mysql or true;
         libxml2Support = config.php.libxml2 or true;
@@ -221,7 +224,7 @@ let
         bcmathSupport = config.php.bcmath or true;
         socketsSupport = config.php.sockets or true;
         curlSupport = config.php.curl or true;
-        curlWrappersSupport = (!php7) && (config.php.curlWrappers or true);
+        curlWrappersSupport = (!use-php7) && (config.php.curlWrappers or true);
         gettextSupport = config.php.gettext or true;
         pcntlSupport = config.php.pcntl or true;
         postgresqlSupport = config.php.postgresql or true;
@@ -242,7 +245,7 @@ let
         ftpSupport = config.php.ftp or true;
         fpmSupport = config.php.fpm or true;
         gmpSupport = config.php.gmp or true;
-        mssqlSupport = (!php7) && (config.php.mssql or (!stdenv.isDarwin));
+        mssqlSupport = (!use-php7) && (config.php.mssql or (!stdenv.isDarwin));
         ztsSupport = config.php.zts or false;
         calendarSupport = config.php.calendar or true;
       };
@@ -278,11 +281,21 @@ let
         maintainers = with maintainers; [ globin ];
       };
 
-      patches = if !php7 then [ ./fix-paths.patch ] else [ ./fix-paths-php7.patch ];
+      patches = if use-php53
+        then [ ./fix-paths-php53.patch ]
+        else if use-php7
+        then [ ./fix-paths-php7.patch ]
+        else [ ./fix-paths.patch ];
 
     });
 
 in {
+
+  php53 = generic {
+    version = "5.3.29";
+    sha256 = "1480pfp4391byqzmvdmbxkdkqwdzhdylj63sfzrcgadjf9lwzqf4";
+    url = "http://museum.php.net/php5/php-5.3.29.tar.bz2";
+  };
 
   php54 = generic {
     version = "5.4.45";

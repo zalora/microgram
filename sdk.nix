@@ -98,7 +98,7 @@ rec {
       diffutils dnsmasq dstat
       e2fsprogs elasticsearch erlang
       file findutils
-      gawk gcc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
+      gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop
       iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
@@ -107,7 +107,7 @@ rec {
       memcached
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
-      parallel perl php postgresql procps psmisc pv pxz python
+      parallel perl php postgresql procps psmisc pv pwgen pxz python
       renameutils riemann runit rxvt_unicode rsync
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
       tcpdump tmux tree tzdata

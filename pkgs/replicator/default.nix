@@ -6,11 +6,11 @@
 }:
 mkDerivation {
   pname = "replicator";
-  version = "0.5.0";
+  version = "0.5.x";
   src = fetchgit {
     url = "https://github.com/zalora/replicator.git";
-    sha256 = "5c0446ae528a576639b194c4eb3d154504ef95c56c1a9c06e72902c3c2ca0624";
-    rev = "07f09121e6e91304db831910f0b8ba477f477e04";
+    rev = "3dbe8614813cd4d1742286b3bce023187871354e";
+    sha256 = "1qb8z6cj5rx902r1dni9hq24balvj6mqzcqy4v7ny9h5vv1y88dk";
   };
   isLibrary = false;
   isExecutable = true;

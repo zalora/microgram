@@ -226,7 +226,7 @@ in rec {
     sha256 = "1qmrq6gsirjzkmh2yd8h43vpi02c0na90i3i28z57a7nsg12185k";
   };
 
-  mariadb = pkgs.callPackage ./mariadb/multilib.nix {};
+  mariadb = pkgs.callPackage ./mariadb/default.nix {};
 
   mariadb-galera = pkgs.callPackage ./mariadb-galera {};
 

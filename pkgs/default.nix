@@ -335,8 +335,7 @@ in rec {
      stack3 = pkgs.writeScriptBin "stack" ''
        #!${stdenv.shell}
        exec ${stack2}/bin/stack \
-         --extra-lib-dirs=${lib.makeSearchPath "lib" rdeps} \
-         --extra-include-dirs=${lib.makeSearchPath "include" rdeps} \
+         ${lib.concatStringsSep " " (map (x: "--extra-lib-dirs ${x}/lib --extra-include-dirs ${x}/include") rdeps)} \
          "$@"
      '';
    in stack3;

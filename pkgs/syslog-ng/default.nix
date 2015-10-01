@@ -1,10 +1,10 @@
 { stdenv, fetchurl, eventlog, pkgconfig, glib, python, systemd, perl
-, riemann_c_client, protobufc, yacc, openssl }:
+, riemann_c_client, protobufc, yacc }:
 
 stdenv.mkDerivation rec {
   name = "syslog-ng-${version}";
 
-  version = "3.7.1";
+  version = "3.6.4";
 
   dontStrip = true;
   stripAllFlags = "";
@@ -13,10 +13,10 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/balabit/syslog-ng/releases/download/syslog-ng-${version}/syslog-ng-${version}.tar.gz";
-    sha256 = "0802qanvy68zqgs4iiji9p843bvkyaxnw7jbh76pgcvrj0dq86ac";
+    sha256 = "1rzl0s8kv1bafwiv4h9scgfrw172x1d2pqjjz7qidmy73brivqbv";
   };
 
-  buildInputs = [ eventlog pkgconfig glib python systemd perl riemann_c_client protobufc yacc openssl ];
+  buildInputs = [ eventlog pkgconfig glib python systemd perl riemann_c_client protobufc yacc ];
 
   configureFlags = [
     "--enable-dynamic-linking"

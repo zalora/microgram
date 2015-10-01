@@ -103,7 +103,7 @@ stdenv.mkDerivation rec {
     echo "$lib" > $out/nix-support/propagated-native-build-inputs
 
     # Don't install static libraries.
-    rm $lib/lib/libmysqlclient.a $lib/lib/libmysqld.a
+    rm -f $lib/lib/*.a
   '';
 
   passthru.mysqlVersion = "5.6";

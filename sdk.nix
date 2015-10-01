@@ -137,7 +137,7 @@ rec {
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry
-      ShellCheck sproxy syslog-ng
+      ShellCheck sproxy stack syslog-ng
       thumbor
       unicron
       upcast

@@ -311,6 +311,36 @@ in rec {
 
   sproxy = (fns.staticHaskellCallPackageWith old_ghc784) ./sproxy {};
 
+  stack = let
+     version = "0.1.5.0";
+     tarball = pkgs.fetchurl {
+       url = "https://github.com/commercialhaskell/stack/releases/download/v${version}/stack-${version}-x86_64-linux.tar.gz";
+       sha256 = "1z0fddri25q97qj93mz54ajmgrb65kk3zd375mn08xmn831lcyin";
+     };
+     stack1 = pkgs.srcOnly {
+       name = "stack-${version}-bin1";
+       src = tarball;
+     };
+     inherit (pkgs) stdenv zlib gmp ncurses;
+
+     stack2 = pkgs.runCommand "stack-${version}-bin2" {} ''
+       mkdir -p $out/bin
+       cp ${stack1}/stack $out/bin
+       patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" $out/bin/stack
+       patchelf --set-rpath ${stdenv.cc.cc}/lib64:${lib.makeSearchPath "lib" [ stdenv.cc.cc zlib gmp ncurses]} $out/bin/stack
+     '';
+
+     rdeps = [ zlib gmp ];
+
+     stack3 = pkgs.writeScriptBin "stack" ''
+       #!${stdenv.shell}
+       exec ${stack2}/bin/stack \
+         --extra-lib-dirs=${lib.makeSearchPath "lib" rdeps} \
+         --extra-include-dirs=${lib.makeSearchPath "include" rdeps} \
+         "$@"
+     '';
+   in stack3;
+
   syslog-ng = pkgs.callPackage ./syslog-ng {};
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd tornado; }).thumbor;

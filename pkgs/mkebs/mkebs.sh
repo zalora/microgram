@@ -31,7 +31,7 @@ amitest() {
     if [ "${1:-}" = "$aminame" ]; then
         echo AMI already exists >&2
         echo "$2" # stdout
-        exit 42
+        exit 0
     fi
 }
 

@@ -41,6 +41,10 @@ rec {
       inherit (ugpkgs) docker go imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
+      glibcLocales = pkgs.glibcLocales.override {
+        allLocales = false;
+        locales = ["en_US.UTF-8/UTF-8"];
+      };
       gnupg = pkgs.gnupg.override {
         pinentry = null;
         x11Support = false; openldap = null; libusb = null;

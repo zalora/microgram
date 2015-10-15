@@ -60,7 +60,6 @@ let
           # pipefail by default doesn't play with SC2143:
           #   https://github.com/koalaman/shellcheck/wiki/SC2143#exceptions
           "SC2143"
-          "SC2148"
         ];
         prelude = ''
           #!${pkgs.bash}/bin/bash

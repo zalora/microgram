@@ -5,7 +5,6 @@
 
 let
   inherit (import <microgram/sdk.nix>) pkgs lib;
-  inherit (import <microgram/lib>) exportSessionVariables;
   inherit (pkgs)
     pythonPackages perlPackages stdenv_32bit gnome stdenv fetchurl newScope;
   inherit (lib)
@@ -68,7 +67,6 @@ let
           set -e
           set -o pipefail
           # set -u # We are not ready for this yet
-          ${exportSessionVariables}
         '';
       in
       pkgs.runCommand name { inherit prelude script; } ''

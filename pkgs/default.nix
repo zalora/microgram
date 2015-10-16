@@ -5,7 +5,6 @@
 
 let
   inherit (import <microgram/sdk.nix>) pkgs lib;
-  inherit (import <microgram/lib>) exportSessionVariables;
   inherit (pkgs)
     pythonPackages perlPackages stdenv_32bit gnome stdenv fetchurl newScope;
   inherit (lib)
@@ -54,39 +53,22 @@ let
       inherit (pkgs) php stdenv autoreconfHook fetchurl;
     };
 
-    writeBashScriptOverride =
-      skipchecks: name: script:
-      let
-        skipchecks' = skipchecks ++ [
-          # pipefail by default doesn't play with SC2143:
-          #   https://github.com/koalaman/shellcheck/wiki/SC2143#exceptions
-          "SC2143"
-          "SC2148"
-        ];
-        prelude = ''
-          #!${pkgs.bash}/bin/bash
-          set -e
-          set -o pipefail
-          # set -u # We are not ready for this yet
-          ${exportSessionVariables}
-        '';
-      in
-      pkgs.runCommand name { inherit prelude script; } ''
-        echo "$prelude" >> "$out"
+    writeBashScriptOverride = skipchecks: name: script:
+      let exc = concatMapStringsSep " " (e: "-e ${e}") skipchecks;
+      in pkgs.runCommand name { inherit script; } ''
+        echo '#!${pkgs.bash}/bin/bash' > "$out"
         echo "$script" >> "$out"
         chmod +x "$out"
-        ${ShellCheck}/bin/shellcheck \
-          -e ${concatStringsSep "," skipchecks'} \
-          "$out"
+        ${ShellCheck}/bin/shellcheck ${exc} "$out"
       '';
 
-    writeBashScriptBinOverride = skipchecks: name: script: pkgs.runCommand name {} ''
-      mkdir -p "$out/bin"
-      ln -s "${writeBashScriptOverride skipchecks name script}" "$out/bin/${name}"
-    '';
+    writeBashScriptBinOverride = skipchecks: name: script:
+      pkgs.runCommand name {} ''
+        mkdir -p "$out/bin"
+        ln -s "${writeBashScriptOverride skipchecks name script}" "$out/bin/${name}"
+      '';
 
     writeBashScript = writeBashScriptOverride [];
-
     writeBashScriptBin = writeBashScriptBinOverride [];
   };
 

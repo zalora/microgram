@@ -138,7 +138,7 @@ rec {
       kibana4 kiries
       lua-json
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
-      newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix
+      newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry
       ShellCheck sproxy stack syslog-ng

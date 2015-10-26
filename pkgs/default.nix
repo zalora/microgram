@@ -262,6 +262,8 @@ in rec {
     withStream = true;
   };
 
+  nq = pkgs.callPackage ./nq {};
+
   openssl = overrideDerivation pkgs.openssl (_: (rec {
     name = "openssl-1.0.1p";
     src = fetchurl {

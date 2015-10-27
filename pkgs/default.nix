@@ -166,10 +166,10 @@ in rec {
   jenkins = pkgs.callPackage ./jenkins {};
 
   kibana4 = pkgs.srcOnly {
-    name = "kibana-4.0.0";
+    name = "kibana-4.1.2";
     src = fetchurl {
-      url = https://download.elasticsearch.org/kibana/kibana/kibana-4.0.0-linux-x64.tar.gz;
-      sha256 = "0bng4mmmhc2lhfk9vxnbgs4d7hiki5dlzrggzvd96dw0a8gy47cg";
+      url = https://download.elasticsearch.org/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz;
+      sha256 = "031ppiwv35bk86dkiicv2g59pk3c67khj3vmlqb11xvymkvi6qjz";
     };
   };
 

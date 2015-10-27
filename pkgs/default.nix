@@ -154,6 +154,10 @@ in rec {
     inherit sqlite3;
   };
 
+  curator = pkgs.callPackage ./curator {
+    inherit (pythonPackages) click elasticsearch urllib3 nosexcover mock;
+  };
+
   imagemagick = pkgs.callPackage ./ImageMagick {
     libX11 = null;
     ghostscript = null;

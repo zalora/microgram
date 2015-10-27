@@ -128,7 +128,7 @@ rec {
     solr4 = pkgs.solr;
     inherit (ugpkgs)
       angel
-      clj-json curator curl-loader
+      clj-json curl-loader
       damemtop docker
       elasticsearch-cloud-aws elastisch
       exim

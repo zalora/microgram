@@ -28,6 +28,8 @@ let
     recordType ? if useLocalHostname then "A" else "CNAME"
   }: sdk.writeBashScriptOverride ["SC2046"] "ec2-register-hostname-${zone}" ''
 
+    export SSL_CERT_FILE='${sdk.cacert}/etc/ssl/certs/ca-bundle.crt'
+
     date=$(${curl} -I https://route53.amazonaws.com/date | ${awk} '/^Date: / {sub("Date: ", "", $0); sub("\\r", "", $0); print $0}')
 
     iam="${iamCredentialName}"

@@ -81,6 +81,8 @@ in rec {
 
   angel = fns.staticHaskellCallPackage ./angel {};
 
+  ares = fns.staticHaskellCallPackage ./ares {};
+
   couchbase = pkgs.callPackage ./couchbase {};
 
   curl-loader = pkgs.callPackage ./curl-loader {};

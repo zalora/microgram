@@ -11,6 +11,11 @@ mkDerivation {
   };
   isLibrary = true;
   isExecutable = true;
+  configureFlags = [
+    "--ghc-option=-threaded"
+    "--ghc-option=-rtsopts"
+    "--ghc-option=-with-rtsopts=-N"
+  ];
   libraryHaskellDepends = [
     attoparsec base mtl mtl-compat old-locale text time
   ];

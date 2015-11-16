@@ -302,6 +302,13 @@ in rec {
 
   retry = pkgs.callPackage ./retry {};
 
+  rootfs-busybox = pkgs.fetchurl {
+    url = https://github.com/proger/docker-busybox/raw/master/rootfs.tar;
+    sha256 = "067m7jdz71v703azwka1yj6kbbcm3h2sfcwg92clrvgnpgp7fvy3";
+  };
+
+  runc = pkgs.callPackage ./runc {};
+
   inherit ShellCheck;
 
   sproxy = (fns.staticHaskellCallPackageWith old_ghc784) ./sproxy {};

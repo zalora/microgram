@@ -132,6 +132,7 @@ rec {
       damemtop docker
       elasticsearch-cloud-aws elastisch
       exim
+      flame-graph
       galera-wsrep get-user-data gdb-quiet graphviz
       heavy-sync
       jackson-core-asl jenkins

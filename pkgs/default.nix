@@ -95,6 +95,8 @@ in rec {
 
   docker = pkgs.callPackage ./docker { inherit go bridge-utils; };
 
+  flame-graph = pkgs.callPackage ./flame-graph { inherit (pkgs) perl; };
+
   elasticsearch-cloud-aws = pkgs.stdenv.mkDerivation rec {
     name = "elasticsearch-cloud-aws-${version}";
     version = "2.4.1";

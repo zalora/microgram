@@ -135,12 +135,12 @@ rec {
       flame-graph
       galera-wsrep get-user-data gdb-quiet graphviz
       heavy-sync
-      jackson-core-asl jenkins
+      jackson-core-asl jenkins jmaps
       kibana4 kiries
       lua-json
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
-      percona-toolkit perf-map-agent pivotal_agent put-metric
+      percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry
       ShellCheck sproxy stack syslog-ng
       thumbor

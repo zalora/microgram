@@ -171,6 +171,8 @@ in rec {
 
   jenkins = pkgs.callPackage ./jenkins {};
 
+  jmaps = pkgs.callPackage ./jmaps { inherit perf-map-agent; inherit (pkgs) openjdk; };
+
   kibana4 = pkgs.srcOnly {
     name = "kibana-4.1.2";
     src = fetchurl {

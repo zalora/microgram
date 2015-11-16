@@ -280,6 +280,9 @@ in rec {
 
   percona-toolkit = import ./percona-toolkit { inherit perlPackages fetchurl; };
 
+  perf-map-agent = import ./perf-map-agent
+    { inherit (pkgs) stdenv fetchgit cmake openjdk; };
+
   inherit (pkgs.callPackage ./php {}) php53 php54;
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};

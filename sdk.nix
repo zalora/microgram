@@ -140,7 +140,7 @@ rec {
       lua-json
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
-      percona-toolkit pivotal_agent put-metric
+      percona-toolkit perf-map-agent pivotal_agent put-metric
       rabbitmq replicator retry
       ShellCheck sproxy stack syslog-ng
       thumbor

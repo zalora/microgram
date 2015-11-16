@@ -111,7 +111,7 @@ rec {
       memcached
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
-      parallel perl php postgresql procps psmisc pv pwgen pxz python
+      parallel perf-tools perl php postgresql procps psmisc pv pwgen pxz python
       renameutils riemann runit rxvt_unicode rsync
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
       tcpdump tmux tree tzdata

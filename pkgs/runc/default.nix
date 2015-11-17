@@ -9,6 +9,11 @@ stdenv.mkDerivation {
     sha256 = "dfa221984051bf68c9837a0f4db940a880af6dc7cddab02e1fa9c092ac7b0143";
   };
 
+  patches = [
+    # brutal hack:
+    ./tasks.patch
+  ];
+
   buildInputs = [ go libseccomp ];
 
   buildPhase = ''

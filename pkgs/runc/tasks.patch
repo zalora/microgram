@@ -1,0 +1,79 @@
+diff --git a/libcontainer/cgroups/fs/apply_raw.go b/libcontainer/cgroups/fs/apply_raw.go
+index 68ebcfe..dc81f2f 100644
+--- a/libcontainer/cgroups/fs/apply_raw.go
++++ b/libcontainer/cgroups/fs/apply_raw.go
+@@ -30,7 +30,7 @@ var (
+ 		&PerfEventGroup{},
+ 		&FreezerGroup{},
+ 	}
+-	CgroupProcesses  = "cgroup.procs"
++	CgroupProcesses  = "tasks"
+ 	HugePageSizes, _ = cgroups.GetHugePageSize()
+ )
+ 
+@@ -124,7 +124,7 @@ func (m *Manager) Apply(pid int) (err error) {
+ 		}
+ 		// TODO: Apply should, ideally, be reentrant or be broken up into a separate
+ 		// create and join phase so that the cgroup hierarchy for a container can be
+-		// created then join consists of writing the process pids to cgroup.procs
++		// created then join consists of writing the process pids to tasks
+ 		p, err := d.path(sys.Name())
+ 		if err != nil {
+ 			if cgroups.IsNotFound(err) {
+diff --git a/libcontainer/cgroups/fs/cpuset.go b/libcontainer/cgroups/fs/cpuset.go
+index 088a665..2a2f867 100644
+--- a/libcontainer/cgroups/fs/cpuset.go
++++ b/libcontainer/cgroups/fs/cpuset.go
+@@ -70,7 +70,7 @@ func (s *CpusetGroup) ApplyDir(dir string, cgroup *configs.Cgroup, pid int) erro
+ 	}
+ 	// because we are not using d.join we need to place the pid into the procs file
+ 	// unlike the other subsystems
+-	if err := writeFile(dir, "cgroup.procs", strconv.Itoa(pid)); err != nil {
++	if err := writeFile(dir, "tasks", strconv.Itoa(pid)); err != nil {
+ 		return err
+ 	}
+ 
+diff --git a/libcontainer/cgroups/systemd/apply_systemd.go b/libcontainer/cgroups/systemd/apply_systemd.go
+index 7a422b3..a0658c2 100644
+--- a/libcontainer/cgroups/systemd/apply_systemd.go
++++ b/libcontainer/cgroups/systemd/apply_systemd.go
+@@ -322,7 +322,7 @@ func join(c *configs.Cgroup, subsystem string, pid int) (string, error) {
+ 	if err := os.MkdirAll(path, 0755); err != nil {
+ 		return "", err
+ 	}
+-	if err := writeFile(path, "cgroup.procs", strconv.Itoa(pid)); err != nil {
++	if err := writeFile(path, "tasks", strconv.Itoa(pid)); err != nil {
+ 		return "", err
+ 	}
+ 
+diff --git a/libcontainer/cgroups/utils.go b/libcontainer/cgroups/utils.go
+index d00e0e2..49eb111 100644
+--- a/libcontainer/cgroups/utils.go
++++ b/libcontainer/cgroups/utils.go
+@@ -194,7 +194,7 @@ func GetInitCgroupDir(subsystem string) (string, error) {
+ }
+ 
+ func readProcsFile(dir string) ([]int, error) {
+-	f, err := os.Open(filepath.Join(dir, "cgroup.procs"))
++	f, err := os.Open(filepath.Join(dir, "tasks"))
+ 	if err != nil {
+ 		return nil, err
+ 	}
+@@ -265,7 +265,7 @@ func PathExists(path string) bool {
+ func EnterPid(cgroupPaths map[string]string, pid int) error {
+ 	for _, path := range cgroupPaths {
+ 		if PathExists(path) {
+-			if err := ioutil.WriteFile(filepath.Join(path, "cgroup.procs"),
++			if err := ioutil.WriteFile(filepath.Join(path, "tasks"),
+ 				[]byte(strconv.Itoa(pid)), 0700); err != nil {
+ 				return err
+ 			}
+@@ -330,7 +330,7 @@ func GetPids(path string) ([]int, error) {
+ 	// collect pids from all sub-cgroups
+ 	err := filepath.Walk(path, func(p string, info os.FileInfo, iErr error) error {
+ 		dir, file := filepath.Split(p)
+-		if file != "cgroup.procs" {
++		if file != "tasks" {
+ 			return nil
+ 		}
+ 		if iErr != nil {

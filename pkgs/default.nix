@@ -10,7 +10,7 @@ let
   inherit (lib)
     concatMapStringsSep overrideDerivation optionalAttrs concatStringsSep;
 
-  haskellPackages = pkgs.haskell.packages.ghc784;
+  haskellPackages = pkgs.haskellPackages;
 
   old_ghc784 = pkgs.callPackage ./haskell-modules {
     ghc = pkgs.haskell.compiler.ghc784;
@@ -229,7 +229,7 @@ in rec {
 
   mkebs = pkgs.callPackage ./mkebs {};
 
-  myrapi = fns.staticHaskellCallPackage ./myrapi { inherit servant servant-client; };
+  myrapi = fns.staticHaskellCallPackage ./myrapi {};
 
   mysql55 = pkgs.callPackage ./mysql/5.5.x.nix {};
 
@@ -314,10 +314,10 @@ in rec {
   sproxy = (fns.staticHaskellCallPackageWith old_ghc784) ./sproxy {};
 
   stack = let
-     version = "0.1.5.0";
+     version = "0.1.6.0";
      tarball = pkgs.fetchurl {
-       url = "https://github.com/commercialhaskell/stack/releases/download/v${version}/stack-${version}-x86_64-linux.tar.gz";
-       sha256 = "1z0fddri25q97qj93mz54ajmgrb65kk3zd375mn08xmn831lcyin";
+       url = "https://github.com/commercialhaskell/stack/releases/download/v${version}/stack-${version}-linux-x86_64.tar.gz";
+       sha256 = "1gwch0airaa7xq0i4y2w80k8j0bcbpn79vn5g80bngmc4z5x4nbd";
      };
      stack1 = pkgs.srcOnly {
        name = "stack-${version}-bin1";
@@ -422,11 +422,6 @@ in rec {
   amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2 { inherit amazonka-core; };
   amazonka-elb = haskellPackages.callPackage ./amazonka-elb { inherit amazonka-core; };
   amazonka-route53 = haskellPackages.callPackage ./amazonka-route53 { inherit amazonka-core; };
-
-  # servant 0.2.x
-  servant = haskellPackages.callPackage ./servant {};
-  servant-client = haskellPackages.callPackage ./servant-client { inherit servant; };
-  servant-server = haskellPackages.callPackage ./servant-server { inherit servant; };
 
   #
   # clojure/java libraries

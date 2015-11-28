@@ -7,10 +7,10 @@
 }:
 mkDerivation {
   pname = "aws-ec2";
-  version = "0.3.2";
+  version = "0.3.3";
   src = fetchzip {
-    url = "http://hackage.haskell.org/package/aws-ec2-0.3.2/aws-ec2-0.3.2.tar.gz";
-    sha256 = "0apcnbb8hqv07x3g2vldr288kfxzhs02lp1rqvznlrgybp5hnla2";
+    url = "http://hackage.haskell.org/package/aws-ec2-0.3.3/aws-ec2-0.3.3.tar.gz";
+    sha256 = "15bdx39yphyb2w1v4rjsd8wh1s5nz3hdpqdfl4jws6lvcsrd40fc";
   };
   isLibrary = true;
   isExecutable = true;

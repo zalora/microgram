@@ -13,6 +13,7 @@ mkDerivation {
   };
   isLibrary = true;
   isExecutable = true;
+  jailbreak = true;
   libraryHaskellDepends = [
     aeson base base64-bytestring byteable bytestring cryptohash either
     http-types old-locale servant servant-client text time

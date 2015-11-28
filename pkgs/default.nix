@@ -316,7 +316,7 @@ in rec {
   stack = let
      version = "0.1.6.0";
      tarball = pkgs.fetchurl {
-       url = "https://github.com/commercialhaskell/stack/releases/download/v${version}/stack-${version}-x86_64-linux.tar.gz";
+       url = "https://github.com/commercialhaskell/stack/releases/download/v${version}/stack-${version}-linux-x86_64.tar.gz";
        sha256 = "1gwch0airaa7xq0i4y2w80k8j0bcbpn79vn5g80bngmc4z5x4nbd";
      };
      stack1 = pkgs.srcOnly {

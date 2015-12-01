@@ -50,7 +50,10 @@ let
 
     writeBashScriptOverride = skipchecks: name: script:
       let
-        base = ["SC1091"]; # file inputs, not ready for this yet
+        base = [
+          "SC1091"  # file inputs, not ready for this yet
+          "SC1090"  # file inputs with variables
+        ];
         exc = concatMapStringsSep " " (e: "-e ${e}") (base ++ skipchecks);
       in pkgs.runCommand name { inherit script; } ''
         echo '#!${pkgs.bash}/bin/bash' > "$out"

@@ -59,7 +59,7 @@ in
   };
   config = mkIf config.services.ntp.enable {
     environment.systemPackages = [ pkgs.ntp ];
-    users.extraUsers = singleton
+    users.users = singleton
       { name = ntpUser;
         uid = config.ids.uids.ntp;
         description = "NTP daemon user";

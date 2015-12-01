@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) docker go imagemagick linux nix;
+      inherit (ugpkgs) docker erlang go imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       glibcLocales = pkgs.glibcLocales.override {
@@ -48,6 +48,17 @@ rec {
       gnupg = pkgs.gnupg.override {
         pinentry = null;
         x11Support = false; openldap = null; libusb = null;
+      };
+      python27 = pkgs.python27.override {
+        x11Support = false;
+      };
+      python3 = pkgs.python3.override {
+        libX11 = null;
+        tk = null; tcl = null;
+      };
+      python34 = pkgs.python34.override {
+        libX11 = null;
+        tk = null; tcl = null;
       };
       qemu = pkgs.qemu.override {
         pulseSupport = false;

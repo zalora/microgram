@@ -100,7 +100,7 @@ rec {
       bash binutils
       cacert coreutils curl
       diffutils dnsmasq dstat
-      e2fsprogs elasticsearch erlang
+      e2fsprogs elasticsearch
       file findutils
       gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop
@@ -130,7 +130,7 @@ rec {
       angel
       clj-json curator curl-loader
       damemtop docker
-      elasticsearch-cloud-aws elastisch
+      elasticsearch-cloud-aws elastisch erlang
       exim
       flame-graph
       galera-wsrep get-user-data gdb-quiet graphviz

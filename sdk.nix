@@ -123,7 +123,7 @@ rec {
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
       parallel perf-tools perl php postgresql procps psmisc pv pwgen pxz python
-      renameutils riemann runit rxvt_unicode rsync
+      rdfind renameutils riemann runit rxvt_unicode rsync
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
       tcpdump tmux tree tzdata
       unzip utillinux

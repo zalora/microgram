@@ -11,7 +11,7 @@ Watch this space for updates.
 
 ### NixOS
 
-Microgram includes opinionated [NixOS 14.12](https://github.com/nixos/nixpkgs/tree/release-14.12) configuration targeted for deployments in IaaS environments.
+Microgram includes opinionated [NixOS 15.09](https://github.com/nixos/nixpkgs/tree/release-15.09) configuration targeted for deployments in IaaS environments.
 
 Currently supported backends: EC2 AMI (EBS and instance-store), QEMU (automated testing), VirtualBox (works in other providers that support OVAs, like VMWare).
 

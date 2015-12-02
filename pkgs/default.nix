@@ -12,11 +12,6 @@ let
 
   haskellPackages = pkgs.haskellPackages;
 
-  old_ghc784 = pkgs.callPackage ./haskell-modules {
-    ghc = pkgs.haskell.compiler.ghc784;
-    packageSetConfig = pkgs.callPackage <nixpkgs/pkgs/development/haskell-modules/configuration-ghc-7.8.x.nix> {};
-  };
-
   fns = rec {
 
     # exports dependency graph of a derivation as a separate derivation
@@ -54,7 +49,12 @@ let
     };
 
     writeBashScriptOverride = skipchecks: name: script:
-      let exc = concatMapStringsSep " " (e: "-e ${e}") skipchecks;
+      let
+        base = [
+          "SC1091"  # file inputs, not ready for this yet
+          "SC1090"  # file inputs with variables
+        ];
+        exc = concatMapStringsSep " " (e: "-e ${e}") (base ++ skipchecks);
       in pkgs.runCommand name { inherit script; } ''
         echo '#!${pkgs.bash}/bin/bash' > "$out"
         echo "$script" >> "$out"
@@ -311,7 +311,7 @@ in rec {
 
   inherit ShellCheck;
 
-  sproxy = (fns.staticHaskellCallPackageWith old_ghc784) ./sproxy {};
+  sproxy = fns.staticHaskellCallPackage ./sproxy {};
 
   stack = let
      version = "0.1.6.0";

@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) docker go imagemagick linux nix;
+      inherit (ugpkgs) docker erlang go imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       glibcLocales = pkgs.glibcLocales.override {
@@ -48,6 +48,17 @@ rec {
       gnupg = pkgs.gnupg.override {
         pinentry = null;
         x11Support = false; openldap = null; libusb = null;
+      };
+      python27 = pkgs.python27.override {
+        x11Support = false;
+      };
+      python3 = pkgs.python3.override {
+        libX11 = null;
+        tk = null; tcl = null;
+      };
+      python34 = pkgs.python34.override {
+        libX11 = null;
+        tk = null; tcl = null;
       };
       qemu = pkgs.qemu.override {
         pulseSupport = false;
@@ -100,11 +111,11 @@ rec {
       bash binutils
       cacert coreutils curl
       diffutils dnsmasq dstat
-      e2fsprogs elasticsearch erlang
+      e2fsprogs elasticsearch
       file findutils
       gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop
-      iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
+      iana_etc iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod
       libjpeg libjpeg_turbo libxml2 logrotate lsof
@@ -112,7 +123,7 @@ rec {
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
       parallel perf-tools perl php postgresql procps psmisc pv pwgen pxz python
-      renameutils riemann runit rxvt_unicode rsync
+      rdfind renameutils riemann runit rxvt_unicode rsync
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
       tcpdump tmux tree tzdata
       unzip utillinux
@@ -130,7 +141,7 @@ rec {
       angel
       clj-json curator curl-loader
       damemtop docker
-      elasticsearch-cloud-aws elastisch
+      elasticsearch-cloud-aws elastisch erlang
       exim
       flame-graph
       galera-wsrep get-user-data gdb-quiet graphviz

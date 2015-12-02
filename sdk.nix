@@ -115,7 +115,7 @@ rec {
       file findutils
       gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop
-      iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
+      iana_etc iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq
       kibana kmod
       libjpeg libjpeg_turbo libxml2 logrotate lsof

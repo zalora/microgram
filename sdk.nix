@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) docker erlang go imagemagick linux nix;
+      inherit (ugpkgs) docker erlang imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       glibcLocales = pkgs.glibcLocales.override {
@@ -113,7 +113,7 @@ rec {
       diffutils dnsmasq dstat
       e2fsprogs elasticsearch
       file findutils
-      gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
+      gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar gzip
       htop
       iana_etc iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq

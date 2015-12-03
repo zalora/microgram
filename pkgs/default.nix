@@ -93,7 +93,7 @@ in rec {
       ${pkgs.perl}/bin/perl ${./memcached/damemtop} "$@"
   '';
 
-  docker = pkgs.callPackage ./docker { inherit go bridge-utils; };
+  docker = pkgs.callPackage ./docker { inherit bridge-utils; };
 
   flame-graph = pkgs.callPackage ./flame-graph { inherit (pkgs) perl; };
 

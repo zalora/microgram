@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) docker erlang imagemagick linux nix;
+      inherit (ugpkgs) erlang imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       glibcLocales = pkgs.glibcLocales.override {
@@ -110,7 +110,7 @@ rec {
       atop awscli
       bash binutils
       cacert coreutils curl
-      diffutils dnsmasq dstat
+      diffutils dnsmasq docker dstat
       e2fsprogs elasticsearch
       file findutils
       gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
@@ -140,7 +140,7 @@ rec {
     inherit (ugpkgs)
       angel
       clj-json curator curl-loader
-      damemtop docker
+      damemtop
       elasticsearch-cloud-aws elastisch erlang
       exim
       flame-graph

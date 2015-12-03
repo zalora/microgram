@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) docker erlang go imagemagick linux nix;
+      inherit (ugpkgs) docker erlang imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       glibcLocales = pkgs.glibcLocales.override {

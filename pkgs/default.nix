@@ -146,8 +146,6 @@ in rec {
       -q -O - http://169.254.169.254/latest/user-data
   '';
 
-  go = pkgs.callPackage ./go/1.4.nix {};
-
   graphviz = pkgs.callPackage ./graphviz {};
 
   heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {

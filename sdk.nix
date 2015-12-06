@@ -41,6 +41,7 @@ rec {
       inherit (ugpkgs) erlang imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
+      git = pkgs.gitMinimal;
       glibcLocales = pkgs.glibcLocales.override {
         allLocales = false;
         locales = ["en_US.UTF-8/UTF-8"];
@@ -131,8 +132,6 @@ rec {
       wget which
       xz
     ;
-
-    git = pkgs.gitMinimal;
 
     inherit (pkgs) bundler;
 

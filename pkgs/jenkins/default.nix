@@ -30,10 +30,10 @@ in
 
 stdenv.mkDerivation rec {
   name = "jenkins-${version}+plugins.war";
-  version = "1.606";
+  version = "1.638";
   src = fetchurl {
     url = "http://mirrors.jenkins-ci.org/war/${version}/jenkins.war";
-    sha256 = "0lvr91xbbp3lj2k82766gjx4xp0bbamnnkdkyshq96myz4566l6r";
+    sha256 = "1kbx9n2hj8znw0ykvgvrlf2v472f1nkdwix6a2v4rjxkgmghxmh8";
   };
 
   # https://wiki.jenkins-ci.org/display/JENKINS/Bundling+plugins+with+Jenkins

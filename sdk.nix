@@ -114,7 +114,7 @@ rec {
       diffutils dnsmasq docker dstat
       e2fsprogs elasticsearch
       file findutils
-      gawk gcc glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
+      gawk gcc git glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
       htop
       iana_etc iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
       jdk jetty92 jq

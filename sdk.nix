@@ -42,6 +42,7 @@ rec {
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       git = pkgs.gitMinimal;
+      go = pkgs.go_1_4;
       glibcLocales = pkgs.glibcLocales.override {
         allLocales = false;
         locales = ["en_US.UTF-8/UTF-8"];

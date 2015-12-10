@@ -342,6 +342,8 @@ in rec {
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd tornado; }).thumbor;
 
+  twemproxy = pkgs.callPackage ./twemproxy {};
+
   unicron = fns.staticHaskellCallPackage ./unicron {};
 
   upcast = pkgs.haskell.lib.overrideCabal (fns.staticHaskellCallPackage ./upcast {

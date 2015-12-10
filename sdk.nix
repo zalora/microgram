@@ -141,7 +141,7 @@ rec {
       angel
       ares
       clj-json curator curl-loader
-      damemtop
+      damemtop dynomite
       elasticsearch-cloud-aws elastisch erlang
       exim
       flame-graph

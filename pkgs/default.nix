@@ -93,6 +93,8 @@ in rec {
       ${pkgs.perl}/bin/perl ${./memcached/damemtop} "$@"
   '';
 
+  dynomite = pkgs.callPackage ./dynomite {};
+
   flame-graph = pkgs.callPackage ./flame-graph { inherit (pkgs) perl; };
 
   elasticsearch-cloud-aws = pkgs.stdenv.mkDerivation rec {

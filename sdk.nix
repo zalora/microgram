@@ -158,6 +158,7 @@ rec {
       thumbor twemproxy
       unicron
       upcast
+      vault
       xd
       ybc;
     inherit (ugpkgs)

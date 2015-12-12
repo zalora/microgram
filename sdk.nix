@@ -158,6 +158,7 @@ rec {
       thumbor
       unicron
       upcast
+      vault
       xd
       ybc;
     inherit (ugpkgs)

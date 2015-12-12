@@ -350,6 +350,8 @@ in rec {
     postFixup = "rm -rf $out/lib $out/nix-support";
   });
 
+  vault = pkgs.callPackage ./vault {};
+
   xd = pkgs.callPackage ./xd {};
 
   ybc = pkgs.callPackage ./ybc {};

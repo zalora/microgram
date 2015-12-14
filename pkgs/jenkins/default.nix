@@ -30,10 +30,10 @@ in
 
 stdenv.mkDerivation rec {
   name = "jenkins-${version}+plugins.war";
-  version = "1.638";
+  version = "1.641";
   src = fetchurl {
     url = "http://mirrors.jenkins-ci.org/war/${version}/jenkins.war";
-    sha256 = "1kbx9n2hj8znw0ykvgvrlf2v472f1nkdwix6a2v4rjxkgmghxmh8";
+    sha256 = "14svpwz9r7zw5i263pkmjb3d6vfxalk521mmiasi2g2fzqw6qrgp";
   };
 
   # https://wiki.jenkins-ci.org/display/JENKINS/Bundling+plugins+with+Jenkins
@@ -66,4 +66,3 @@ stdenv.mkDerivation rec {
   '';
   installPhase = "cp jenkins.war $out";
 }
-

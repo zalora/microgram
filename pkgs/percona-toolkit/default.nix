@@ -1,20 +1,28 @@
-{ perlPackages, fetchurl, makeWrapper }:
+{ perlPackages, fetchurl }:
 
 perlPackages.buildPerlPackage rec {
-  version = "2.2.16";
-  name = "percona-toolkit-${version}";
+  name = "percona-toolkit-2.2.13";
 
   src = fetchurl {
-    url = "http://www.percona.com/redir/downloads/percona-toolkit/${version}/tarball/${name}.tar.gz";
-    sha256 = "0jk5xrrxy0p92cwpz926xpx5r79lma7ly44rkn9qp3ca0wwg9zwb";
+    url = http://www.percona.com/redir/downloads/percona-toolkit/2.2.13/tarball/percona-toolkit-2.2.13.tar.gz;
+    sha256 = "0qsazzpb2za6fc552nbmdkq0hv8gvx2g275x4bx7mkb3s4czcscf";
   };
 
-  doCheck = false;
-  buildInputs = [ perlPackages.DBI perlPackages.DBDmysql makeWrapper ];
-  postInstall = ''
-    for n in "$out/bin/"*; do
-      wrapProgram "$n" --prefix PERL5LIB : "$PERL5LIB"
+  preConfigure = ''
+    find . | while read fn; do
+        if test -f "$fn"; then
+            first=$(dd if="$fn" count=2 bs=1 2> /dev/null)
+            if test "$first" = "#!"; then
+                sed < "$fn" > "$fn".tmp \
+                    -e "s|^#\!\(.*[/\ ]perl.*\)$|#\!$perl/bin/perl $perlFlags|"
+                if test -x "$fn"; then chmod +x "$fn".tmp; fi
+                mv "$fn".tmp "$fn"
+            fi
+        fi
     done
   '';
 
+  doCheck = false;
+
+  propagatedBuildInputs = [ perlPackages.DBI perlPackages.DBDmysql ];
 }

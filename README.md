@@ -19,18 +19,18 @@ Currently supported backends: EC2 AMI (EBS and instance-store), QEMU (automated 
 
 To test images of Nginx:
 
-You need `<nixpkgs>` in your `$NIX_PATH` to build, branch `release-14.12`.
-If you don't have a remote builder, substitute `upcast build-remote -t builder.example.com` with `nix-build`.
+You need `<nixpkgs>` in your `$NIX_PATH` to build, branch `release-15.09`.
+If you don't have a remote builder, substitute `upcast build -t builder.example.com` with `nix-build`.
 
 ```bash
 # builds an OVA (exported by VirtualBox)
-upcast build-remote -t builder.example.com -A ova tests/nginx.nix
+upcast build -t builder.example.com -A ova tests/nginx.nix
 
 # builds a VDI (to be used with VirtualBox), might be faster as it doesn't have VirtualBox as a dependency
-upcast build-remote -t builder.example.com -A vdi tests/nginx.nix
+upcast build -t builder.example.com -A vdi tests/nginx.nix
 
 # builds and runs a test in qemu
-upcast build-remote -t builder.example.com -A qemu-test tests/nginx.nix
+upcast build -t builder.example.com -A qemu-test tests/nginx.nix
 
 export AWS_ACCOUNT_ID=...
 export AWS_X509_CERT=...
@@ -39,10 +39,10 @@ export AWS_ACCESS_KEY=...
 export AWS_SECRET_KEY=...
 
 # bundles an instance-store AMI
-upcast build-remote -t builder.example.com -A s3-bundle tests/nginx.nix
+upcast build -t builder.example.com -A s3-bundle tests/nginx.nix
 
 # builds a script that sets up an EBS AMI
-upcast build-remote -t builder.example.com -A ebs-ami-builder tests/nginx.nix
+upcast build -t builder.example.com -A ebs-ami-builder tests/nginx.nix
 ```
 
 ### Packaging software
@@ -50,7 +50,6 @@ upcast build-remote -t builder.example.com -A ebs-ami-builder tests/nginx.nix
 * [to-nix/python](to-nix/python) - Python packaging documentation and tools (previously known as python2nix)
 * [to-nix/haskell](to-nix/haskell) - Haskell packaging documentation for programs using Cabal
 * [to-nix/golang](to-nix/golang) - Go packaging documentation for Nix
-* `to-nix/docker` - TBA (using lightweight docker images as a software delivery unit)
 
 ### Utility scripts
 

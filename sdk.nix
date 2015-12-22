@@ -125,7 +125,7 @@ rec {
       netcat-openbsd nfs-utils nodejs ntp
       openjdk openssh openssl optipng
       parallel perf-tools perl php postgresql procps psmisc pv pwgen pxz python
-      rdfind renameutils riemann runit rxvt_unicode rsync
+      rdfind redis renameutils riemann runit rxvt_unicode rsync
       s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
       tcpdump tmux tree tzdata
       unzip utillinux
@@ -169,7 +169,7 @@ rec {
   };
 
   phpPackages = {
-    inherit (pkgs.phpPackages) memcache memcached zmq zendopcache xdebug;
+    inherit (pkgs.phpPackages) memcache memcached redis zmq zendopcache xdebug;
     inherit (ugpkgs) newrelic-php imagick;
   };
 }

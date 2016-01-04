@@ -158,6 +158,7 @@ rec {
       thumbor twemproxy
       unicron
       upcast
+      upcast-ng
       vault
       xd
       ybc;

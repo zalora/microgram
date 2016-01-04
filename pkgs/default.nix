@@ -349,10 +349,18 @@ in rec {
   unicron = fns.staticHaskellCallPackage ./unicron {};
 
   upcast = pkgs.haskell.lib.overrideCabal (fns.staticHaskellCallPackage ./upcast {
-    inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
+    inherit (amazonka_1_1_0) amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
   }) (drv: {
     postFixup = "rm -rf $out/lib $out/nix-support";
   });
+
+  upcast-ng = let
+    ng = pkgs.haskell.lib.overrideCabal (fns.staticHaskellCallPackage ./upcast/ng.nix {
+      inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
+    }) (drv: {
+      postFixup = "rm -rf $out/lib $out/nix-support";
+    });
+  in pkgs.writeScriptBin "upcast-ng" "${ng}/bin/upcast $*";
 
   vault = pkgs.callPackage ./vault {};
 
@@ -419,6 +427,7 @@ in rec {
   # haskell libraries
   #
 
+  # modern stuff
   amazonka = haskellPackages.callPackage ./amazonka
     { inherit amazonka-core; retry = haskell-retry; };
   amazonka-core = haskellPackages.callPackage ./amazonka-core {};
@@ -430,6 +439,19 @@ in rec {
     { inherit amazonka-core amazonka-test; };
   amazonka-test = haskellPackages.callPackage ./amazonka-test
     { inherit amazonka-core; };
+
+  # compat
+  amazonka_1_1_0 = rec {
+    amazonka = haskellPackages.callPackage ./amazonka/1.1.0.nix
+      { inherit amazonka-core; };
+    amazonka-core = haskellPackages.callPackage ./amazonka-core/1.1.0.nix {};
+    amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2/1.1.0.nix
+      { inherit amazonka-core; };
+    amazonka-elb = haskellPackages.callPackage ./amazonka-elb/1.1.0.nix
+      { inherit amazonka-core; };
+    amazonka-route53 = haskellPackages.callPackage ./amazonka-route53/1.1.0.nix
+      { inherit amazonka-core; };
+  };
 
   # Ugly collision with tv's retry, maybe we should namespace
   # Haskell/cabal things into a subdirectory? If not going the

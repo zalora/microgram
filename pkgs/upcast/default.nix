@@ -1,37 +1,42 @@
 { mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
-, amazonka-ec2, amazonka-elb, amazonka-route53, async, attoparsec
-, base, base64-bytestring, bytestring, conduit, conduit-extra
-, containers, directory, exceptions, fetchgit, filepath, lens
-, lifted-base, mtl, natural-sort, optparse-applicative, pretty-show
-, process, random, resourcet, scientific, semigroups, stdenv
-, tagged, text, time, unix, unordered-containers, vector
-, vk-posix-pty, xml-conduit
+, amazonka-ec2, amazonka-elb, amazonka-route53, array, async
+, attoparsec, base, base64-bytestring, bifunctors, bytestring
+, conduit, conduit-extra, containers, directory, exceptions
+, fetchgit, filepath, hashable, iproute, lens, lens-action
+, lens-aeson, lifted-base, mtl, natural-sort, optparse-applicative
+, pretty-show, process, random, resourcet, scientific, semigroups
+, stdenv, tagged, text, time, unix, unordered-containers, vector
+, vk-posix-pty, witherable, xml-conduit
 }:
 mkDerivation {
   pname = "upcast";
   version = "0.1.1.0";
   src = fetchgit {
-    url = "https://github.com/zalora/upcast.git";
-    sha256 = "dbb721b2bbbe549cd4608d15c4abc8b6e25c7f5dd9c25fe9b7b62a381e17f8a0";
-    rev = "ed869de9551cce1eff1d35941d145e4075d9f1fe";
+    url = git://github.com/zalora/upcast.git;
+    rev = "426a3b74ccd5534a330b9993b11b70d91e0da30c";
+    sha256 = "7a984690faafaff1257fc4f65e963f39f4cc8c4307a00382ddcaa3050fdb6bdc";
   };
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
     aeson aeson-pretty amazonka amazonka-core amazonka-ec2 amazonka-elb
-    amazonka-route53 async attoparsec base base64-bytestring bytestring
-    conduit conduit-extra containers directory exceptions filepath lens
+    amazonka-route53 array async attoparsec base base64-bytestring
+    bifunctors bytestring conduit conduit-extra containers directory
+    exceptions filepath hashable iproute lens lens-action lens-aeson
     lifted-base mtl natural-sort optparse-applicative pretty-show
     process random resourcet scientific semigroups tagged text time
-    unix unordered-containers vector vk-posix-pty xml-conduit
+    unix unordered-containers vector vk-posix-pty witherable
+    xml-conduit
   ];
   executableHaskellDepends = [
     aeson aeson-pretty amazonka amazonka-core amazonka-ec2 amazonka-elb
-    amazonka-route53 async attoparsec base base64-bytestring bytestring
-    conduit conduit-extra containers directory exceptions filepath lens
+    amazonka-route53 array async attoparsec base base64-bytestring
+    bifunctors bytestring conduit conduit-extra containers directory
+    exceptions filepath hashable iproute lens lens-action lens-aeson
     lifted-base mtl natural-sort optparse-applicative pretty-show
     process random resourcet scientific semigroups tagged text time
-    unix unordered-containers vector vk-posix-pty xml-conduit
+    unix unordered-containers vector vk-posix-pty witherable
+    xml-conduit
   ];
   homepage = "https://github.com/zalora/upcast#readme";
   description = "Nix-based Linux deployment platform tools";

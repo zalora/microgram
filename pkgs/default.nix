@@ -419,11 +419,22 @@ in rec {
   # haskell libraries
   #
 
-  amazonka = haskellPackages.callPackage ./amazonka { inherit amazonka-core; };
+  amazonka = haskellPackages.callPackage ./amazonka
+    { inherit amazonka-core; retry = haskell-retry; };
   amazonka-core = haskellPackages.callPackage ./amazonka-core {};
-  amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2 { inherit amazonka-core; };
-  amazonka-elb = haskellPackages.callPackage ./amazonka-elb { inherit amazonka-core; };
-  amazonka-route53 = haskellPackages.callPackage ./amazonka-route53 { inherit amazonka-core; };
+  amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2
+    { inherit amazonka-core amazonka-test; };
+  amazonka-elb = haskellPackages.callPackage ./amazonka-elb
+    { inherit amazonka-core amazonka-test; };
+  amazonka-route53 = haskellPackages.callPackage ./amazonka-route53
+    { inherit amazonka-core amazonka-test; };
+  amazonka-test = haskellPackages.callPackage ./amazonka-test
+    { inherit amazonka-core; };
+
+  # Ugly collision with tv's retry, maybe we should namespace
+  # Haskell/cabal things into a subdirectory? If not going the
+  # stack/ECR route..
+  haskell-retry = haskellPackages.callPackage ./haskell-retry {};
 
   #
   # clojure/java libraries

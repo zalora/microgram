@@ -1,17 +1,16 @@
-{ mkDerivation, amazonka-core, base, bytestring
-, fetchzip, lens, stdenv, tasty, tasty-hunit, text, time
+{ mkDerivation, amazonka-core, amazonka-test, base, bytestring
+, lens, stdenv, tasty, tasty-hunit, text, time
 , unordered-containers
 }:
 mkDerivation {
   pname = "amazonka-ec2";
-  version = "1.1.0";
-  src = fetchzip {
-    url = "http://hackage.haskell.org/package/amazonka-ec2-1.1.0/amazonka-ec2-1.1.0.tar.gz";
-    sha256 = "1xfdmr7vnaqmqhsay6572gx1f86c8vny0z9pv9gawfsk65vffdvz";
-  };
+  version = "1.3.6";
+  sha256 = "15sc9mlbalzaq6w3bsjxdmkhsmjn9qj7wis70vjvk13xy7qnwxfm";
   libraryHaskellDepends = [ amazonka-core base ];
-  doHaddock = false;
-  doCheck = false;
+  testHaskellDepends = [
+    amazonka-core amazonka-test base bytestring lens tasty tasty-hunit
+    text time unordered-containers
+  ];
   homepage = "https://github.com/brendanhay/amazonka";
   description = "Amazon Elastic Compute Cloud SDK";
   license = "unknown";

@@ -78,15 +78,3 @@ index b30c95c..a9e369c 100644
  import System.Directory (renameFile)
  import System.FilePath (splitFileName)
  import System.IO (hClose)
-diff --git a/src/Ares/CGroup.hs b/src/Ares/CGroup.hs
-index 51b20a5..9b510ea 100644
---- a/src/Ares/CGroup.hs
-+++ b/src/Ares/CGroup.hs
-@@ -5,6 +5,7 @@ module Ares.CGroup
-     )
-   where
- 
-+import Control.Applicative
- import qualified Data.ByteString.Char8 as BS8
- import Control.Monad.Extra (unlessM)
- import Data.Maybe (fromMaybe)

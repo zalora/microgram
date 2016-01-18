@@ -342,6 +342,8 @@ in rec {
 
   syslog-ng = pkgs.callPackage ./syslog-ng {};
 
+  terraform = pkgs.callPackage ./terraform {};
+
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd tornado; }).thumbor;
 
   twemproxy = pkgs.callPackage ./twemproxy {};

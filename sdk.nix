@@ -38,7 +38,7 @@ rec {
     };
 
     packageOverrides = pkgs: rec {
-      inherit (ugpkgs) erlang imagemagick linux nix;
+      inherit (ugpkgs) bundler_HEAD erlang imagemagick linux nix;
       mysql = ugpkgs.mariadb;
       php = ugpkgs.php54;
       git = pkgs.gitMinimal;

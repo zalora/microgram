@@ -83,6 +83,10 @@ in rec {
 
   ares = fns.staticHaskellCallPackage ./ares {};
 
+  bundler_HEAD = import ./bundler/bundler-head.nix {
+    inherit (pkgs) buildRubyGem coreutils fetchgit;
+  };
+
   couchbase = pkgs.callPackage ./couchbase {};
 
   curl-loader = pkgs.callPackage ./curl-loader {};

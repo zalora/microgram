@@ -1,20 +1,23 @@
 { config, options, name, ... }:
 let
-  inherit (import <nixpkgs/lib>) types mkOption replaceChars optionalString;
+  inherit (import <nixpkgs/lib>)
+    types mkOption replaceChars optionalString range mapAttrs;
   inherit (import <microgram/sdk.nix>) sdk lib;
 
 
   # Convert time periods (e.g. "1h") to seconds
   toSeconds = p: with builtins;
     let
-      count = fromJSON "${substring 0 (stringLength p - 1) p}";
+      count = let
+        count' = substring 0 (stringLength p - 1) p;
+      in if count' == "" then 0 else fromJSON count';
       unit = substring (stringLength p - 1) 1 p ;
-      mult = {
+      conv = mapAttrs (_: mul) {
         s = 1; m = 60; h = 3600; d = 86400;
       } // (listToAttrs
-        (map (n: { name = toString n; value = 1; }) [0 1 2 3 4 5 6 7 8 9])
+        (map (n: { name = toString n; value = (x: x * 10 + n); }) (range 0 9))
       );
-    in if mult ? "${unit}" then mul count mult.${unit}
+    in if conv ? "${unit}" then conv.${unit} count
        else throw "Invalid period ${p}";
 
   max = a: b: if a > b then a else b;

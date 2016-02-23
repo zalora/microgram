@@ -360,13 +360,14 @@ in rec {
     postFixup = "rm -rf $out/lib $out/nix-support";
   });
 
-  upcast-ng = let
-    ng = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast/ng.nix {
-      inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
-    }) (drv: {
-      postFixup = "rm -rf $out/lib $out/nix-support";
-    });
-  in pkgs.writeScriptBin "upcast-ng" "${ng}/bin/upcast $*";
+  upcast-ng = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast/ng.nix {
+    inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
+  }) (drv: {
+    postFixup = ''
+      rm -rf $out/lib $out/nix-support
+      mv $out/bin/upcast $out/bin/upcast-ng
+    '';
+  });
 
   vault = pkgs.callPackage ./vault {};
 

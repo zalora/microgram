@@ -20,7 +20,7 @@
 
 let
 
-  version = "6.9.1-3";
+  version = "6.9.2-10";
 
   arch =
     if stdenv.system == "i686-linux" then "i686"
@@ -37,9 +37,10 @@ stdenv.mkDerivation rec {
   src = fetchurl {
     urls = [
       "http://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/releases/${name}.tar.xz"
+      "http://distfiles.macports.org/ImageMagick/ImageMagick-${version}.tar.xz"
       "mirror://imagemagick/releases/${name}.tar.xz"
     ];
-    sha256 = "18wbsjfccxlgsdsd6h9wvhcjrsglyi086jk4bk029ik07rh81laz";
+    sha256 = "0g01q8rygrf977d9rpixg1bhnavqfwzz30qpn7fj17yn8fx6ybys";
   };
 
   enableParallelBuilding = true;

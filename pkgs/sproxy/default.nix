@@ -5,12 +5,12 @@
 , time, tls, unix, utf8-string, x509, yaml
 }:
 mkDerivation {
-  pname = "sproxy";
+  pname = "sproxy-lame";
   version = "0.8.0";
   src = fetchgit {
-    url = "git://github.com/zalora/sproxy";
-    sha256 = "b564d417acfea12742a1aa038964b807e4ba4359b3d212e645bb46301da244dd";
-    rev = "892b131e0bc34b492ed1f569d03ea1c2ec767ef7";
+    url = "https://github.com/zalora/sproxy";
+    sha256 = "0ka5c69pfz19gggkdkxfin85w2zp8bvd29bkikmggkc79gnwzdqc";
+    rev = "c2b70cabe191791ed96e53413ac51b2078723f02";
   };
   isLibrary = true;
   isExecutable = true;

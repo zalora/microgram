@@ -11,7 +11,7 @@ rec {
   #
   # Use only this attribute. The rest is "exported" for debugging convenience.
   #
-  sdk = fns // exports // { inherit sdk-env phpPackages; };
+  sdk = fns // exports // { inherit sdk-env phpPackages perlPackages; };
 
   sdk-env = pkgs.buildEnv {
     name = "sdk";
@@ -172,5 +172,9 @@ rec {
   phpPackages = {
     inherit (pkgs.phpPackages) memcache memcached redis zmq zendopcache xdebug;
     inherit (ugpkgs) newrelic-php imagick;
+  };
+
+  perlPackages = {
+    inherit (pkgs.perlPackages) NetAddrIP;
   };
 }

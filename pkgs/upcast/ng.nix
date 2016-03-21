@@ -1,12 +1,12 @@
-{ mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
-, amazonka-ec2, amazonka-elb, amazonka-route53, array, async
+{ mkDerivation, aeson, aeson-pretty, amazonka, amazonka-cloudwatch
+, amazonka-core, amazonka-ec2, amazonka-elb, amazonka-route53, array, async
 , attoparsec, base, base64-bytestring, bifunctors, bytestring
 , conduit, conduit-extra, containers, directory, exceptions
 , fetchgit, filepath, hashable, iproute, lens, lens-action
 , lens-aeson, lifted-base, mtl, natural-sort, optparse-applicative
 , pretty-show, process, random, resourcet, scientific, semigroups
 , stdenv, tagged, text, time, unix, unordered-containers, vector
-, vk-posix-pty, witherable, xml-conduit
+, vk-posix-pty, witherable
 }:
 mkDerivation {
   pname = "upcast";
@@ -14,29 +14,21 @@ mkDerivation {
   src = fetchgit {
     url = git://github.com/zalora/upcast.git;
     rev = "426a3b74ccd5534a330b9993b11b70d91e0da30c";
-    sha256 = "7a984690faafaff1257fc4f65e963f39f4cc8c4307a00382ddcaa3050fdb6bdc";
+    sha256 = "1p3bvc7hb8yavn1078078f6crx1r7yb5xxn4gwjz3bxgza84d63s";
   };
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    aeson aeson-pretty amazonka amazonka-core amazonka-ec2 amazonka-elb
+    aeson aeson-pretty amazonka amazonka-cloudwatch amazonka-core amazonka-ec2 amazonka-elb
     amazonka-route53 array async attoparsec base base64-bytestring
     bifunctors bytestring conduit conduit-extra containers directory
     exceptions filepath hashable iproute lens lens-action lens-aeson
     lifted-base mtl natural-sort optparse-applicative pretty-show
     process random resourcet scientific semigroups tagged text time
     unix unordered-containers vector vk-posix-pty witherable
-    xml-conduit
   ];
   executableHaskellDepends = [
-    aeson aeson-pretty amazonka amazonka-core amazonka-ec2 amazonka-elb
-    amazonka-route53 array async attoparsec base base64-bytestring
-    bifunctors bytestring conduit conduit-extra containers directory
-    exceptions filepath hashable iproute lens lens-action lens-aeson
-    lifted-base mtl natural-sort optparse-applicative pretty-show
-    process random resourcet scientific semigroups tagged text time
-    unix unordered-containers vector vk-posix-pty witherable
-    xml-conduit
+    optparse-applicative
   ];
   homepage = "https://github.com/zalora/upcast#readme";
   description = "Nix-based Linux deployment platform tools";

@@ -13,8 +13,8 @@ mkDerivation {
   version = "0.1.1.0";
   src = fetchgit {
     url = git://github.com/zalora/upcast.git;
-    rev = "426a3b74ccd5534a330b9993b11b70d91e0da30c";
-    sha256 = "1p3bvc7hb8yavn1078078f6crx1r7yb5xxn4gwjz3bxgza84d63s";
+    rev = "c8faa2442bc840b7cb2f15d02e113295a6361df8";
+    sha256 = "4a8facdb8a564c3a263a1ae1a673624a71560b994f3876fa00b1ace7eaa35cff";
   };
   isLibrary = true;
   isExecutable = true;

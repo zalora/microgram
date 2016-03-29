@@ -361,7 +361,8 @@ in rec {
   });
 
   upcast-ng = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast/ng.nix {
-    inherit amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
+    inherit amazonka amazonka-cloudwatch
+            amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
   }) (drv: {
     postFixup = ''
       rm -rf $out/lib $out/nix-support
@@ -437,6 +438,8 @@ in rec {
   # modern stuff
   amazonka = haskellPackages.callPackage ./amazonka
     { inherit amazonka-core; retry = haskell-retry; };
+  amazonka-cloudwatch = haskellPackages.callPackage ./amazonka-cloudwatch
+    { inherit amazonka-core amazonka-test; };
   amazonka-core = haskellPackages.callPackage ./amazonka-core {};
   amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2
     { inherit amazonka-core amazonka-test; };

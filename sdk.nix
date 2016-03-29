@@ -170,7 +170,8 @@ rec {
   };
 
   phpPackages = {
-    inherit (pkgs.phpPackages) memcache memcached redis zmq zendopcache xdebug;
+    inherit (pkgs.phpPackages)
+      composer memcache memcached redis zmq zendopcache xdebug;
     inherit (ugpkgs) newrelic-php imagick;
   };
 

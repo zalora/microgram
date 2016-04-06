@@ -103,10 +103,10 @@ in rec {
 
   elasticsearch-cloud-aws = pkgs.stdenv.mkDerivation rec {
     name = "elasticsearch-cloud-aws-${version}";
-    version = "2.4.1";
+    version = "2.7.1";
     src = fetchurl {
       url = "http://search.maven.org/remotecontent?filepath=org/elasticsearch/elasticsearch-cloud-aws/${version}/${name}.zip";
-      sha256 = "1nvfvx92q9p0yny45jjfwdvbpn0qh384s6714wmm7qivbylb8f03";
+      sha256 = "1lppzd9kzybfr6r7b01ggcdx09ccv4ml8bqh5wh88yhh473yrg8s";
     };
     phases = [ "installPhase" ];
     buildInputs = [ pkgs.unzip ];

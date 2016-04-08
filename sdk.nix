@@ -155,7 +155,7 @@ rec {
       percona-toolkit pivotal_agent put-metric
       rabbitmq replicator retry rootfs-busybox runc
       ShellCheck sproxy stack syslog-ng
-      thumbor twemproxy
+      terraform thumbor twemproxy
       unicron
       upcast
       upcast-ng

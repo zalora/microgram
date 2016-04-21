@@ -217,6 +217,8 @@ in rec {
       });
     };
 
+  logstash-all-plugins = pkgs.callPackage ./logstash-all-plugins {};
+
   lua-json = pkgs.fetchzip {
     url = "http://files.luaforge.net/releases/json/json/0.9.50/json4lua-0.9.50.zip";
     sha256 = "1qmrq6gsirjzkmh2yd8h43vpi02c0na90i3i28z57a7nsg12185k";

@@ -144,12 +144,12 @@ rec {
       damemtop dynomite
       elasticsearch-cloud-aws elastisch erlang
       exim
-      flame-graph
+      filebeat flame-graph
       galera-wsrep get-user-data gdb-quiet graphviz
       heavy-sync
       jackson-core-asl jenkins jmaps
       kibana4 kiries
-      lua-json
+      logstash-all-plugins lua-json
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
       percona-toolkit pivotal_agent put-metric

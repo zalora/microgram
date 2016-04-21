@@ -99,6 +99,10 @@ in rec {
 
   dynomite = pkgs.callPackage ./dynomite {};
 
+  filebeat = pkgs.callPackage ./filebeat {
+    go = pkgs.go_1_5;
+  };
+
   flame-graph = pkgs.callPackage ./flame-graph { inherit (pkgs) perl; };
 
   elasticsearch-cloud-aws = pkgs.stdenv.mkDerivation rec {

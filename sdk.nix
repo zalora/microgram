@@ -152,7 +152,7 @@ rec {
       logstash-all-plugins lua-json
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
-      percona-toolkit pivotal_agent put-metric
+      percona-toolkit pivotal_agent
       rabbitmq replicator retry rootfs-busybox runc
       ShellCheck sproxy stack syslog-ng
       terraform thumbor twemproxy

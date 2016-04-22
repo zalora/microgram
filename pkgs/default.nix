@@ -297,13 +297,6 @@ in rec {
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 
-  put-metric = let
-    aws-ec2 = fns.staticHaskellCallPackage ./aws-ec2 {};
-  in pkgs.runCommand "${aws-ec2.name}-put-metric" {} ''
-    mkdir -p $out/bin
-    cp ${aws-ec2}/bin/put-metric $out/bin
-  '';
-
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
 
   replicator = fns.staticHaskellCallPackage ./replicator {};

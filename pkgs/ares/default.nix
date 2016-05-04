@@ -6,7 +6,6 @@
 mkDerivation {
   pname = "ares";
   version = "3";
-  patches = [ ./ug.patch ];
   src = fetchgit {
     url = https://github.com/zalora/ares;
     rev = "cdc81cc55f7b27543bec5eb6cd79228abcb3b8c8";

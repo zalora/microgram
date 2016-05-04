@@ -1,21 +1,21 @@
-{ fetchgit, mkDerivation, aeson, attoparsec, base, bytestring, containers
+{ fetchgit, mkDerivation, aeson, attoparsec, base, bytestring, cond, containers
 , directory, extra, filelock, filepath, network, process
 , servant-server, stdenv, temporary, text, transformers, Unique
 , unix, wai, wai-extra, warp
 }:
 mkDerivation {
   pname = "ares";
-  version = "2";
+  version = "3";
   patches = [ ./ug.patch ];
   src = fetchgit {
     url = https://github.com/zalora/ares;
-    rev = "880a6ca5ddf23a3dba366d89ec253ebe3f72da07";
-    sha256 = "1ms4w8ac7i1y0iv8z57x9rmfj5djns9d6yq3bysjz4rjsmanbh33";
+    rev = "cdc81cc55f7b27543bec5eb6cd79228abcb3b8c8";
+    sha256 = "0xwxrsw758vbnz79q1c6ijnpz65ksx93i970sp45ry4h3ycyvlvm";
   };
   isLibrary = false;
   isExecutable = true;
   executableHaskellDepends = [
-    aeson attoparsec base bytestring containers directory extra
+    aeson attoparsec base bytestring cond containers directory extra
     filelock filepath network process servant-server temporary text
     transformers Unique unix wai wai-extra warp
   ];

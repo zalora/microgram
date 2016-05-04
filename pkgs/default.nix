@@ -288,6 +288,8 @@ in rec {
     };
   }));
 
+  packer = pkgs.callPackage ./packer {};
+
   percona-toolkit = import ./percona-toolkit { inherit perlPackages fetchurl; };
 
   perf-map-agent = import ./perf-map-agent

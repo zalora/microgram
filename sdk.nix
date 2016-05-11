@@ -106,35 +106,7 @@ rec {
       writeBashScriptOverride;
   };
 
-  exports = rec {
-    inherit (pkgs)
-      # One line per letter
-      atop awscli
-      bash binutils
-      cacert coreutils curl
-      diffutils dnsmasq docker dstat
-      e2fsprogs elasticsearch
-      file findutils
-      gawk gcc git glibc glibcLocales gnugrep gnumake gnupg gnused gnutar go gzip
-      htop
-      iana_etc iftop imagemagick inetutils inotifyTools iotop iperf iproute iptables
-      jdk jetty92 jq
-      kibana kmod
-      libcgroup libjpeg libjpeg_turbo libxml2 logrotate lsof
-      memcached
-      netcat-openbsd nfs-utils nodejs ntp
-      openjdk openssh openssl optipng
-      parallel perf-tools perl php postgresql procps psmisc pv pwgen pxz python
-      rdfind redis renameutils riemann runit rxvt_unicode rsync
-      s3cmd shadow sshfsFuse stdenv strace strongswan sysstat systemd
-      tcpdump tmux tree tzdata
-      unzip utillinux
-      vim
-      wget which
-      xz
-    ;
-
-    inherit (pkgs) bundler;
+  exports = pkgs // rec {
 
     solr4 = pkgs.solr;
     inherit (ugpkgs)
@@ -154,7 +126,7 @@ rec {
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
       percona-toolkit pivotal_agent
       rabbitmq replicator retry rootfs-busybox runc
-      ShellCheck sproxy stack syslog-ng
+      ShellCheck simp_le sproxy stack syslog-ng
       terraform thumbor twemproxy
       unicron
       upcast

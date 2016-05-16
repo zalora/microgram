@@ -85,6 +85,7 @@ let
  '';
 
   ec2-autohostname = ''
+    set -efuo pipefail
     ${ip} route delete blackhole 169.254.169.254 2>/dev/null || true
     # registering route 53 hostnames if any:
     echo ${concatStringsSep " " (
@@ -147,7 +148,7 @@ in
 
       script = ''
         while true; do
-          ${pkgs.writeScript "ec2-autohostname" ec2-autohostname}
+          ${sdk.writeBashScript "ec2-autohostname" ec2-autohostname}
           sleep $((120 + $RANDOM % 40))m
         done
       '';

@@ -299,7 +299,11 @@ in rec {
 
   pivotal_agent = pkgs.callPackage ./pivotal_agent {};
 
-  rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
+  rabbitmq = pkgs.callPackage ./rabbitmq {
+    pkgs = pkgs // {
+      inherit erlang;
+    };
+  };
 
   rabbitmq-clusterer = pkgs.callPackage ./rabbitmq-clusterer {};
 

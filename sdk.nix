@@ -125,7 +125,7 @@ rec {
       mariadb mariadb-galera memcached-tool mergex mkebs myrapi
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
       packer percona-toolkit pivotal_agent
-      rabbitmq replicator retry rootfs-busybox runc
+      rabbitmq rabbitmq-clusterer replicator retry rootfs-busybox runc
       ShellCheck simp_le sproxy stack syslog-ng
       terraform thumbor twemproxy
       unicron

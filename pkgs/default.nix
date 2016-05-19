@@ -301,6 +301,8 @@ in rec {
 
   rabbitmq = pkgs.callPackage ./rabbitmq { inherit erlang; };
 
+  rabbitmq-clusterer = pkgs.callPackage ./rabbitmq-clusterer {};
+
   replicator = fns.staticHaskellCallPackage ./replicator {};
 
   retry = pkgs.callPackage ./retry {};

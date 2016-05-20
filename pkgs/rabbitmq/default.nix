@@ -3,11 +3,11 @@
 stdenv.mkDerivation rec {
   name = "rabbitmq-server-${version}";
 
-  version = "3.6.1";
+  version = "3.6.2";
 
   src = pkgs.fetchurl {
     url = "http://www.rabbitmq.com/releases/rabbitmq-server/v${version}/${name}.tar.xz";
-    sha256 = "1vhvvryh9bl6hqnfazhh93kbf07zd4nw320j60d1k69zhr7175n6";
+    sha256 = "05h2nshszq91811rpij52lzk2ilycpj2653dhm85w4a42bcsv7mh";
   };
 
   buildInputs = [
@@ -21,13 +21,6 @@ stdenv.mkDerivation rec {
     pkgs.unzip
     pkgs.xmlto
     pkgs.zip
-  ];
-
-  patches = [
-    (pkgs.substituteAll {
-      inherit (pkgs) coreutils;
-      src = ./df.patch;
-    })
   ];
 
   makeFlags = "RMQ_ERLAPP_DIR=$(out)";

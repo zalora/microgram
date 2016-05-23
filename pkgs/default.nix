@@ -374,6 +374,8 @@ in rec {
 
   thumbor = (import ./thumbor { inherit pkgs newrelic-python statsd tornado; }).thumbor;
 
+  to-json-array = fns.staticHaskellCallPackage ./to-json-array {};
+
   twemproxy = pkgs.callPackage ./twemproxy {};
 
   unicron = fns.staticHaskellCallPackage ./unicron {};

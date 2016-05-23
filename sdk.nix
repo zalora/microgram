@@ -127,7 +127,7 @@ rec {
       packer percona-toolkit pivotal_agent
       rabbitmq rabbitmq-clusterer replicator retry rootfs-busybox runc
       ShellCheck simp_le sproxy stack syslog-ng
-      terraform thumbor twemproxy
+      terraform thumbor to-json-array twemproxy
       unicron
       upcast
       upcast-ng

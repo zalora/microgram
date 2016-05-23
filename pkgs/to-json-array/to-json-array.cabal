@@ -1,0 +1,13 @@
+build-type: Simple
+cabal-version: >= 1.2
+name: to-json-array
+synopsis: command-line utility to turn arguments into a JSON array of strings
+version: 1
+
+Executable to-json-array
+  Build-Depends:
+    aeson,
+    base,
+    bytestring
+  GHC-Options: -Wall
+  Main-Is: to-json-array.hs

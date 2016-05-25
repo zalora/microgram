@@ -534,4 +534,16 @@ in rec {
 
     NIX_CFLAGS_COMPILE = "-I${imagemagick}/include/ImageMagick-6";
   };
+
+  # Because the package in Nixpkgs doesn't have --enable-memcached-json
+  memcached = fns.buildPecl {
+    name = "memcached-2.2.0";
+    sha256 = "0n4z2mp4rvrbmxq079zdsrhjxjkmhz6mzi7mlcipz02cdl7n1f8p";
+    configureFlags = [
+      "--enable-memcached-json=yes"
+      "--with-zlib-dir=${pkgs.zlib}"
+      "--with-libmemcached-dir=${pkgs.libmemcached}"
+    ];
+    buildInputs = with pkgs; [ pkgconfig cyrus_sasl ];
+  };
 }

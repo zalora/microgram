@@ -157,13 +157,13 @@ in rec {
   graphviz = pkgs.callPackage ./graphviz {};
 
   heavy-sync = with pythonPackages; pkgs.callPackage ./heavy-sync {
-    inherit boto;
+    boto = boto-230;
     inherit gcs-oauth2-boto-plugin;
     inherit sqlite3;
   };
 
   curator = pkgs.callPackage ./curator {
-    inherit (pythonPackages) click elasticsearch urllib3 nosexcover mock;
+    inherit (pythonPackages) click elasticsearch urllib3;
   };
 
   imagemagick = pkgs.callPackage ./ImageMagick {
@@ -354,6 +354,7 @@ in rec {
      stack2 = pkgs.runCommand "stack-${version}-bin2" {} ''
        mkdir -p $out/bin
        cp ${stack1}/stack $out/bin
+       chmod u+w $out/bin/stack # https://github.com/NixOS/nixpkgs/issues/14440
        patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" $out/bin/stack
        patchelf --set-rpath ${stdenv.cc.cc}/lib64:${lib.makeSearchPath "lib" [ stdenv.cc.cc zlib gmp ncurses]} $out/bin/stack
      '';
@@ -380,16 +381,41 @@ in rec {
 
   unicron = fns.staticHaskellCallPackage ./unicron {};
 
-  upcast = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast {
-    inherit (amazonka_1_1_0) amazonka amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
-  }) (drv: {
+  upcast = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast {}) (drv: {
     postFixup = "rm -rf $out/lib $out/nix-support";
+    patches = [
+      # compat hacks for release-16.04/amazonka-1.4:
+      (builtins.toFile "compat.patch" ''
+        diff --git a/src/Upcast/Infra/Amazonka.hs b/src/Upcast/Infra/Amazonka.hs
+        index 934939a..501d412 100644
+        --- a/src/Upcast/Infra/Amazonka.hs
+        +++ b/src/Upcast/Infra/Amazonka.hs
+        @@ -413,7 +413,7 @@ plan expressionName userData keypairs Infras{..} =
+                                                  k
+                                                  v)
+
+        -    unless (null instanceA) $
+        +    unless (null instanceA) . void $
+               await EC2.instanceRunning (EC2.describeInstances
+                                          & EC2.diiInstanceIds .~ map snd instanceA)
+
+        diff --git a/src/Upcast/Infra/Match.hs b/src/Upcast/Infra/Match.hs
+        index 8858702..7c8298e 100644
+        --- a/src/Upcast/Infra/Match.hs
+        +++ b/src/Upcast/Infra/Match.hs
+        @@ -157,7 +157,6 @@ instance AWSPager EC2.DescribeVPCs where page _ _ = Nothing
+         instance AWSPager EC2.DescribeSubnets where page _ _ = Nothing
+         instance AWSPager EC2.DescribeSecurityGroups where page _ _ = Nothing
+         instance AWSPager EC2.DescribeKeyPairs where page _ _ = Nothing
+        -instance AWSPager EC2.DescribeVolumes where page _ _ = Nothing
+
+
+         class AWSExtractResponse infra where
+      '')
+    ];
   });
 
-  upcast-ng = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast/ng.nix {
-    inherit amazonka amazonka-cloudwatch
-            amazonka-core amazonka-ec2 amazonka-elb amazonka-route53;
-  }) (drv: {
+  upcast-ng = lib.overrideDerivation (fns.staticHaskellCallPackage ./upcast/ng.nix {}) (drv: {
     postFixup = ''
       rm -rf $out/lib $out/nix-support
       mv $out/bin/upcast $out/bin/upcast-ng
@@ -456,43 +482,6 @@ in rec {
 
     doCheck = false;
   };
-
-  #
-  # haskell libraries
-  #
-
-  # modern stuff
-  amazonka = haskellPackages.callPackage ./amazonka
-    { inherit amazonka-core; retry = haskell-retry; };
-  amazonka-cloudwatch = haskellPackages.callPackage ./amazonka-cloudwatch
-    { inherit amazonka-core amazonka-test; };
-  amazonka-core = haskellPackages.callPackage ./amazonka-core {};
-  amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2
-    { inherit amazonka-core amazonka-test; };
-  amazonka-elb = haskellPackages.callPackage ./amazonka-elb
-    { inherit amazonka-core amazonka-test; };
-  amazonka-route53 = haskellPackages.callPackage ./amazonka-route53
-    { inherit amazonka-core amazonka-test; };
-  amazonka-test = haskellPackages.callPackage ./amazonka-test
-    { inherit amazonka-core; };
-
-  # compat
-  amazonka_1_1_0 = rec {
-    amazonka = haskellPackages.callPackage ./amazonka/1.1.0.nix
-      { inherit amazonka-core; };
-    amazonka-core = haskellPackages.callPackage ./amazonka-core/1.1.0.nix {};
-    amazonka-ec2 = haskellPackages.callPackage ./amazonka-ec2/1.1.0.nix
-      { inherit amazonka-core; };
-    amazonka-elb = haskellPackages.callPackage ./amazonka-elb/1.1.0.nix
-      { inherit amazonka-core; };
-    amazonka-route53 = haskellPackages.callPackage ./amazonka-route53/1.1.0.nix
-      { inherit amazonka-core; };
-  };
-
-  # Ugly collision with tv's retry, maybe we should namespace
-  # Haskell/cabal things into a subdirectory? If not going the
-  # stack/ECR route..
-  haskell-retry = haskellPackages.callPackage ./haskell-retry {};
 
   #
   # clojure/java libraries

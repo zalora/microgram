@@ -1,4 +1,4 @@
-{ buildPythonPackage, fetchgit, stdenv, click, elasticsearch, urllib3, nosexcover, mock }:
+{ buildPythonPackage, fetchgit, stdenv, click, elasticsearch, urllib3, ... }:
 
 buildPythonPackage {
   name = "curator";
@@ -9,5 +9,9 @@ buildPythonPackage {
     sha256 = "1p6qmfk9j9ng8rgkz8q3mc7f9mc96xhn585g14f8zqy65wflz3q1";
   };
 
-  propagatedBuildInputs = [click elasticsearch urllib3 nosexcover mock];
+  # Test suite tries to make requests against a local elasticsearch, would
+  # rather not supply this in the build environment. Revisit later?
+  doCheck = false;
+
+  propagatedBuildInputs = [click elasticsearch urllib3];
 }

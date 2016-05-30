@@ -8,7 +8,6 @@ let
              ++ import <microgram/nixos/vendor-module-list.nix>;
 
   lib = import <nixpkgs/lib>;
-  backports = import <microgram/lib/backports.nix>;
 
   stub = with lib; mkOption {
     type = types.attrsOf types.unspecified;
@@ -23,11 +22,6 @@ let
   };
 
   stub-module = {
-    imports = [
-      # redundant since nixpkgs-master
-      (backports.mkAliasOptionModule [ "users" "extraUsers" ] [ "users" "users" ])
-      (backports.mkAliasOptionModule [ "users" "extraGroups" ] [ "users" "groups" ])
-    ];
     options = {
       services.xserver = stub;
       services.bind = stub;
@@ -44,10 +38,12 @@ let
       powerManagement = stub;
       security.pam.usb = stub;
       security.pam.mount = stub;
+      security.pam.oath = stub;
       boot.isContainer = lib.mkOption { default = false; };
       boot.initrd.luks = stub;
       networking.wireless = stub;
       networking.connman = stub;
+      virtualisation.vswitch = stub;
     };
     config = {
       services.virtualboxGuest = true; # renamed

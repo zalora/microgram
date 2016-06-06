@@ -40,7 +40,7 @@ rec {
     packageOverrides = pkgs: rec {
       inherit (ugpkgs) bundler_HEAD erlang imagemagick linux nix;
       mysql = ugpkgs.mariadb;
-      php = ugpkgs.php56;
+      php = ugpkgs.php70;
       git = pkgs.git.override {
         withManual = false;
         pythonSupport = false;
@@ -145,9 +145,9 @@ rec {
   };
 
   phpPackages = {
-    inherit (pkgs.phpPackages.override { php = ugpkgs.php56; })
-      composer redis xdebug zmq;
-    inherit (ugpkgs) imagick memcached newrelic-php memcache;
+    inherit (pkgs.phpPackages.override { php = ugpkgs.php70; })
+      composer redis;
+    inherit (ugpkgs) imagick memcached newrelic-php xdebug zmq;
   };
 
   perlPackages = {

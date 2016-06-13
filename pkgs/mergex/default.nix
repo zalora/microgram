@@ -1,10 +1,11 @@
-{ stdenv, fetchsvn }:
+{ stdenv, fetchgit }:
 
 stdenv.mkDerivation {
   name = "mergex";
-  src = fetchsvn {
-    url = "http://mergex.googlecode.com/svn/trunk";
-    sha256 = "0xn3ci91ch0a108vil1qm2w8l10l0v8iz2ybqic34dhyajy9wwrm";
+  src = fetchgit {
+    url = "https://github.com/NicoJuicy/mergex.git";
+    rev = "d038ceb60d00bb788afe0d51d0b4d4e412f5a333";
+    sha256 = "0cqq4a1pclkbys84x5v1bxvlm4a6d1h9536jan0cg5p8fdajzaga";
   };
   buildPhase = ''
     make all

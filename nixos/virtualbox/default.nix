@@ -6,19 +6,10 @@ let
 in
 {
   imports = [
-    <nixpkgs/nixos/modules/virtualisation/virtualbox-image.nix>
-    <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
-    <microgram/nixos/cloud/cloud-config.nix>
-    ./vm.nix
+    <microgram/nixos/cloud/ntpd.nix>
   ];
 
-  virtualisation.virtualbox.guest.enable = true;
-
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];
-
-  boot.vesa = false;
-
-  boot.loader.grub.timeout = 1;
 
   # VirtualBox doesn't seem to lease IP addresses persistently, so we
   # may get a different IP address if dhcpcd is restarted.  So don't
@@ -35,7 +26,11 @@ in
     hashedPassword = null;
     password = "root";
   };
+  services.openssh.enable = true;
   services.openssh.passwordAuthentication = lib.mkDefault true;
   services.openssh.permitRootLogin = lib.mkDefault "yes";
   services.openssh.challengeResponseAuthentication = lib.mkDefault true;
+
+  boot.loader.grub.device = "/dev/sda";
+  fileSystems."/".device = "/dev/disk/by-label/nixos";
 }

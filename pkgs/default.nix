@@ -535,4 +535,9 @@ in rec {
     ];
     buildInputs = with pkgs; [ pkgconfig cyrus_sasl ];
   };
+
+  memcache = import ./memcache {
+    inherit stdenv;
+    phpPackages = pkgs.phpPackages.override { php = php56; };
+  };
 }

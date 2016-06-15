@@ -6,8 +6,11 @@ let
 in
 {
   imports = [
+    <nixpkgs/nixos/modules/virtualisation/virtualbox-guest.nix>
     <microgram/nixos/cloud/ntpd.nix>
   ];
+
+  virtualisation.virtualbox.guest.enable = true;
 
   services.openssh.authorizedKeysFiles = [ ".vbox-nixops-client-key" ];
 

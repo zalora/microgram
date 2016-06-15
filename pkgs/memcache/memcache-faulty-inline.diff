@@ -1,0 +1,80 @@
+diff -u memcache-3.0.8.orig/memcache_pool.c memcache-3.0.8/memcache_pool.c
+--- memcache-3.0.8.orig/memcache_pool.c	2016-06-15 20:57:39.907001849 +0200
++++ memcache-3.0.8/memcache_pool.c	2016-06-15 20:58:47.559002417 +0200
+@@ -40,7 +40,7 @@
+ 
+ ZEND_DECLARE_MODULE_GLOBALS(memcache)
+ 
+-inline void mmc_buffer_alloc(mmc_buffer_t *buffer, unsigned int size)  /*
++void mmc_buffer_alloc(mmc_buffer_t *buffer, unsigned int size)  /*
+ 	ensures space for an additional size bytes {{{ */
+ {
+ 	register size_t newlen;
+@@ -48,7 +48,7 @@
+ }
+ /* }}} */
+ 
+-inline void mmc_buffer_free(mmc_buffer_t *buffer)  /* {{{ */
++void mmc_buffer_free(mmc_buffer_t *buffer)  /* {{{ */
+ {
+ 	if (buffer->value.c != NULL) {
+ 		smart_str_free(&(buffer->value));
+@@ -1676,7 +1676,7 @@
+ }
+ /* }}} */
+ 
+-inline int mmc_prepare_key_ex(const char *key, unsigned int key_len, char *result, unsigned int *result_len)  /* {{{ */
++int mmc_prepare_key_ex(const char *key, unsigned int key_len, char *result, unsigned int *result_len)  /* {{{ */
+ {
+ 	unsigned int i;
+ 	if (key_len == 0) {
+@@ -1694,7 +1694,7 @@
+ }
+ /* }}} */
+ 
+-inline int mmc_prepare_key(zval *key, char *result, unsigned int *result_len)  /* {{{ */
++int mmc_prepare_key(zval *key, char *result, unsigned int *result_len)  /* {{{ */
+ {
+ 	if (Z_TYPE_P(key) == IS_STRING) {
+ 		return mmc_prepare_key_ex(Z_STRVAL_P(key), Z_STRLEN_P(key), result, result_len);
+diff -u memcache-3.0.8.orig/memcache_pool.h memcache-3.0.8/memcache_pool.h
+--- memcache-3.0.8.orig/memcache_pool.h	2016-06-15 20:57:39.907001849 +0200
++++ memcache-3.0.8/memcache_pool.h	2016-06-15 21:00:40.071003361 +0200
+@@ -135,8 +135,8 @@
+ #define mmc_buffer_release(b) memset((b), 0, sizeof(*(b)))
+ #define mmc_buffer_reset(b) (b)->value.len = (b)->idx = 0
+ 
+-inline void mmc_buffer_alloc(mmc_buffer_t *, unsigned int);
+-inline void mmc_buffer_free(mmc_buffer_t *);
++void mmc_buffer_alloc(mmc_buffer_t *, unsigned int);
++void mmc_buffer_free(mmc_buffer_t *);
+ 
+ /* stream handlers */
+ typedef struct mmc_stream mmc_stream_t;
+@@ -391,8 +391,8 @@
+ double timeval_to_double(struct timeval tv);
+ struct timeval double_to_timeval(double sec);
+ 
+-inline int mmc_prepare_key_ex(const char *, unsigned int, char *, unsigned int *);
+-inline int mmc_prepare_key(zval *, char *, unsigned int *);
++int mmc_prepare_key_ex(const char *, unsigned int, char *, unsigned int *);
++int mmc_prepare_key(zval *, char *, unsigned int *);
+ 
+ #define mmc_str_left(h, n, hlen, nlen) ((hlen) >= (nlen) ? memcmp((h), (n), (nlen)) == 0 : 0)
+ 
+diff -u memcache-3.0.8.orig/memcache_queue.h memcache-3.0.8/memcache_queue.h
+--- memcache-3.0.8.orig/memcache_queue.h	2016-06-15 20:57:39.907001849 +0200
++++ memcache-3.0.8/memcache_queue.h	2016-06-15 20:58:13.991002135 +0200
+@@ -37,11 +37,7 @@
+ #define mmc_queue_reset(q) (q)->len = (q)->head = (q)->tail = 0
+ #define mmc_queue_item(q, i) ((q)->tail + (i) < (q)->alloc ? (q)->items[(q)->tail + (i)] : (q)->items[(i) - ((q)->alloc - (q)->tail)]) 
+ 
+-#ifdef PHP_WIN32
+ #define MMC_QUEUE_INLINE
+-#else
+-#define MMC_QUEUE_INLINE inline
+-#endif
+ 
+ MMC_QUEUE_INLINE void mmc_queue_push(mmc_queue_t *, void *);
+ MMC_QUEUE_INLINE void *mmc_queue_pop(mmc_queue_t *);
+Common subdirectories: memcache-3.0.8.orig/tests and memcache-3.0.8/tests

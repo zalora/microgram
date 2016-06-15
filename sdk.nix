@@ -146,8 +146,8 @@ rec {
 
   phpPackages = {
     inherit (pkgs.phpPackages.override { php = ugpkgs.php56; })
-      composer memcache redis xdebug zmq;
-    inherit (ugpkgs) imagick memcached newrelic-php;
+      composer redis xdebug zmq;
+    inherit (ugpkgs) imagick memcached newrelic-php memcache;
   };
 
   perlPackages = {

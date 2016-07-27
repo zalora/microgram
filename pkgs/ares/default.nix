@@ -5,11 +5,11 @@
 }:
 mkDerivation {
   pname = "ares";
-  version = "3";
+  version = "4";
   src = fetchgit {
     url = https://github.com/zalora/ares;
-    rev = "cdc81cc55f7b27543bec5eb6cd79228abcb3b8c8";
-    sha256 = "0xwxrsw758vbnz79q1c6ijnpz65ksx93i970sp45ry4h3ycyvlvm";
+    rev = "8521dc9ec47c7ac01be69280998fa4b45170bba8";
+    sha256 = "1mjvskhp63ksrd2rs60vck8qvj2mvcdqw999yc5fg58gl152i1gh";
   };
   isLibrary = false;
   isExecutable = true;

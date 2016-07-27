@@ -58,7 +58,7 @@ done
 
 checks=$(
   wtfdb \
-      -r -s \
+      -r \
       --arg ytags "${tags[*]}" \
       --arg ntags "${nottags[*]}" \
       --arg names "${alwayschecks[*]}" \
@@ -87,7 +87,7 @@ checks=$(
           enabled_by_name(x) or
           enabled_by_tags(x);
 
-        add | to_entries[] | .value | select(enabled(.)) |
+        to_entries[] | .value | select(enabled(.)) |
           @sh "wtf_wrapper=\(."wtf-wrapper") name=\(.name)"
       '
 )

@@ -1,13 +1,14 @@
-{ buildPythonPackage, fetchgit, stdenv, boto, gcs-oauth2-boto-plugin, sqlite3 }:
+{ buildPythonPackage, fetchFromGitHub, stdenv, boto, gcs-oauth2-boto-plugin, sqlite3 }:
 
 buildPythonPackage rec {
 
   name = "heavy-sync-0.1";
 
-  src = fetchgit {
-    url = "https://github.com/zalora/heavy-sync.git";
-    rev = "7c08c510be08e8dccf97a6534bdb672576f804f4";
-    sha256 = "cbe3d034fe3429ba0a50e5239b20edf71c3ab3ee7b447adeabbb871c56b1db8a";
+  src = fetchFromGitHub {
+    owner = "zalora";
+    repo = "heavy-sync";
+    rev = "c41e0b7244941108c4cf655ff4c981654ccdfa21";
+    sha256 = "0ngp2bmjhgzzdbx65wx3c7g8z0iasdfy44wwbb7s2c1m4rhnwzb6";
   };
 
   propagatedBuildInputs = [

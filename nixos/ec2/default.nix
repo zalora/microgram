@@ -4,7 +4,7 @@ let
 in
 {
   imports = [
-    ./amazon-image.nix
+    <nixpkgs/nixos/modules/virtualisation/amazon-image.nix>
     ./ami-ebs.nix
     ./ami-s3.nix
     <microgram/nixos/cloud/cloud-config.nix>

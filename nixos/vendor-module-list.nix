@@ -11,6 +11,7 @@
   <nixpkgs/nixos/modules/config/system-path.nix>
   <nixpkgs/nixos/modules/config/timezone.nix>
   <nixpkgs/nixos/modules/config/users-groups.nix>
+  <nixpkgs/nixos/modules/installer/tools/tools.nix>
   <nixpkgs/nixos/modules/misc/assertions.nix>
   <nixpkgs/nixos/modules/misc/extra-arguments.nix>
   <nixpkgs/nixos/modules/misc/ids.nix>
@@ -26,6 +27,8 @@
   <nixpkgs/nixos/modules/security/pam.nix>
   <nixpkgs/nixos/modules/security/setuid-wrappers.nix>
   <nixpkgs/nixos/modules/security/sudo.nix>
+  <nixpkgs/nixos/modules/services/audio/alsa.nix>
+  <nixpkgs/nixos/modules/services/hardware/actkbd.nix>
   <nixpkgs/nixos/modules/services/hardware/udev.nix>
   <nixpkgs/nixos/modules/services/misc/nix-daemon.nix>
   <nixpkgs/nixos/modules/services/misc/nix-gc.nix>
@@ -39,10 +42,12 @@
   <nixpkgs/nixos/modules/services/ttys/agetty.nix>
   <nixpkgs/nixos/modules/system/activation/activation-script.nix>
   <nixpkgs/nixos/modules/system/activation/top-level.nix>
+  <nixpkgs/nixos/modules/system/boot/emergency-mode.nix>
+  <nixpkgs/nixos/modules/system/boot/initrd-network.nix>
   <nixpkgs/nixos/modules/system/boot/kernel.nix>
-  <nixpkgs/nixos/modules/system/boot/loader/loader.nix>
-  <nixpkgs/nixos/modules/system/boot/loader/grub/grub.nix>
   <nixpkgs/nixos/modules/system/boot/loader/efi.nix>
+  <nixpkgs/nixos/modules/system/boot/loader/grub/grub.nix>
+  <nixpkgs/nixos/modules/system/boot/loader/loader.nix>
   <nixpkgs/nixos/modules/system/boot/modprobe.nix>
   <nixpkgs/nixos/modules/system/boot/shutdown.nix>
   <nixpkgs/nixos/modules/system/boot/stage-1.nix>
@@ -53,4 +58,5 @@
   <nixpkgs/nixos/modules/tasks/filesystems.nix>
   <nixpkgs/nixos/modules/tasks/filesystems/ext.nix>
   <nixpkgs/nixos/modules/tasks/network-interfaces.nix>
+  <nixpkgs/nixos/modules/virtualisation/amazon-options.nix>
 ]

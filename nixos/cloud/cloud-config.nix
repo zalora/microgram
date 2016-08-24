@@ -1,6 +1,6 @@
 { config, lib, ... }: with lib;
 let
-  inherit (import <microgram/sdk.nix>) sdk pkgs ugpkgs nixpkgs-config;
+  inherit (import <microgram/sdk.nix>) sdk pkgs nixpkgs-config;
   systemd-pkg = pkgs.systemd;
 
   cloudDefault = mkOverride 900;
@@ -64,7 +64,6 @@ in
   #systemd.services."getty@tty1".enable = false;
   #systemd.services."autovt@".enable = false;
 
-  boot.kernelPackages = ugpkgs.linuxPackages;
   boot.kernelParams = [ "panic=1" "boot.panic_on_fail" ];
 
   boot.tmpOnTmpfs = cloudDefault false;

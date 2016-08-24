@@ -187,36 +187,6 @@ in rec {
     };
   };
 
-  # microgram default linux
-#  linux = pkgs.callPackage ./linux-kernel/ubuntu/ubuntu-overrides.nix {
-#    kernel = linux_3_19;
-#  };
-
-  linux = linux_3_19;
-
-  linux_3_19 = pkgs.makeOverridable (import ./linux-kernel/3.19.nix) {
-    inherit (pkgs) fetchurl stdenv perl buildLinux;
-  };
-
-  linuxPackages =
-    let callPackage = newScope linuxPackages; in
-    pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux linuxPackages) // rec {
-      sysdig = callPackage ./sysdig {};
-
-      virtualbox = callPackage ./virtualbox {
-        stdenv = stdenv_32bit;
-        inherit (gnome) libIDL;
-      };
-
-      virtualboxGuestAdditions = stdenv.lib.overrideDerivation (callPackage ./virtualbox/guest-additions { inherit virtualbox; }) (args: {
-        src = fetchurl {
-          url = "http://download.virtualbox.org/virtualbox/${virtualbox.version}/VBoxGuestAdditions_${virtualbox.version}.iso";
-          sha256 = "c5e46533a6ff8df177ed5c9098624f6cec46ca392bab16de2017195580088670";
-        };
-
-      });
-    };
-
   logstash-all-plugins = pkgs.callPackage ./logstash-all-plugins {};
 
   lua-json = pkgs.fetchzip {

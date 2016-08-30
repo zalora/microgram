@@ -290,23 +290,6 @@ in rec {
 
   inherit ShellCheck;
 
-  # This and its dependencies appear somewhere between 15.09 and 16.03
-  simp_le =
-  let
-    pythonPackagesPlus1 = pkgs.pythonPackages // {
-      buildPythonApplication = args: pkgs.buildPythonPackage ({namePrefix="";} // args );
-    };
-    pythonPackagesPlus2 = pythonPackagesPlus1 // pkgs.callPackage ./simp_le/python-packages.nix {
-      pkgs = pkgs // {
-        letsencrypt = pkgs.callPackage ./letsencrypt {
-          pythonPackages = pythonPackagesPlus1;
-        };
-      };
-    };
-  in pkgs.callPackage ./simp_le {
-    pythonPackages = pythonPackagesPlus2;
-  };
-
   sproxy = fns.staticHaskellCallPackage ./sproxy {};
 
   stack = let

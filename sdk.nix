@@ -129,7 +129,7 @@ rec {
       newrelic-memcached-plugin newrelic-mysql-plugin newrelic-plugin-agent newrelic-sysmond nginx nix nq
       packer percona-toolkit pivotal_agent
       rabbitmq rabbitmq-clusterer replicator retry rootfs-busybox runc
-      ShellCheck simp_le sproxy stack syslog-ng
+      ShellCheck sproxy stack syslog-ng
       terraform thumbor to-json-array twemproxy
       unicron
       upcast
